@@ -8,10 +8,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -32,7 +31,18 @@ public class SecurityConfig {
                     // Authorization Header 노출
                     cors.addExposedHeader("Authorization");
                     return cors;
-                }));
+                }))
+                .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(authorize ->
+                        authorize
+                                .requestMatchers(
+                                        "/actuator/**"
+                                        , "/swagger-ui/**"
+                                        , "/api-docs/swagger-config"
+                                        , "/members/login"
+                                        , "/**"
+                                ).permitAll()
+                                .anyRequest().permitAll());
 
         return http.build();
     }
