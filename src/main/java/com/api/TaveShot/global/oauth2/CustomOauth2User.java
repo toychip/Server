@@ -4,11 +4,15 @@ import com.api.TaveShot.domain.Member.Member;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
+@Builder
+@AllArgsConstructor
 @RequiredArgsConstructor
 public class CustomOauth2User implements OAuth2User {
 

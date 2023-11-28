@@ -1,5 +1,6 @@
 package com.api.TaveShot.global.config;
 
+import com.api.TaveShot.global.oauth2.CustomOAuth2UserService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +17,8 @@ import org.springframework.web.cors.CorsConfiguration;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -43,6 +46,14 @@ public class SecurityConfig {
                                         , "/**"
                                 ).permitAll()
                                 .anyRequest().permitAll());
+        http
+                .oauth2Login()
+                .authorizationEndpoint().baseUri("/oauth/authorize")
+                .and()
+                .redirectionEndpoint().baseUri("/oauth/callback")
+                .and()
+                .userInfoEndpoint()
+                .userService(customOAuth2UserService);
 
         return http.build();
     }
