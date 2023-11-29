@@ -1,11 +1,12 @@
 package com.api.TaveShot.domain.base;
 
 import java.util.Optional;
-import java.util.UUID;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @EnableJpaAuditing
 @Configuration
@@ -13,7 +14,14 @@ public class BaseEntityConfig {
 
     @Bean
     public AuditorAware<String> auditorProvider() {
-        // TODO 지금은 UUID이지만, Security 설정 후 spring Securitycontextholder 에서 값 꺼내기
-        return () -> Optional.of(UUID.randomUUID().toString());
+        return () -> {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication == null) {
+                return Optional.of("Anonymous");
+            }
+
+            String name = authentication.getName();
+            return Optional.of(name);
+        };
     }
 }
