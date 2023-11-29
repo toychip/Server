@@ -51,9 +51,9 @@ public class SecurityConfig {
                                         ,"/oauth/**"
                                         ,"/favicon.ico"
                                         ,"/login/**"
-//                                        , "/**"
+                                        , "/**"
                                 ).permitAll()
-                                .anyRequest().authenticated());
+                                .anyRequest().permitAll());
         http
                 .oauth2Login()
                 .authorizationEndpoint().baseUri("/login/oauth2/code/github")
