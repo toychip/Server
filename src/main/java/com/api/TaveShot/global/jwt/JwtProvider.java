@@ -3,6 +3,7 @@ package com.api.TaveShot.global.jwt;
 import static com.api.TaveShot.global.constant.OauthConstant.ACCESS_TOKEN_VALID_TIME;
 import static com.api.TaveShot.global.exception.ErrorType._JWT_EXPIRED;
 import static com.api.TaveShot.global.exception.ErrorType._JWT_PARSING_ERROR;
+import static com.api.TaveShot.global.exception.ErrorType._USER_NOT_FOUND;
 
 import com.api.TaveShot.domain.Member.repository.MemberRepository;
 import com.api.TaveShot.global.exception.ApiException;
@@ -85,7 +86,8 @@ public class JwtProvider {
     // token 으로부터 유저 정보 확인
     private void getGitLoginId(final String jwtToken) {
         Long userId = Long.valueOf(getUserIdFromToken(jwtToken));
-        memberRepository.findById(userId).orElseThrow(() -> new RuntimeException("token 으로 Member를 찾을 수 없음"));
+        memberRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(_USER_NOT_FOUND));
     }
 
     // 토큰에서 유저 아이디 얻기
