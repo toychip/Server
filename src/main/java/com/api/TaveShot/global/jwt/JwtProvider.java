@@ -2,7 +2,6 @@ package com.api.TaveShot.global.jwt;
 
 import static com.api.TaveShot.global.constant.OauthConstant.ACCESS_TOKEN_VALID_TIME;
 
-import com.api.TaveShot.domain.Member.domain.Member;
 import com.api.TaveShot.domain.Member.repository.MemberRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -10,14 +9,11 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Date;
 import javax.crypto.SecretKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -79,25 +75,14 @@ public class JwtProvider {
     public void getAuthenticationFromToken(final String jwtToken) {
 
         log.info("-------------- getAuthenticationFromToken jwt token: " + jwtToken);
-        String gitName = getGitName(jwtToken);
-        registerAuthentication(jwtToken, gitName);
+        getGitLoginId(jwtToken);
 
     }
 
     // token 으로부터 유저 정보 확인
-    private String getGitName(final String jwtToken) {
+    private void getGitLoginId(final String jwtToken) {
         Long userId = Long.valueOf(getUserIdFromToken(jwtToken));
-        Member findMember = memberRepository.findById(userId).orElseThrow(() -> new RuntimeException("token 으로 Member를 찾을 수 없음"));
-        return findMember.getGitName();
-    }
-
-    private void registerAuthentication(final String jwtToken, final String gitName) {
-        // JWT 토큰이 유효하면, 사용자 정보를 연결 세션에 추가
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(gitName, jwtToken, new ArrayList<>());
-
-        // SecurityContextHolder 유저 등록
-        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        memberRepository.findById(userId).orElseThrow(() -> new RuntimeException("token 으로 Member를 찾을 수 없음"));
     }
 
     // 토큰에서 유저 아이디 얻기

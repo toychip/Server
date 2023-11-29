@@ -34,6 +34,6 @@ public class CustomOauth2User implements OAuth2User {
 
     @Override
     public String getName() {
-        return member.getGitName();
+        return member.getGitLoginId();
     }
 }

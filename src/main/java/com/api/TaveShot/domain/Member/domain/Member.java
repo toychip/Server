@@ -25,5 +25,6 @@ public class Member extends BaseEntity {
     private String gitLoginId;
     private String gitEmail;
     private String gitName;
+    private String profileImageUrl;
 
 }

@@ -3,7 +3,7 @@ package com.api.TaveShot.global.oauth2;
 import static com.api.TaveShot.global.constant.OauthConstant.EMAIL_PATTERN;
 import static com.api.TaveShot.global.constant.OauthConstant.ID_PATTERN;
 import static com.api.TaveShot.global.constant.OauthConstant.LOGIN_PATTERN;
-import static com.api.TaveShot.global.constant.OauthConstant.NAME_PATTERN;
+import static com.api.TaveShot.global.constant.OauthConstant.PROFILE_IMAGE_URL_PATTERN;
 
 import com.api.TaveShot.domain.Member.domain.Member;
 import com.api.TaveShot.domain.Member.repository.MemberRepository;
@@ -37,27 +37,27 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String gitLoginId = (String) userInfo.get(LOGIN_PATTERN);
         Long gitId = ((Integer) userInfo.get(ID_PATTERN)).longValue();
         String gitEmail = (String) userInfo.get(EMAIL_PATTERN);
-        String gitName = (String) userInfo.get(NAME_PATTERN);
+        String profileImageUrl = (String) userInfo.get(PROFILE_IMAGE_URL_PATTERN);
 
         return memberRepository.findByGitId(gitId)
-                .orElseGet(() -> registerNewMember(gitId, gitLoginId, gitEmail, gitName));
+                .orElseGet(() -> registerNewMember(gitId, gitLoginId, gitEmail, profileImageUrl));
     }
 
     private Member registerNewMember(final Long gitId, final String gitLoginId,
-                                     final String gitEmail, final String gitName) {
+                                     final String gitEmail, final String profileImageUrl) {
         Member newMember = Member.builder()
                 .gitId(gitId)
                 .gitLoginId(gitLoginId)
                 .gitEmail(gitEmail)
-                .gitName(gitName)
+                .profileImageUrl(profileImageUrl)
                 .build();
 
         return memberRepository.save(newMember);
     }
 
     private CustomOauth2User createCustomOauth2User(final Member member, final Map<String, Object> userInfo) {
-
         GithubUserInfo githubUserInfo = generateGithubInfo(userInfo);
+
         return CustomOauth2User.builder()
                 .member(member)
                 .githubUserInfo(githubUserInfo)
