@@ -22,10 +22,19 @@ public enum ErrorType {
      * ex) "인증이 필요합니다."
      */
 
+    // ------------------------------------------ SERVER ------------------------------------------
     _CANT_TRANCE_INSTANCE(INTERNAL_SERVER_ERROR, "SERVER_5000", "상수는 인스턴스화 할 수 없습니다."),
     _SERVER_USER_NOT_FOUND(INTERNAL_SERVER_ERROR, "SERVER_5001", "로그인이 성공한 소셜 로그인 유저가 DB에 존재하지 않을 수 없습니다."),
-    _TOKEN_EXPIRED(UNAUTHORIZED, "JWT_4010", "Jwt Token의 유효 기간이 만료되었습니다.")
-    // 각종 에러들
+
+
+    // ---------------------------------------- JWT TOKEN ----------------------------------------
+    _JWT_PARSING_ERROR(BAD_REQUEST, "JWT_4001", "JWT 토큰 파싱 중 오류가 발생했습니다."),
+    _JWT_EXPIRED(UNAUTHORIZED, "JWT_4010", "Jwt Token의 유효 기간이 만료되었습니다."),
+
+
+
+    // ------------------------------------------ USER ------------------------------------------
+
     ;
 
     private final HttpStatus status;

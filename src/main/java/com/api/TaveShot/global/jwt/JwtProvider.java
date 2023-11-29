@@ -1,7 +1,8 @@
 package com.api.TaveShot.global.jwt;
 
 import static com.api.TaveShot.global.constant.OauthConstant.ACCESS_TOKEN_VALID_TIME;
-import static com.api.TaveShot.global.exception.ErrorType._TOKEN_EXPIRED;
+import static com.api.TaveShot.global.exception.ErrorType._JWT_EXPIRED;
+import static com.api.TaveShot.global.exception.ErrorType._JWT_PARSING_ERROR;
 
 import com.api.TaveShot.domain.Member.repository.MemberRepository;
 import com.api.TaveShot.global.exception.ApiException;
@@ -67,9 +68,9 @@ public class JwtProvider {
                     .parseClaimsJws(jwtToken);
 
         } catch (ExpiredJwtException e) { // 어세스 토큰 만료
-            throw new ApiException(_TOKEN_EXPIRED);
+            throw new ApiException(_JWT_EXPIRED);
         } catch (Exception e) {
-            throw new IllegalArgumentException("User Not Authorized");
+            throw new ApiException(_JWT_PARSING_ERROR);
         }
     }
 
