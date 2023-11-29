@@ -5,8 +5,8 @@ import static com.api.TaveShot.global.constant.OauthConstant.ID_PATTERN;
 import static com.api.TaveShot.global.constant.OauthConstant.LOGIN_PATTERN;
 import static com.api.TaveShot.global.constant.OauthConstant.NAME_PATTERN;
 
-import com.api.TaveShot.domain.Member.Member;
-import com.api.TaveShot.domain.Member.MemberRepository;
+import com.api.TaveShot.domain.Member.domain.Member;
+import com.api.TaveShot.domain.Member.repository.MemberRepository;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

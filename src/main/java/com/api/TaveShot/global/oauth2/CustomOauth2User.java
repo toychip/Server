@@ -1,10 +1,9 @@
 package com.api.TaveShot.global.oauth2;
 
-import com.api.TaveShot.domain.Member.Member;
+import com.api.TaveShot.domain.Member.domain.Member;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;

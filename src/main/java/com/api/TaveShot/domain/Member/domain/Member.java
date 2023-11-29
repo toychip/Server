@@ -1,4 +1,4 @@
-package com.api.TaveShot.domain.Member;
+package com.api.TaveShot.domain.Member.domain;
 
 import com.api.TaveShot.domain.base.BaseEntity;
 import jakarta.persistence.Entity;
