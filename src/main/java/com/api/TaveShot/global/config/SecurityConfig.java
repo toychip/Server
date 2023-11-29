@@ -1,8 +1,6 @@
 package com.api.TaveShot.global.config;
 
-import com.api.TaveShot.global.jwt.JwtAuthenticationFilter;
 import com.api.TaveShot.global.oauth2.CustomOAuth2UserService;
-import jakarta.servlet.Filter;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +11,6 @@ import org.springframework.security.config.annotation.web.configurers.CsrfConfig
 import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
@@ -53,19 +50,20 @@ public class SecurityConfig {
                 .oauth2Login()
                 .authorizationEndpoint().baseUri("/oauth/authorize")
                 .and()
-                .redirectionEndpoint().baseUri("/oauth/callback")
+                .redirectionEndpoint().baseUri("/oauth2/github/code")
                 .and()
                 .userInfoEndpoint()
                 .userService(customOAuth2UserService);
 
-        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+//        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
-    private JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter();
-    }
+//    @Bean
+//    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+//        return new JwtAuthenticationFilter();
+//    }
 
 
 }
