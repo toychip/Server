@@ -1,5 +1,7 @@
 package com.api.TaveShot.global.exception;
 
+import static org.springframework.http.HttpStatus.*;
+
 import lombok.Getter;
 import lombok.ToString;
 import org.springframework.http.HttpStatus;
@@ -10,7 +12,8 @@ public enum ErrorType {
 
     /**
      * Error Message Convention
-     * status : HttpStatus
+     *
+     * name : _(head) + Error Name status : HttpStatus
      *
      * errorCode : 400번 오류인 상황이 여러개 올텐데, 4001, 4002, 4003.. 이런식으로 설정 (해당 오류들은 MEMBER 와 관련된 400 오류들)
      * ex) Member Error, Http Status Code: 400 -> MEMBER_4000
@@ -19,6 +22,7 @@ public enum ErrorType {
      * ex) "인증이 필요합니다."
      */
 
+    _CANT_TRANCE_INSTANCE(INTERNAL_SERVER_ERROR, "SERVER_5000", "상수는 인스턴스화 할 수 없습니다."),
 
     // 각종 에러들
     ;
