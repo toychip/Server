@@ -12,7 +12,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 @Builder
-@AllArgsConstructor
 @RequiredArgsConstructor
 public class CustomOauth2User implements OAuth2User {
 

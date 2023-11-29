@@ -1,5 +1,10 @@
 package com.api.TaveShot.global.oauth2;
 
+import static com.api.TaveShot.global.constant.OauthConstant.AVATAR_URL_PATTERN;
+import static com.api.TaveShot.global.constant.OauthConstant.EMAIL_PATTERN;
+import static com.api.TaveShot.global.constant.OauthConstant.LOGIN_PATTERN;
+import static com.api.TaveShot.global.constant.OauthConstant.NAME_PATTERN;
+
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,11 +14,6 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public record GithubUserInfo(Map<String, Object> userInfo) {
-
-    private static final String AVATAR_URL_PATTERN = "avatar_url";
-    private static final String LOGIN_PATTERN = "login";
-    private static final String NAME_PATTERN = "name";
-    private static final String EMAIL_PATTERN = "email";
 
     public String getProfileImageUrl() {
         return (String) userInfo.get(AVATAR_URL_PATTERN);

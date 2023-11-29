@@ -1,5 +1,10 @@
 package com.api.TaveShot.global.oauth2;
 
+import static com.api.TaveShot.global.constant.OauthConstant.EMAIL_PATTERN;
+import static com.api.TaveShot.global.constant.OauthConstant.ID_PATTERN;
+import static com.api.TaveShot.global.constant.OauthConstant.LOGIN_PATTERN;
+import static com.api.TaveShot.global.constant.OauthConstant.NAME_PATTERN;
+
 import com.api.TaveShot.domain.Member.Member;
 import com.api.TaveShot.domain.Member.MemberRepository;
 import java.util.Map;
@@ -23,16 +28,16 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         log.info("-------------- 갖고 온 정보 -------------- getAttributes : {} ", oAuth2User.getAuthorities());
 
-        Map<String, Object> attributes = oAuth2User.getAttributes();
-        Member member = processOAuthUser(attributes);
-        return createCustomOauth2User(member, oAuth2User);
+        Map<String, Object> userInfo = oAuth2User.getAttributes();
+        Member member = processOAuthUser(userInfo);
+        return createCustomOauth2User(member, userInfo);
     }
 
-    private Member processOAuthUser(Map<String, Object> attributes) {
-        String gitLoginId = (String) attributes.get("login");
-        Long gitId = ((Integer) attributes.get("id")).longValue();
-        String gitEmail = (String) attributes.get("email");
-        String gitName = (String) attributes.get("name");
+    private Member processOAuthUser(Map<String, Object> userInfo) {
+        String gitLoginId = (String) userInfo.get(LOGIN_PATTERN);
+        Long gitId = ((Integer) userInfo.get(ID_PATTERN)).longValue();
+        String gitEmail = (String) userInfo.get(EMAIL_PATTERN);
+        String gitName = (String) userInfo.get(NAME_PATTERN);
 
         return memberRepository.findByGitId(gitId)
                 .orElseGet(() -> registerNewMember(gitId, gitLoginId, gitEmail, gitName));
@@ -49,10 +54,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         return memberRepository.save(newMember);
     }
 
-    private CustomOauth2User createCustomOauth2User(Member member, OAuth2User oAuth2User) {
+    private CustomOauth2User createCustomOauth2User(Member member, Map<String, Object> userInfo) {
         return CustomOauth2User.builder()
                 .member(member)
-                .attributes(oAuth2User.getAttributes())
+                .attributes(userInfo)
                 .build();
     }
 }
