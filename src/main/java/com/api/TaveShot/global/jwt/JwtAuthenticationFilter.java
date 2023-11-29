@@ -27,13 +27,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String authorizationHeader = request.getHeader("Authorization");
 
-        if (authorizationHeader != null) {
-            // ToDo Access Token 검증
-              jwtProvider.isValidToken(authorizationHeader);
+        if (authorizationHeader != null && isBearer(authorizationHeader)) {
+            String jwtToken = authorizationHeader.substring(7); // "Bearer " 이후의 문자열을 추출
+
+            // token 단순 유효성 검증
+            jwtProvider.isValidToken(jwtToken);
+
+            // token을 활용하여 유저 정보 검증
+            jwtProvider.getAuthenticationFromToken(jwtToken);
         }
 
         filterChain.doFilter(request, response);
 
+    }
+
+    private boolean isBearer(String authorizationHeader) {
+        return authorizationHeader.startsWith("Bearer ");
     }
 
     private boolean isPublicUri(String requestURI) {
