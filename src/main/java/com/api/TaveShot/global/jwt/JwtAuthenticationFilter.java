@@ -46,13 +46,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private boolean isPublicUri(String requestURI) {
-        return requestURI.equals("/auth/signup") ||
-                requestURI.equals("/auth/login") ||
-                requestURI.equals("/auth/logout") ||
-                requestURI.equals("/auth/token") ||
-                requestURI.startsWith("/oauth") ||
+        return
+                requestURI.startsWith("/oauth/**") ||
                 requestURI.startsWith("/swagger-ui") ||
                 requestURI.startsWith("/favicon.ico") ||
-                requestURI.startsWith("/login");
+                requestURI.startsWith("/login/**");
     }
 }

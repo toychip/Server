@@ -46,14 +46,16 @@ public class SecurityConfig {
                                         , "/swagger-ui/**"
                                         , "/api-docs/swagger-config"
                                         , "/members/login"
-                                        , "/**"
+                                        ,"/oauth/**"
+                                        ,"/login/**"
+//                                        , "/**"
                                 ).permitAll()
-                                .anyRequest().permitAll());
+                                .anyRequest().authenticated());
         http
                 .oauth2Login()
                 .authorizationEndpoint().baseUri("/oauth/authorize")
                 .and()
-                .redirectionEndpoint().baseUri("/oauth2/github/code")
+                .redirectionEndpoint().baseUri("/login/oauth2/github/code")
                 .and()
                 .userInfoEndpoint()
                 .userService(customOAuth2UserService);
