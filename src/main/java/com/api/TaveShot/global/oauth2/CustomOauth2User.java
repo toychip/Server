@@ -15,16 +15,16 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 public class CustomOauth2User implements OAuth2User {
 
     private final Member member;
-    private final Map<String, Object> attributes;
+    private final GithubUserInfo githubUserInfo;
 
     @Override
-    public <A> A getAttribute(String name) {
+    public <A> A getAttribute(final String name) {
         return OAuth2User.super.getAttribute(name);
     }
 
     @Override
     public Map<String, Object> getAttributes() {
-        return attributes;
+        return githubUserInfo.userInfo();
     }
 
     @Override

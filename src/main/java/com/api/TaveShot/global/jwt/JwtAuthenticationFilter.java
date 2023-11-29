@@ -16,11 +16,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response,
+                                    final FilterChain filterChain) throws ServletException, IOException {
 
         String requestURI = request.getRequestURI();
         if (isPublicUri(requestURI)) {
+            // Public uri 일 경우 검증 안함
             filterChain.doFilter(request, response);
             return;
         }
@@ -28,7 +29,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String authorizationHeader = request.getHeader("Authorization");
 
         if (authorizationHeader != null && isBearer(authorizationHeader)) {
-            String jwtToken = authorizationHeader.substring(7); // "Bearer " 이후의 문자열을 추출
+            // "Bearer " 이후의 문자열을 추출
+            String jwtToken = authorizationHeader.substring(7);
 
             // token 단순 유효성 검증
             jwtProvider.isValidToken(jwtToken);
@@ -41,15 +43,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     }
 
-    private boolean isBearer(String authorizationHeader) {
+    private boolean isBearer(final String authorizationHeader) {
         return authorizationHeader.startsWith("Bearer ");
     }
 
-    private boolean isPublicUri(String requestURI) {
+    private boolean isPublicUri(final String requestURI) {
         return
-                requestURI.startsWith("/oauth/**") ||
                 requestURI.startsWith("/swagger-ui") ||
                 requestURI.startsWith("/favicon.ico") ||
+                requestURI.startsWith("/oauth/**") ||
                 requestURI.startsWith("/login/**");
     }
 }

@@ -24,7 +24,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final MemberRepository memberRepository;
 
     @Override
-    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+    public OAuth2User loadUser(final OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         log.info("-------------- 갖고 온 정보 -------------- getAttributes : {} ", oAuth2User.getAuthorities());
 
@@ -33,7 +33,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         return createCustomOauth2User(member, userInfo);
     }
 
-    private Member processOAuthUser(Map<String, Object> userInfo) {
+    private Member processOAuthUser(final Map<String, Object> userInfo) {
         String gitLoginId = (String) userInfo.get(LOGIN_PATTERN);
         Long gitId = ((Integer) userInfo.get(ID_PATTERN)).longValue();
         String gitEmail = (String) userInfo.get(EMAIL_PATTERN);
@@ -43,7 +43,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .orElseGet(() -> registerNewMember(gitId, gitLoginId, gitEmail, gitName));
     }
 
-    private Member registerNewMember(Long gitId, String gitLoginId, String gitEmail, String gitName) {
+    private Member registerNewMember(final Long gitId, final String gitLoginId,
+                                     final String gitEmail, final String gitName) {
         Member newMember = Member.builder()
                 .gitId(gitId)
                 .gitLoginId(gitLoginId)
@@ -54,10 +55,18 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         return memberRepository.save(newMember);
     }
 
-    private CustomOauth2User createCustomOauth2User(Member member, Map<String, Object> userInfo) {
+    private CustomOauth2User createCustomOauth2User(final Member member, final Map<String, Object> userInfo) {
+
+        GithubUserInfo githubUserInfo = generateGithubInfo(userInfo);
         return CustomOauth2User.builder()
                 .member(member)
-                .attributes(userInfo)
+                .githubUserInfo(githubUserInfo)
+                .build();
+    }
+
+    private GithubUserInfo generateGithubInfo(final Map<String, Object> userInfo) {
+        return GithubUserInfo.builder()
+                .userInfo(userInfo)
                 .build();
     }
 }

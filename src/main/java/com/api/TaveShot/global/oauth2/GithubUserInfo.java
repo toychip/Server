@@ -7,7 +7,6 @@ import static com.api.TaveShot.global.constant.OauthConstant.LOGIN_PATTERN;
 import static com.api.TaveShot.global.constant.OauthConstant.NAME_PATTERN;
 
 import java.util.Map;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 
 @Builder
