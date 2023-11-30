@@ -1,10 +1,12 @@
 package com.api.TaveShot.global.oauth2;
 
 import static com.api.TaveShot.global.constant.OauthConstant.REDIRECT_URL;
+import static com.api.TaveShot.global.exception.ErrorType._SERVER_USER_NOT_FOUND;
 
 import com.api.TaveShot.domain.Member.domain.Member;
 import com.api.TaveShot.domain.Member.dto.response.AuthResponse;
 import com.api.TaveShot.domain.Member.repository.MemberRepository;
+import com.api.TaveShot.global.exception.ApiException;
 import com.api.TaveShot.global.jwt.JwtProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -45,7 +47,8 @@ public class CustomOAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         String mail = githubUserInfo.getMail();
         String profileImageUrl = githubUserInfo.getProfileImageUrl();
 
-        Member loginMember = memberRepository.findByGitId(Long.valueOf(id)).orElseThrow(() -> new RuntimeException("해당 gitId로 회원을 찾을 수 없음"));
+        Member loginMember = memberRepository.findByGitId(Long.valueOf(id)).orElseThrow(
+                () -> new ApiException(_SERVER_USER_NOT_FOUND));
         String loginMemberId = String.valueOf(loginMember.getId());
 
         registerHeaderToken(response, loginMemberId);

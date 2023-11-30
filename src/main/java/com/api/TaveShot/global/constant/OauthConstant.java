@@ -1,9 +1,13 @@
 package com.api.TaveShot.global.constant;
 
+import static com.api.TaveShot.global.exception.ErrorType._CANT_TRANCE_INSTANCE;
+
+import com.api.TaveShot.global.exception.ApiException;
+
 public final class OauthConstant {
 
     private OauthConstant() {
-        throw new IllegalArgumentException("인스턴스화 불가");
+        throw new ApiException(_CANT_TRANCE_INSTANCE);
     }
 
     public static final String ID_PATTERN = "id";
