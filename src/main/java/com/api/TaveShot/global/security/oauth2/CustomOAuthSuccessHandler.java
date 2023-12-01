@@ -1,4 +1,4 @@
-package com.api.TaveShot.global.oauth2;
+package com.api.TaveShot.global.security.oauth2;
 
 import static com.api.TaveShot.global.constant.OauthConstant.REDIRECT_URL;
 import static com.api.TaveShot.global.exception.ErrorType._SERVER_USER_NOT_FOUND;
@@ -7,7 +7,7 @@ import com.api.TaveShot.domain.Member.domain.Member;
 import com.api.TaveShot.domain.Member.dto.response.AuthResponse;
 import com.api.TaveShot.domain.Member.repository.MemberRepository;
 import com.api.TaveShot.global.exception.ApiException;
-import com.api.TaveShot.global.jwt.JwtProvider;
+import com.api.TaveShot.global.security.jwt.JwtProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;

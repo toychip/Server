@@ -1,4 +1,4 @@
-package com.api.TaveShot.global.jwt;
+package com.api.TaveShot.global.security.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
