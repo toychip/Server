@@ -1,4 +1,4 @@
-package com.api.TaveShot.global.jwt;
+package com.api.TaveShot.global.security.jwt;
 
 import static com.api.TaveShot.global.constant.OauthConstant.ACCESS_TOKEN_VALID_TIME;
 import static com.api.TaveShot.global.exception.ErrorType._JWT_EXPIRED;

@@ -1,4 +1,4 @@
-package com.api.TaveShot.global.oauth2;
+package com.api.TaveShot.global.security.oauth2;
 
 import com.api.TaveShot.domain.Member.domain.Member;
 import java.util.Collection;
