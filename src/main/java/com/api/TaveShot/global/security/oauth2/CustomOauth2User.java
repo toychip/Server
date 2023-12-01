@@ -36,4 +36,8 @@ public class CustomOauth2User implements OAuth2User {
     public String getName() {
         return member.getGitLoginId();
     }
+
+    public Member getMember() {
+        return this.member;
+    }
 }
