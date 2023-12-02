@@ -1,4 +1,4 @@
-package com.api.TaveShot.global.oauth2;
+package com.api.TaveShot.global.security.oauth2;
 
 import com.api.TaveShot.domain.Member.domain.Member;
 import java.util.Collection;
@@ -35,5 +35,9 @@ public class CustomOauth2User implements OAuth2User {
     @Override
     public String getName() {
         return member.getGitLoginId();
+    }
+
+    public Member getMember() {
+        return this.member;
     }
 }

@@ -43,6 +43,20 @@ dependencies {
 
 	// webflux
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+	//Querydsl 추가
+	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+	annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
+	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
+	// query 값 정렬
+	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
+
+	// Swagger
+	implementation 'org.springdoc:springdoc-openapi-ui:1.6.15'
+	implementation 'io.springfox:springfox-swagger2:2.9.2'
+	implementation 'io.springfox:springfox-swagger-ui:2.9.2'
 }
 
 tasks.named('bootBuildImage') {
@@ -52,3 +66,10 @@ tasks.named('bootBuildImage') {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+// for queryDSL
+clean {
+	delete file('src/main/generated')
+}
+
+

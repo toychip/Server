@@ -1,8 +1,8 @@
 package com.api.TaveShot.global.config;
 
-import com.api.TaveShot.global.jwt.JwtAuthenticationFilter;
-import com.api.TaveShot.global.oauth2.CustomOAuth2UserService;
-import com.api.TaveShot.global.oauth2.CustomOAuthSuccessHandler;
+import com.api.TaveShot.global.security.jwt.JwtAuthenticationFilter;
+import com.api.TaveShot.global.security.oauth2.CustomOAuth2UserService;
+import com.api.TaveShot.global.security.oauth2.CustomOAuthSuccessHandler;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

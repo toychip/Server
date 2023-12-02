@@ -1,4 +1,4 @@
-package com.api.TaveShot.global.oauth2;
+package com.api.TaveShot.global.security.oauth2;
 
 import static com.api.TaveShot.global.constant.OauthConstant.EMAIL_PATTERN;
 import static com.api.TaveShot.global.constant.OauthConstant.ID_PATTERN;
