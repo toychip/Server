@@ -28,3 +28,4 @@ public class Member extends BaseEntity {
     private String profileImageUrl;
 
 }
+
