@@ -36,7 +36,13 @@ public enum ErrorType {
     // ------------------------------------------ USER ------------------------------------------
     _USER_NOT_FOUND_BY_TOKEN(NOT_FOUND, "USER_4040", "제공된 토큰으로 사용자를 찾을 수 없습니다."),
     _UNAUTHORIZED(UNAUTHORIZED, "USER_4010", "로그인되지 않은 상태입니다."),
-    _USER_NOT_FOUND_DB(NOT_FOUND, "USER_4041", "존재하지 않는 회원입니다.")
+    _USER_NOT_FOUND_DB(NOT_FOUND, "USER_4041", "존재하지 않는 회원입니다."),
+
+
+    // ------------------------------------------ SOLVED API ------------------------------------------
+    _SOLVED_API_CONNECT_URI(INTERNAL_SERVER_ERROR, "SOLVED_5000", "Solved Api Uri 관련 오류입니다."),
+    _SOLVED_API_CONNECT_HTTP(INTERNAL_SERVER_ERROR, "SOLVED_5001", "Solved Api 네트워크 문제, 서버 문제 또는 기타 입출력 관련 문제입니다."),
+    _SOLVED_API_CONNECT_INTERRUPT(INTERNAL_SERVER_ERROR, "SOLVED_5002", "Solved Api 스레드가 대기, 수면 또는 다른 차단 작업 중에 인터럽트")
     ;
 
     private final HttpStatus status;
