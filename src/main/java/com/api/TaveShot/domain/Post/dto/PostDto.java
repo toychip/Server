@@ -22,11 +22,12 @@ public class PostDto {
             private String title;
             private String writer;
             private String content;
-            private MultipartFile attachmentFile;
             private String createdDate, modifiedDate;
+            private MultipartFile attachmentFile;
             private int view;
             private Member member;
 
+            /* Dto -> Entity */
             public Post toEntity() {
 
                 return Post.builder()
@@ -34,6 +35,7 @@ public class PostDto {
                         .title(title)
                         .writer(writer)
                         .content(content)
+                        .attachmentFile(attachmentFile)
                         .view(0)
                         .member(member)
                         .build();
@@ -48,9 +50,8 @@ public class PostDto {
             private final String writer;
             private final String content;
             private final MultipartFile attachmentFile;
-            private final String createdDate, modifiedDate;
             private final int view;
-            private final Long memberId;
+            private final Long writerId;
             private final List<CommentDto.Response> comments;
 
 
@@ -60,10 +61,8 @@ public class PostDto {
                 this.writer = post.getWriter();
                 this.content = post.getContent();
                 this.attachmentFile = post.getAttachmentFile();
-                this.createdDate = String.valueOf(post.getCreatedDate());
-                this.modifiedDate = String.valueOf(post.getModifiedDate());
                 this.view = post.getView();
-                this.memberId = post.getMember().getId();
+                this.writerId = post.getMember().getId();
                 this.comments = post.getComments().stream().map(CommentDto.Response::new).collect(Collectors.toList());
             }
         }
