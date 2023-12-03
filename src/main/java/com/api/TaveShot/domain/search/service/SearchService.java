@@ -5,7 +5,9 @@ import com.api.TaveShot.domain.search.dto.GoogleResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
@@ -13,29 +15,38 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
+
 @Transactional
 @RequiredArgsConstructor
 @Slf4j
+@Service
 public class SearchService {
 
-    private final String key = "AIzaSyDfz9EptXFpw0Zq4f-VzgGyt3jpQIiyq0s";
-    private final String cx = "e1f8e204a35ca41ad";
+    @Value("${google.secret.key}")
+    private String KEY;
 
-    public Object findBlog(String query){
+    @Value("${google.secret.cx}")
+    private String CX;
+
+
+    public List<GoogleResponseDto> findBlog(String query){
         WebClient webClient = WebClient.builder()
                 .baseUrl("https://www.googleapis.com/customsearch/v1")
                 .build();
 
-        Mono<GoogleResponseDto> dto = webClient.get()
+        Flux<GoogleResponseDto> dto = webClient.get()
                 .uri(uriBuilder -> uriBuilder
-                        .queryParam("key", key)
-                        .queryParam("cx", cx)
+                        .queryParam("key", KEY)
+                        .queryParam("cx", CX)
                         .queryParam("q", query)
                         .build())
+                .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .bodyToMono(GoogleResponseDto.class);
+                .bodyToFlux(GoogleResponseDto.class);
 
+        log.info("{}", dto.collectList().block());
 
-        return dto;
+        return dto.collectList().block();
+
     }
 }
