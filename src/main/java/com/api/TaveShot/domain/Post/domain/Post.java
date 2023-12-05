@@ -43,9 +43,8 @@ public class Post extends BaseEntity {
 
     private String gitLoginId;
 
-    /*@ColumnDefault("0")
-    @Column(name = "comment_count",nullable = false)
-    private Integer commentCount;*/
+    @Transient
+    private Long commentCount; //DB에 저장된 댓글 수를 조회해 설정
 
 
     @OneToMany(mappedBy = "post", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)

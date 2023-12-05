@@ -11,6 +11,8 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 /** REST API Controller **/
 @RequestMapping("/api")
@@ -28,7 +30,7 @@ public class PostApiController {
     }
 
     /* READ */
-    @GetMapping("/posts/{id}")
+    @GetMapping("/post/{id}")
     public ResponseEntity<PostDto.Response> read(@PathVariable Long id) {
         return ResponseEntity.ok(postService.findById(id));
     }
@@ -46,5 +48,11 @@ public class PostApiController {
         postService.delete(id);
         return ResponseEntity.ok(id);
     }
+
+    @GetMapping("/postlistWithCommentCount")
+    public List<PostDto.Response> postlistWithCommentCount() {
+        return postService.findAllWithCommentCount();
+    }
+
 
 }

@@ -22,7 +22,6 @@ public class PostDto {
             private String title;
             private String writer;
             private String content;
-            private String createdDate, modifiedDate;
             private MultipartFile attachmentFile;
             private int view;
             private Member member;
@@ -53,6 +52,7 @@ public class PostDto {
             private final int view;
             private final Long writerId;
             private final List<CommentDto.Response> comments;
+            private final Long commentCount;
 
 
             public Response(Post post) {
@@ -63,7 +63,8 @@ public class PostDto {
                 this.attachmentFile = post.getAttachmentFile();
                 this.view = post.getView();
                 this.writerId = post.getMember().getId();
-                this.comments = post.getComments().stream().map(CommentDto.Response::new).collect(Collectors.toList());
+                this.comments = post.getComments().stream().map(comment -> new CommentDto.Response(comment)).collect(Collectors.toList());
+                this.commentCount = (long) post.getComments().size();
             }
         }
 

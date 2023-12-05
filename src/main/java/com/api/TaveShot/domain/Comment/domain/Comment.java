@@ -27,14 +27,6 @@ public class Comment {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String comment; // 댓글 내용
 
-    @Column(name = "created_date")
-    @CreatedDate
-    private String createdDate;
-
-    @Column(name = "modified_date")
-    @LastModifiedDate
-    private String modifiedDate;
-
     @ManyToOne
     @JoinColumn(name = "post_id")
     private Post post;
@@ -43,14 +35,12 @@ public class Comment {
     @JoinColumn(name = "member_id")
     private Member member; // 작성자
 
-    /*
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "parent_comment_id")
     private Comment parentComment; // 부모 댓글
 
     @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL)
     private List<Comment> childComments; // 자식 댓글들
-    */
 
     /* 댓글 수정 */
     public void update(String comment) {

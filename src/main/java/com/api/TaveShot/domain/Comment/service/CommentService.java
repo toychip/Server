@@ -4,15 +4,14 @@ import com.api.TaveShot.domain.Comment.domain.Comment;
 import com.api.TaveShot.domain.Comment.domain.CommentRepository;
 import com.api.TaveShot.domain.Comment.dto.CommentDto;
 import com.api.TaveShot.domain.Member.domain.Member;
-import com.api.TaveShot.domain.Member.repository.MemberRepository;
 import com.api.TaveShot.domain.Post.domain.Post;
 import com.api.TaveShot.domain.Post.domain.PostRepository;
+import com.api.TaveShot.global.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -20,17 +19,16 @@ import java.util.stream.Collectors;
 public class CommentService {
 
     private final CommentRepository commentRepository;
-    private final MemberRepository memberRepository;
     private final PostRepository postRepository;
 
     /* CREATE */
     @Transactional
-    public Long save(Long id, Long gitId, CommentDto.Request dto) {
-        Optional<Member> member = memberRepository.findByGitId(gitId);
+    public Long save(Long id, Long gitLoginId, CommentDto.Request dto) {
+        Member currentMember = SecurityUtil.getCurrentMember();
         Post post = postRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("댓글 쓰기 실패: 해당 게시글이 존재하지 않습니다. " + id));
 
-        dto.setMember(member.orElse(null));
+        dto.setMember(currentMember);
         dto.setPost(post);
 
         Comment comment = dto.toEntity();
@@ -64,5 +62,40 @@ public class CommentService {
                 new IllegalArgumentException("해당 댓글이 존재하지 않습니다. id=" + id));
 
         commentRepository.delete(comment);
+    }
+
+    @Transactional
+    public Long saveReply(Long postId, Long parentId, Long gitLoginId, CommentDto.Request dto) {
+        Member currentMember = SecurityUtil.getCurrentMember();
+
+        // 부모 댓글 가져오기
+        Comment parentComment = commentRepository.findByPostIdAndId(postId, parentId).orElseThrow(() ->
+                new IllegalArgumentException("부모 댓글이 존재하지 않습니다. id=" + parentId));
+
+        Post post = postRepository.findById(postId).orElseThrow(() ->
+                new IllegalArgumentException("댓글 쓰기 실패: 해당 게시글이 존재하지 않습니다. " + postId));
+
+        dto.setMember(currentMember);
+        dto.setPost(post);
+        dto.setParentComment(parentComment);
+
+        Comment comment = dto.toEntity();
+        commentRepository.save(comment);
+
+        return comment.getId();
+    }
+    @Transactional(readOnly = true)
+    public List<CommentDto.ResponseWithReplies> findAllWithReplies(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow(() ->
+                new IllegalArgumentException("해당 게시글이 존재하지 않습니다. id: " + postId));
+
+        List<Comment> topLevelComments = commentRepository.findByPostAndParentCommentIsNullOrderById(post);
+
+        return topLevelComments.stream()
+                .map(topLevelComment -> {
+                    List<Comment> replies = commentRepository.findByParentCommentOrderById(topLevelComment);
+                    return new CommentDto.ResponseWithReplies(topLevelComment, replies);
+                })
+                .collect(Collectors.toList());
     }
 }

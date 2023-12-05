@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Slf4j
 @Service
@@ -86,5 +88,11 @@ public class PostService {
         Page<Post> searchResult = postRepository.findByTitleContaining(keyword, pageable);
         return searchResult.map(PostDto.Response::new);
     }
+
+    @Transactional(readOnly = true)
+    public List<PostDto.Response> findAllWithCommentCount() {
+        return postRepository.findAllWithCommentCount();
+    }
+
 
 }
