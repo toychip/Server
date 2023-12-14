@@ -1,10 +1,10 @@
 package com.api.TaveShot.domain.Post.service;
 
 import com.api.TaveShot.domain.Member.domain.Member;
-import com.api.TaveShot.domain.Member.repository.MemberRepository;
 import com.api.TaveShot.domain.Post.domain.Post;
 import com.api.TaveShot.domain.Post.domain.PostRepository;
 import com.api.TaveShot.domain.Post.dto.PostDto;
+import com.api.TaveShot.global.util.SecurityUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @Slf4j
 @Service
@@ -21,21 +21,26 @@ import java.util.Optional;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final MemberRepository memberRepository;
 
     /* CREATE */
     @Transactional
-    public Long save(PostDto.Request dto, Long gitId) {
-        /* Memeber 정보 -> dto에 담기. */
-        Optional<Member> member = memberRepository.findByGitId(gitId);
-        dto.setMember(member.orElse(null));
+    public Long save(PostDto.Request dto) {
 
-        log.info("PostsService save() 실행");
+        // 현재 로그인한 Member 정보 가져오기
+        Member currentMember = SecurityUtil.getCurrentMember();
+
+        // gitLoginId 가져오기
+        String gitLoginId = currentMember.getGitLoginId();
+
+        log.info("PostService save() 실행");
         Post post = dto.toEntity();
+        post.setGitLoginId(gitLoginId);
+
         postRepository.save(post);
 
         return post.getId();
     }
+
 
     /* READ */
     @Transactional(readOnly = true)
@@ -70,17 +75,24 @@ public class PostService {
         return postRepository.updateView(id);
     }
 
-
     /* Paging and Sort */
     @Transactional(readOnly = true)
-    public Page<Post> pageList(Pageable pageable) {
-        return postRepository.findAll(pageable);
+    public Page<PostDto.Response> pageList(Pageable pageable) {
+        Page<Post> postPage = postRepository.findAll(pageable);
+        return postPage.map(PostDto.Response::new);
     }
 
     /* search */
     @Transactional(readOnly = true)
-    public Page<Post> search(String keyword, Pageable pageable) {
-        return postRepository.findByTitleContaining(keyword, pageable);
+    public Page<PostDto.Response> search(String keyword, Pageable pageable) {
+        Page<Post> searchResult = postRepository.findByTitleContaining(keyword, pageable);
+        return searchResult.map(PostDto.Response::new);
     }
+
+    @Transactional(readOnly = true)
+    public List<PostDto.Response> findAllWithCommentCount() {
+        return postRepository.findAllWithCommentCount();
+    }
+
 
 }

@@ -6,11 +6,8 @@ import com.api.TaveShot.domain.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -44,14 +41,20 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    /*@ColumnDefault("0")
-    @Column(name = "comment_count",nullable = false)
-    private Integer commentCount;*/
+    private String gitLoginId;
+
+    @Transient
+    private Long commentCount; //DB에 저장된 댓글 수를 조회해 설정
 
 
-    @OneToMany(mappedBy = "posts", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @OrderBy("id asc") // 댓글 정렬
     private List<Comment> comments;
+
+    // gitLoginId 설정 메서드
+    public void setGitLoginId(String gitLoginId) {
+        this.gitLoginId = gitLoginId;
+    }
 
     /* 게시글 수정 */
     public void update(String title, String content, MultipartFile attachmentFile) {

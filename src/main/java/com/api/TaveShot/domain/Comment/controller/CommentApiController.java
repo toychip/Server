@@ -2,10 +2,9 @@ package com.api.TaveShot.domain.Comment.controller;
 
 import com.api.TaveShot.domain.Comment.dto.CommentDto;
 import com.api.TaveShot.domain.Comment.service.CommentService;
+import com.api.TaveShot.global.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,11 +19,8 @@ public class CommentApiController {
     /* CREATE */
     @PostMapping("/post/{id}/comments")
     public ResponseEntity<Long> save(@PathVariable Long id, @RequestBody CommentDto.Request dto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String gitIdAsString = authentication.getName();
-
-        Long gitId = Long.valueOf(gitIdAsString);
-        return ResponseEntity.ok(commentService.save(id, gitId, dto));
+        Long gitLoginId = Long.valueOf(SecurityUtil.getCurrentMember().getGitLoginId());
+        return ResponseEntity.ok(commentService.save(id, gitLoginId, dto));
     }
 
     /* READ */
@@ -45,5 +41,22 @@ public class CommentApiController {
     public ResponseEntity<Long> delete(@PathVariable Long postId, @PathVariable Long id) {
         commentService.delete(postId, id);
         return ResponseEntity.ok(id);
+    }
+
+    /* CREATE REPLY */
+    @PostMapping("/post/{postId}/comments/{parentId}")
+    public ResponseEntity<Long> saveReply(
+            @PathVariable Long postId,
+            @PathVariable Long parentId,
+            @RequestBody CommentDto.Request dto
+    ) {
+        Long gitLoginId = SecurityUtil.getCurrentMember().getId();
+        return ResponseEntity.ok(commentService.saveReply(postId, parentId, gitLoginId, dto));
+    }
+
+    /* READ WITH REPLIES */
+    @GetMapping("/post/{postId}/commentsWithReplies")
+    public List<CommentDto.ResponseWithReplies> readWithReplies(@PathVariable Long postId) {
+        return commentService.findAllWithReplies(postId);
     }
 }
