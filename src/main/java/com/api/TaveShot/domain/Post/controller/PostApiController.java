@@ -33,9 +33,9 @@ public class PostApiController {
     }
 
     /* READ */
-    @GetMapping("/post/{id}")
-    public SuccessResponse<PostResponse> read(@PathVariable Long id) {
-        PostResponse postResponse = postService.findById(id);
+    @GetMapping("/post/{postId}")
+    public SuccessResponse<PostResponse> read(@PathVariable Long postId) {
+        PostResponse postResponse = postService.findById(postId);
         return new SuccessResponse<>(postResponse);
     }
 
@@ -47,10 +47,10 @@ public class PostApiController {
     }
 
     /* DELETE */
-    @DeleteMapping("/post/{id}")
-    public ResponseEntity<Long> delete(@PathVariable Long id) {
-        postService.delete(id);
-        return ResponseEntity.ok(id);
+    @DeleteMapping("/post/{postId}")
+    public ResponseEntity<Long> delete(@PathVariable Long postId) {
+        postService.delete(postId);
+        return ResponseEntity.ok(postId);
     }
 
     @GetMapping("/postlistWithCommentCount")

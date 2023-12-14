@@ -45,8 +45,8 @@ public class PostService {
 
     /* READ */
 
-    public PostResponse findById(Long id) {
-        Post post = postRepository.findById(id).orElseThrow(
+    public PostResponse findById(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow(
                 () -> new ApiException(ErrorType._POST_NOT_FOUND));
 
         PostConverter.entityToResponse(post);
@@ -65,9 +65,9 @@ public class PostService {
 
     /* DELETE (영구 삭제 안되도록 어쩌구는 추후에 다시..) */
     @Transactional
-    public void delete(Long id) {
-        Post post = postRepository.findById(id).orElseThrow(() ->
-                new IllegalArgumentException("해당 게시글이 존재하지 않습니다. id=" + id));
+    public void delete(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new ApiException(ErrorType._POST_NOT_FOUND));
 
         postRepository.delete(post);
     }
