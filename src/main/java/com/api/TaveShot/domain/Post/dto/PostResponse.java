@@ -1,6 +1,8 @@
 package com.api.TaveShot.domain.Post.dto;
 
 import com.api.TaveShot.domain.Comment.dto.CommentDto;
+import com.api.TaveShot.domain.Comment.dto.CommentDto.Response;
+import com.querydsl.core.annotations.QueryProjection;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,4 +20,14 @@ public class PostResponse {
     private int view;
     private Long writerId;
     private List<CommentDto.Response> comments;
+
+    @QueryProjection
+    public PostResponse(Long postId, String title, String content, String writer, int view, Long writerId) {
+        this.postId = postId;
+        this.title = title;
+        this.content = content;
+        this.writer = writer;
+        this.view = view;
+        this.writerId = writerId;
+    }
 }
