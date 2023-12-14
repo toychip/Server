@@ -28,39 +28,32 @@ public class Post extends BaseEntity {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
-    @Transient
-    private MultipartFile attachmentFile;
+    /**
+     * image uri 로 변경
+     */
+//    @Transient
+//    private MultipartFile attachmentFile;
 
     @Column(nullable = false)
     private String writer;
 
-    @Column(columnDefinition = "integer default 0", nullable = false)
-    private int view;
+    // default = 0 설정
+    private int viewCount = 0;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    private String gitLoginId;
-
     @Transient
     private Long commentCount; //DB에 저장된 댓글 수를 조회해 설정
 
-
     @OneToMany(mappedBy = "post", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    @OrderBy("id asc") // 댓글 정렬
     private List<Comment> comments;
 
-    // gitLoginId 설정 메서드
-    public void setGitLoginId(String gitLoginId) {
-        this.gitLoginId = gitLoginId;
-    }
-
     /* 게시글 수정 */
-    public void update(String title, String content, MultipartFile attachmentFile) {
+    public void update(String title, String content) {
         this.title = title;
         this.content = content;
-        this.attachmentFile = attachmentFile;
     }
 
 

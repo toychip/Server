@@ -11,12 +11,11 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class PostResponse {
-    private Long id;
+    private Long postId;
     private String title;
     private String content;
     private String writer;
     private int view;
     private Long memberId;
     private List<CommentDto.Response> comments;
-
 }

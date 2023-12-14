@@ -1,17 +1,21 @@
 package com.api.TaveShot.domain.Post.controller;
 
-import com.api.TaveShot.domain.Member.domain.Member;
+import com.api.TaveShot.domain.Post.dto.PostCreateRequest;
 import com.api.TaveShot.domain.Post.dto.PostDto;
+import com.api.TaveShot.domain.Post.dto.PostResponse;
 import com.api.TaveShot.domain.Post.service.PostService;
-import com.api.TaveShot.global.util.SecurityUtil;
+import com.api.TaveShot.global.success.SuccessResponse;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 
 /** REST API Controller **/
@@ -24,9 +28,10 @@ public class PostApiController {
 
     /* CREATE : PostService 내부에서 현재 로그인한 사용자의 gitLoginID 정보를 가져와 사용*/
     @PostMapping("/post")
-    public ResponseEntity<Long> save(@RequestBody PostDto.Request dto) {
+    public SuccessResponse<PostResponse> save(@RequestBody PostCreateRequest request) {
+        PostResponse postResponse = postService.save(request);
         // 게시글 저장
-        return ResponseEntity.ok(postService.save(dto));
+        return new SuccessResponse<>(postResponse);
     }
 
     /* READ */

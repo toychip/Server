@@ -1,49 +1,47 @@
 package com.api.TaveShot.domain.Post.service;
 
 import com.api.TaveShot.domain.Member.domain.Member;
+import com.api.TaveShot.domain.Post.converter.PostConverter;
 import com.api.TaveShot.domain.Post.domain.Post;
 import com.api.TaveShot.domain.Post.domain.PostRepository;
+import com.api.TaveShot.domain.Post.dto.PostCreateRequest;
 import com.api.TaveShot.domain.Post.dto.PostDto;
+import com.api.TaveShot.domain.Post.dto.PostResponse;
 import com.api.TaveShot.global.util.SecurityUtil;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class PostService {
 
     private final PostRepository postRepository;
 
     /* CREATE */
     @Transactional
-    public Long save(PostDto.Request dto) {
+    public PostResponse save(PostCreateRequest request) {
 
         // 현재 로그인한 Member 정보 가져오기
         Member currentMember = SecurityUtil.getCurrentMember();
-
-        // gitLoginId 가져오기
-        String gitLoginId = currentMember.getGitLoginId();
-
-        log.info("PostService save() 실행");
-        Post post = dto.toEntity();
-        post.setGitLoginId(gitLoginId);
+        Post post = PostConverter.createDtoToEntity(request, currentMember);
 
         postRepository.save(post);
 
-        return post.getId();
+        return PostConverter.toPostCreateResponse(post, currentMember);
     }
 
 
+
+
     /* READ */
-    @Transactional(readOnly = true)
     public PostDto.Response findById(Long id) {
         Post post = postRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("해당 게시글이 존재하지 않습니다. id: " + id));
@@ -76,20 +74,17 @@ public class PostService {
     }
 
     /* Paging and Sort */
-    @Transactional(readOnly = true)
     public Page<PostDto.Response> pageList(Pageable pageable) {
         Page<Post> postPage = postRepository.findAll(pageable);
         return postPage.map(PostDto.Response::new);
     }
 
     /* search */
-    @Transactional(readOnly = true)
     public Page<PostDto.Response> search(String keyword, Pageable pageable) {
         Page<Post> searchResult = postRepository.findByTitleContaining(keyword, pageable);
         return searchResult.map(PostDto.Response::new);
     }
 
-    @Transactional(readOnly = true)
     public List<PostDto.Response> findAllWithCommentCount() {
         return postRepository.findAllWithCommentCount();
     }
