@@ -16,6 +16,6 @@ public class PostResponse {
     private String content;
     private String writer;
     private int view;
-    private Long memberId;
+    private Long writerId;
     private List<CommentDto.Response> comments;
 }

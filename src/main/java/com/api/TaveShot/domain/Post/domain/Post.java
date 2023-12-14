@@ -56,5 +56,8 @@ public class Post extends BaseEntity {
         this.content = content;
     }
 
+    public Long getMemberId() {
+        return member.getId();
+    }
 
 }

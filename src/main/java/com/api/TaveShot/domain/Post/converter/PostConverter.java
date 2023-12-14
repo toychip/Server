@@ -14,14 +14,14 @@ public class PostConverter {
                 .build();
     }
 
-    public static PostResponse toPostCreateResponse(Post post, Member currentMember) {
+    public static PostResponse entityToResponse(Post post) {
         return PostResponse.builder()
                 .postId(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .writer(post.getWriter())
                 .view(post.getViewCount())
-                .memberId(currentMember.getId())
+                .writerId(post.getMemberId())
 //                .comments() Comment 수정 후 처리
                 .build();
     }

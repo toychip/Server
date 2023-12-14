@@ -26,18 +26,17 @@ public class PostApiController {
 
     private final PostService postService;
 
-    /* CREATE : PostService 내부에서 현재 로그인한 사용자의 gitLoginID 정보를 가져와 사용*/
     @PostMapping("/post")
     public SuccessResponse<PostResponse> save(@RequestBody PostCreateRequest request) {
         PostResponse postResponse = postService.save(request);
-        // 게시글 저장
         return new SuccessResponse<>(postResponse);
     }
 
     /* READ */
     @GetMapping("/post/{id}")
-    public ResponseEntity<PostDto.Response> read(@PathVariable Long id) {
-        return ResponseEntity.ok(postService.findById(id));
+    public SuccessResponse<PostResponse> read(@PathVariable Long id) {
+        PostResponse postResponse = postService.findById(id);
+        return new SuccessResponse<>(postResponse);
     }
 
     /* UPDATE */

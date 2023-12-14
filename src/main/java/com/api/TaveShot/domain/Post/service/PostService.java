@@ -7,6 +7,8 @@ import com.api.TaveShot.domain.Post.domain.PostRepository;
 import com.api.TaveShot.domain.Post.dto.PostCreateRequest;
 import com.api.TaveShot.domain.Post.dto.PostDto;
 import com.api.TaveShot.domain.Post.dto.PostResponse;
+import com.api.TaveShot.global.exception.ApiException;
+import com.api.TaveShot.global.exception.ErrorType;
 import com.api.TaveShot.global.util.SecurityUtil;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -35,18 +37,21 @@ public class PostService {
 
         postRepository.save(post);
 
-        return PostConverter.toPostCreateResponse(post, currentMember);
+        return PostConverter.entityToResponse(post);
     }
 
 
 
 
     /* READ */
-    public PostDto.Response findById(Long id) {
-        Post post = postRepository.findById(id).orElseThrow(() ->
-                new IllegalArgumentException("해당 게시글이 존재하지 않습니다. id: " + id));
 
-        return new PostDto.Response(post);
+    public PostResponse findById(Long id) {
+        Post post = postRepository.findById(id).orElseThrow(
+                () -> new ApiException(ErrorType._POST_NOT_FOUND));
+
+        PostConverter.entityToResponse(post);
+
+        return PostConverter.entityToResponse(post);
     }
 
     /* UPDATE */
