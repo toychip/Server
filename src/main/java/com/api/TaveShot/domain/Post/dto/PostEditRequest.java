@@ -9,10 +9,9 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 @Builder
 @AllArgsConstructor
-public class PostCreateRequest {
+public class PostEditRequest {
 
     private String title;
     private String content;
-    private String writer;
     private MultipartFile attachmentFile;
 }

@@ -4,9 +4,11 @@ import com.api.TaveShot.domain.Member.domain.Member;
 import com.api.TaveShot.domain.Post.converter.PostConverter;
 import com.api.TaveShot.domain.Post.domain.Post;
 import com.api.TaveShot.domain.Post.dto.PostCreateRequest;
+import com.api.TaveShot.domain.Post.dto.PostEditRequest;
 import com.api.TaveShot.domain.Post.dto.PostListResponse;
 import com.api.TaveShot.domain.Post.dto.PostResponse;
 import com.api.TaveShot.domain.Post.dto.PostSearchCondition;
+import com.api.TaveShot.domain.Post.editor.PostEditor;
 import com.api.TaveShot.domain.Post.repository.PostRepository;
 import com.api.TaveShot.global.exception.ApiException;
 import com.api.TaveShot.global.exception.ErrorType;
@@ -30,24 +32,28 @@ public class PostService {
     /* CREATE */
     @Transactional
     public PostResponse save(final PostCreateRequest request) {
-
-        // 현재 로그인한 Member 정보 가져오기
-        Member currentMember = SecurityUtil.getCurrentMember();
+        
+        Member currentMember = getCurrentMember();
         Post post = PostConverter.createDtoToEntity(request, currentMember);
-
         postRepository.save(post);
+        PostResponse postResponse = PostConverter.entityToResponse(post);
+        return postResponse;
+    }
 
-        return PostConverter.entityToResponse(post);
+    private Member getCurrentMember() {
+        return SecurityUtil.getCurrentMember();
     }
 
     /* READ Single */
-    public PostResponse findById(final Long postId) {
-        Post post = postRepository.findById(postId).orElseThrow(
+    public PostResponse getSinglePost(final Long postId) {
+        Post post = getPost(postId);
+        PostResponse postResponse = PostConverter.entityToResponse(post);
+        return postResponse;
+    }
+
+    private Post getPost(final Long postId) {
+        return postRepository.findById(postId).orElseThrow(
                 () -> new ApiException(ErrorType._POST_NOT_FOUND));
-
-        PostConverter.entityToResponse(post);
-
-        return PostConverter.entityToResponse(post);
     }
 
     /* READ Paging */
@@ -61,21 +67,36 @@ public class PostService {
                 .isLast(postResponses.isLast())
                 .build();
     }
-//    /* UPDATE */
-//    @Transactional
-//    public void update(Long id, PostDto.Request dto) {
-//        Post post = postRepository.findById(id).orElseThrow(() ->
-//                new IllegalArgumentException("해당 게시글이 존재하지 않습니다. id=" + id));
-//
-//        post.update(dto.getTitle(), dto.getContent(),dto.getAttachmentFile());
-//    }
+
+    /* EDIT */
+    @Transactional
+    public void edit(final Long postId, final PostEditRequest request) {
+        Post post = getPost(postId);
+        Member currentMember = getCurrentMember();
+
+        validateAuthority(post, currentMember);
+
+        PostEditor.PostEditorBuilder editorBuilder = post.toEditor();
+        PostEditor postEditor = editorBuilder
+                .title(request.getTitle())
+                .content(request.getContent())
+                .build();
+
+        post.edit(postEditor);
+    }
+
+    private void validateAuthority(final Post post, final Member currentMember) {
+        Long postWriterId = post.getMember().getId();
+        Long currentMemberId = currentMember.getId();
+        if (!postWriterId.equals(currentMemberId)) {
+            throw new ApiException(ErrorType._UNAUTHORIZED);
+        }
+    }
 
     /* DELETE (영구 삭제 안되도록 어쩌구는 추후에 다시..) */
     @Transactional
     public void delete(final Long postId) {
-        Post post = postRepository.findById(postId).orElseThrow(
-                () -> new ApiException(ErrorType._POST_NOT_FOUND));
-
+        Post post = getPost(postId);
         postRepository.delete(post);
     }
 
