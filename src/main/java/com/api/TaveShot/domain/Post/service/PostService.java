@@ -3,11 +3,11 @@ package com.api.TaveShot.domain.Post.service;
 import com.api.TaveShot.domain.Member.domain.Member;
 import com.api.TaveShot.domain.Post.converter.PostConverter;
 import com.api.TaveShot.domain.Post.domain.Post;
-import com.api.TaveShot.domain.Post.dto.PostCreateRequest;
-import com.api.TaveShot.domain.Post.dto.PostEditRequest;
-import com.api.TaveShot.domain.Post.dto.PostListResponse;
-import com.api.TaveShot.domain.Post.dto.PostResponse;
-import com.api.TaveShot.domain.Post.dto.PostSearchCondition;
+import com.api.TaveShot.domain.Post.dto.request.PostCreateRequest;
+import com.api.TaveShot.domain.Post.dto.request.PostEditRequest;
+import com.api.TaveShot.domain.Post.dto.response.PostListResponse;
+import com.api.TaveShot.domain.Post.dto.response.PostResponse;
+import com.api.TaveShot.domain.Post.dto.request.PostSearchCondition;
 import com.api.TaveShot.domain.Post.editor.PostEditor;
 import com.api.TaveShot.domain.Post.repository.PostRepository;
 import com.api.TaveShot.global.exception.ApiException;
@@ -29,7 +29,7 @@ public class PostService {
 
     private final PostRepository postRepository;
 
-    /* CREATE */
+    /* --------------------------------- CREATE --------------------------------- */
     @Transactional
     public PostResponse save(final PostCreateRequest request) {
         
@@ -44,56 +44,62 @@ public class PostService {
         return SecurityUtil.getCurrentMember();
     }
 
-    /* READ Single */
+
+    /* --------------------------------- READ Single --------------------------------- */
     public PostResponse getSinglePost(final Long postId) {
         Post post = getPost(postId);
         PostResponse postResponse = PostConverter.entityToResponse(post);
         return postResponse;
     }
 
+
     private Post getPost(final Long postId) {
         return postRepository.findById(postId).orElseThrow(
                 () -> new ApiException(ErrorType._POST_NOT_FOUND));
     }
 
-    /* READ Paging */
+
+    /* --------------------------------- READ Paging --------------------------------- */
     public PostListResponse searchPostPaging(final PostSearchCondition condition, final Pageable pageable) {
         Page<PostResponse> postResponses = postRepository.searchPagePost(condition, pageable);
-        return PostListResponse.builder()
-                .postResponses(postResponses.getContent())
-                .totalPage(postResponses.getTotalPages())
-                .totalElements(postResponses.getTotalElements())
-                .isFirst(postResponses.isFirst())
-                .isLast(postResponses.isLast())
-                .build();
+        PostListResponse postListResponse = PostConverter.pageToPostListResponse(postResponses);
+        return postListResponse;
     }
 
-    /* EDIT */
+
+    /* --------------------------------- EDIT --------------------------------- */
     @Transactional
     public void edit(final Long postId, final PostEditRequest request) {
         Post post = getPost(postId);
-        Member currentMember = getCurrentMember();
-
-        validateAuthority(post, currentMember);
-
-        PostEditor.PostEditorBuilder editorBuilder = post.toEditor();
-        PostEditor postEditor = editorBuilder
-                .title(request.getTitle())
-                .content(request.getContent())
-                .build();
+        validateAuthority(post);
+        PostEditor postEditor = getPostEditor(request, post);
 
         post.edit(postEditor);
     }
 
-    private void validateAuthority(final Post post, final Member currentMember) {
+    private void validateAuthority(final Post post) {
+        Member currentMember = getCurrentMember();
+
         Long postWriterId = post.getMember().getId();
         Long currentMemberId = currentMember.getId();
+
         if (!postWriterId.equals(currentMemberId)) {
             throw new ApiException(ErrorType._UNAUTHORIZED);
         }
     }
 
-    /* DELETE (영구 삭제 안되도록 어쩌구는 추후에 다시..) */
+    private PostEditor getPostEditor(PostEditRequest request, Post post) {
+        PostEditor.PostEditorBuilder editorBuilder = post.toEditor();
+        PostEditor postEditor = editorBuilder
+                .title(request.getTitle())
+                .content(request.getContent())
+                .build();
+        return postEditor;
+    }
+
+
+    /* TODO (영구 삭제 안되도록 어쩌구는 추후에 다시..) */
+    /* --------------------------------- DELETE --------------------------------- */
     @Transactional
     public void delete(final Long postId) {
         Post post = getPost(postId);

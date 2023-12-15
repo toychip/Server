@@ -2,8 +2,10 @@ package com.api.TaveShot.domain.Post.converter;
 
 import com.api.TaveShot.domain.Member.domain.Member;
 import com.api.TaveShot.domain.Post.domain.Post;
-import com.api.TaveShot.domain.Post.dto.PostCreateRequest;
-import com.api.TaveShot.domain.Post.dto.PostResponse;
+import com.api.TaveShot.domain.Post.dto.request.PostCreateRequest;
+import com.api.TaveShot.domain.Post.dto.response.PostListResponse;
+import com.api.TaveShot.domain.Post.dto.response.PostResponse;
+import org.springframework.data.domain.Page;
 
 public class PostConverter {
     public static Post createDtoToEntity(final PostCreateRequest request, final Member currentMember) {
@@ -23,6 +25,16 @@ public class PostConverter {
                 .view(post.getViewCount())
                 .writerId(post.getMemberId())
 //                .comments() Comment 수정 후 처리
+                .build();
+    }
+
+    public static PostListResponse pageToPostListResponse(final Page<PostResponse> postResponses) {
+        return PostListResponse.builder()
+                .postResponses(postResponses.getContent())
+                .totalPage(postResponses.getTotalPages())
+                .totalElements(postResponses.getTotalElements())
+                .isFirst(postResponses.isFirst())
+                .isLast(postResponses.isLast())
                 .build();
     }
 }

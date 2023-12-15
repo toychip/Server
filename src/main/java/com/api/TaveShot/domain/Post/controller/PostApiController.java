@@ -1,10 +1,10 @@
 package com.api.TaveShot.domain.Post.controller;
 
-import com.api.TaveShot.domain.Post.dto.PostCreateRequest;
-import com.api.TaveShot.domain.Post.dto.PostEditRequest;
-import com.api.TaveShot.domain.Post.dto.PostListResponse;
-import com.api.TaveShot.domain.Post.dto.PostResponse;
-import com.api.TaveShot.domain.Post.dto.PostSearchCondition;
+import com.api.TaveShot.domain.Post.dto.request.PostCreateRequest;
+import com.api.TaveShot.domain.Post.dto.request.PostEditRequest;
+import com.api.TaveShot.domain.Post.dto.response.PostListResponse;
+import com.api.TaveShot.domain.Post.dto.response.PostResponse;
+import com.api.TaveShot.domain.Post.dto.request.PostSearchCondition;
 import com.api.TaveShot.domain.Post.service.PostService;
 import com.api.TaveShot.global.success.SuccessResponse;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +50,7 @@ public class PostApiController {
 
 //    /* UPDATE */
     @PatchMapping("/post/{postId}")
-    public SuccessResponse<Long> update(final @PathVariable Long postId,
+    public SuccessResponse<Long> edit(final @PathVariable Long postId,
                                         final @RequestBody PostEditRequest request) {
         postService.edit(postId, request);
         return new SuccessResponse<>(postId);

@@ -3,8 +3,8 @@ package com.api.TaveShot.domain.Post.repository;
 
 import static com.api.TaveShot.domain.Post.domain.QPost.post;
 
-import com.api.TaveShot.domain.Post.dto.PostResponse;
-import com.api.TaveShot.domain.Post.dto.PostSearchCondition;
+import com.api.TaveShot.domain.Post.dto.response.PostResponse;
+import com.api.TaveShot.domain.Post.dto.request.PostSearchCondition;
 import com.api.TaveShot.domain.Post.dto.QPostResponse;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Wildcard;

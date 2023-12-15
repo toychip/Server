@@ -1,4 +1,4 @@
-package com.api.TaveShot.domain.Post.dto;
+package com.api.TaveShot.domain.Post.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
