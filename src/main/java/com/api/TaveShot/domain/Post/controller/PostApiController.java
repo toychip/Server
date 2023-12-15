@@ -27,20 +27,20 @@ public class PostApiController {
     private final PostService postService;
 
     @PostMapping("/post")
-    public SuccessResponse<PostResponse> save(@RequestBody PostCreateRequest request) {
+    public SuccessResponse<PostResponse> save(final @RequestBody PostCreateRequest request) {
         PostResponse postResponse = postService.save(request);
         return new SuccessResponse<>(postResponse);
     }
 
     /* READ */
     @GetMapping("/post/{postId}")
-    public SuccessResponse<PostResponse> getSinglePost(@PathVariable Long postId) {
+    public SuccessResponse<PostResponse> getSinglePost(final @PathVariable Long postId) {
         PostResponse postResponse = postService.findById(postId);
         return new SuccessResponse<>(postResponse);
     }
 
     @GetMapping("/post")
-    public SuccessResponse<PostListResponse> getPagePost(@RequestBody PostSearchCondition condition, Pageable pageable) {
+    public SuccessResponse<PostListResponse> getPagePost(final @RequestBody PostSearchCondition condition, final Pageable pageable) {
         PostListResponse postListResponse = postService.searchPostPaging(condition, pageable);
         return new SuccessResponse<>(postListResponse);
     }
@@ -54,7 +54,7 @@ public class PostApiController {
 
     /* DELETE */
     @DeleteMapping("/post/{postId}")
-    public ResponseEntity<Long> delete(@PathVariable Long postId) {
+    public ResponseEntity<Long> delete(final @PathVariable Long postId) {
         postService.delete(postId);
         return ResponseEntity.ok(postId);
     }

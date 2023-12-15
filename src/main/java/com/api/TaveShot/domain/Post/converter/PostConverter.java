@@ -6,7 +6,7 @@ import com.api.TaveShot.domain.Post.dto.PostCreateRequest;
 import com.api.TaveShot.domain.Post.dto.PostResponse;
 
 public class PostConverter {
-    public static Post createDtoToEntity(PostCreateRequest request, Member currentMember) {
+    public static Post createDtoToEntity(final PostCreateRequest request, final Member currentMember) {
         return Post.builder()
                 .title(request.getTitle())
                 .member(currentMember)
@@ -14,7 +14,7 @@ public class PostConverter {
                 .build();
     }
 
-    public static PostResponse entityToResponse(Post post) {
+    public static PostResponse entityToResponse(final Post post) {
         return PostResponse.builder()
                 .postId(post.getId())
                 .title(post.getTitle())

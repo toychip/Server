@@ -23,7 +23,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Page<PostResponse> searchPagePost(PostSearchCondition condition, Pageable pageable) {
+    public Page<PostResponse> searchPagePost(final PostSearchCondition condition, final Pageable pageable) {
 
         List<PostResponse> postResponses = getSearchPageContent(condition, pageable);
         JPAQuery<Long> searchPageCount = getSearchPageCount(condition);
@@ -31,7 +31,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         return PageableExecutionUtils.getPage(postResponses, pageable, searchPageCount::fetchOne);
     }
 
-    private List<PostResponse> getSearchPageContent(PostSearchCondition condition, Pageable pageable) {
+    private List<PostResponse> getSearchPageContent(final PostSearchCondition condition, final Pageable pageable) {
         return jpaQueryFactory
                 .select(
                         new QPostResponse(post.id, post.title, post.content,
@@ -47,7 +47,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .fetch();
     }
 
-    private JPAQuery<Long> getSearchPageCount(PostSearchCondition condition) {
+    private JPAQuery<Long> getSearchPageCount(final PostSearchCondition condition) {
          return jpaQueryFactory
                 .select(Wildcard.count)
                 .from(post)
@@ -58,21 +58,21 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 );
     }
 
-    private BooleanExpression containTitle(String title) {
+    private BooleanExpression containTitle(final String title) {
         if (StringUtils.hasText(title)) {
             return post.title.contains(title);
         }
         return null;
     }
 
-    private BooleanExpression containContent(String content) {
+    private BooleanExpression containContent(final String content) {
         if (StringUtils.hasText(content)) {
             return post.content.contains(content);
         }
         return null;
     }
 
-    private BooleanExpression containWriter(String writer) {
+    private BooleanExpression containWriter(final String writer) {
         if (StringUtils.hasText(writer)) {
             return post.writer.contains(writer);
         }

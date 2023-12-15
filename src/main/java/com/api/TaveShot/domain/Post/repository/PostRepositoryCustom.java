@@ -8,9 +8,5 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface PostRepositoryCustom {
-//    List<PostResponse> searchPagePost(PostSearchCondition condition, Pageable pageable);
-
-//    Long searchCountPost(PostSearchCondition condition, Pageable pageable);
-
-    Page<PostResponse> searchPagePost(PostSearchCondition condition, Pageable pageable);
+    Page<PostResponse> searchPagePost(final PostSearchCondition condition, final Pageable pageable);
 }

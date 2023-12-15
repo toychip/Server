@@ -11,7 +11,6 @@ import com.api.TaveShot.domain.Post.repository.PostRepository;
 import com.api.TaveShot.global.exception.ApiException;
 import com.api.TaveShot.global.exception.ErrorType;
 import com.api.TaveShot.global.util.SecurityUtil;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -30,7 +29,7 @@ public class PostService {
 
     /* CREATE */
     @Transactional
-    public PostResponse save(PostCreateRequest request) {
+    public PostResponse save(final PostCreateRequest request) {
 
         // 현재 로그인한 Member 정보 가져오기
         Member currentMember = SecurityUtil.getCurrentMember();
@@ -42,7 +41,7 @@ public class PostService {
     }
 
     /* READ Single */
-    public PostResponse findById(Long postId) {
+    public PostResponse findById(final Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new ApiException(ErrorType._POST_NOT_FOUND));
 
@@ -52,8 +51,7 @@ public class PostService {
     }
 
     /* READ Paging */
-
-    public PostListResponse searchPostPaging(PostSearchCondition condition, Pageable pageable) {
+    public PostListResponse searchPostPaging(final PostSearchCondition condition, final Pageable pageable) {
         Page<PostResponse> postResponses = postRepository.searchPagePost(condition, pageable);
         return PostListResponse.builder()
                 .postResponses(postResponses.getContent())
@@ -74,7 +72,7 @@ public class PostService {
 
     /* DELETE (영구 삭제 안되도록 어쩌구는 추후에 다시..) */
     @Transactional
-    public void delete(Long postId) {
+    public void delete(final Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new ApiException(ErrorType._POST_NOT_FOUND));
 
