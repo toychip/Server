@@ -1,11 +1,15 @@
 package com.api.TaveShot.domain.Comment.service;
 
 import com.api.TaveShot.domain.Comment.domain.Comment;
-import com.api.TaveShot.domain.Comment.domain.CommentRepository;
-import com.api.TaveShot.domain.Comment.dto.CommentDto;
+import com.api.TaveShot.domain.Comment.dto.request.CommentCreateRequest;
+import com.api.TaveShot.domain.Comment.dto.request.CommentUpdateRequest;
+import com.api.TaveShot.domain.Comment.dto.response.CommentResponse;
+import com.api.TaveShot.domain.Comment.repository.CommentRepository;
 import com.api.TaveShot.domain.Member.domain.Member;
 import com.api.TaveShot.domain.Post.domain.Post;
-import com.api.TaveShot.domain.Post.domain.PostRepository;
+import com.api.TaveShot.domain.Post.repository.PostRepository;
+import com.api.TaveShot.global.exception.ApiException;
+import com.api.TaveShot.global.exception.ErrorType;
 import com.api.TaveShot.global.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,88 +18,85 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CommentService {
 
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
 
-    /* CREATE */
-    @Transactional
-    public Long save(Long id, Long gitLoginId, CommentDto.Request dto) {
+    @Transactional // 데이터 변경하는 메서드에만 명시적으로 적용
+    public Long save(Long postId, CommentCreateRequest dto) {
         Member currentMember = SecurityUtil.getCurrentMember();
-        Post post = postRepository.findById(id).orElseThrow(() ->
-                new IllegalArgumentException("댓글 쓰기 실패: 해당 게시글이 존재하지 않습니다. " + id));
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ApiException(ErrorType._POST_NOT_FOUND));
 
-        dto.setMember(currentMember);
-        dto.setPost(post);
-
-        Comment comment = dto.toEntity();
+        Comment comment = Comment.builder()
+                .comment(dto.getComment())
+                .member(currentMember)
+                .post(post)
+                .parentComment(null) // 대댓글이 아닌 경우 parentComment는 null
+                .build();
         commentRepository.save(comment);
 
         return comment.getId();
     }
 
-    /* READ */
-    @Transactional(readOnly = true)
-    public List<CommentDto.Response> findAll(Long id) {
-        Post post = postRepository.findById(id).orElseThrow(() ->
-                new IllegalArgumentException("해당 게시글이 존재하지 않습니다. id: " + id));
-        List<Comment> comments = post.getComments();
-        return comments.stream().map(CommentDto.Response::new).collect(Collectors.toList());
+    public List<CommentResponse> findAll(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ApiException(ErrorType._POST_NOT_FOUND));
+        List<Comment> comments = commentRepository.findByPostAndParentCommentIsNullOrderById(post);
+        return comments.stream()
+                .map(comment -> CommentResponse.fromEntity(comment))
+                .toList();
     }
 
-    /* UPDATE */
     @Transactional
-    public void update(Long postId, Long id, CommentDto.Request dto) {
-        Comment comment = commentRepository.findByPostIdAndId(postId, id).orElseThrow(() ->
-                new IllegalArgumentException("해당 댓글이 존재하지 않습니다. " + id));
+    public void update(Long postId, Long commentId, CommentUpdateRequest dto) {
+        Comment comment = commentRepository.findByPostIdAndId(postId, commentId).orElseThrow(() ->
+                new IllegalArgumentException("해당 댓글이 존재하지 않습니다. " + commentId));
 
         comment.update(dto.getComment());
     }
 
-    /* DELETE */
     @Transactional
-    public void delete(Long postId, Long id) {
-        Comment comment = commentRepository.findByPostIdAndId(postId, id).orElseThrow(() ->
-                new IllegalArgumentException("해당 댓글이 존재하지 않습니다. id=" + id));
+    public void delete(Long postId, Long commentId) {
+        Comment comment = commentRepository.findByPostIdAndId(postId, commentId)
+                .orElseThrow(() -> new ApiException(ErrorType._POST_NOT_FOUND));
 
         commentRepository.delete(comment);
     }
 
     @Transactional
-    public Long saveReply(Long postId, Long parentId, Long gitLoginId, CommentDto.Request dto) {
+    public Long saveReply(Long postId, Long parentCommentId, CommentCreateRequest dto) {
         Member currentMember = SecurityUtil.getCurrentMember();
 
-        // 부모 댓글 가져오기
-        Comment parentComment = commentRepository.findByPostIdAndId(postId, parentId).orElseThrow(() ->
-                new IllegalArgumentException("부모 댓글이 존재하지 않습니다. id=" + parentId));
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ApiException(ErrorType._POST_NOT_FOUND));
 
-        Post post = postRepository.findById(postId).orElseThrow(() ->
-                new IllegalArgumentException("댓글 쓰기 실패: 해당 게시글이 존재하지 않습니다. " + postId));
+        Comment parentComment = commentRepository.findById(parentCommentId).orElseThrow(() ->
+                new IllegalArgumentException("부모 댓글이 존재하지 않습니다. id=" + parentCommentId));
 
-        dto.setMember(currentMember);
-        dto.setPost(post);
-        dto.setParentComment(parentComment);
+        Comment replyComment = Comment.builder()
+                .comment(dto.getComment())
+                .member(currentMember)
+                .post(post)
+                .parentComment(parentComment)
+                .build();
+        commentRepository.save(replyComment);
 
-        Comment comment = dto.toEntity();
-        commentRepository.save(comment);
-
-        return comment.getId();
+        return replyComment.getId();
     }
-    @Transactional(readOnly = true)
-    public List<CommentDto.ResponseWithReplies> findAllWithReplies(Long postId) {
-        Post post = postRepository.findById(postId).orElseThrow(() ->
-                new IllegalArgumentException("해당 게시글이 존재하지 않습니다. id: " + postId));
+
+    public List<CommentResponse> findAllWithReplies(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ApiException(ErrorType._POST_NOT_FOUND));
 
         List<Comment> topLevelComments = commentRepository.findByPostAndParentCommentIsNullOrderById(post);
 
         return topLevelComments.stream()
-                .map(topLevelComment -> {
-                    List<Comment> replies = commentRepository.findByParentCommentOrderById(topLevelComment);
-                    return new CommentDto.ResponseWithReplies(topLevelComment, replies);
-                })
+                .map(comment -> CommentResponse.fromEntity(comment))
                 .collect(Collectors.toList());
     }
 }

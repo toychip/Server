@@ -1,9 +1,10 @@
-package com.api.TaveShot.domain.Comment.dto;
+package com.api.TaveShot.domain.Comment.dto.response;
 
 import com.api.TaveShot.domain.Comment.domain.Comment;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +24,7 @@ public class CommentResponse {
         this.memberId = memberId;
         this.postId = postId;
         this.parentComment = parentComment;
-        this.replies = replies;
+        this.replies = Collections.emptyList();
     }
 
     public static CommentResponse fromEntity(Comment commentEntity) {
@@ -34,7 +35,7 @@ public class CommentResponse {
         return new CommentResponse(
                 commentEntity.getId(),
                 commentEntity.getComment(),
-                commentEntity.getMember().getGitName(),
+                commentEntity.getMember().getGitLoginId(),
                 commentEntity.getPost().getId(),
                 commentEntity.getParentComment() != null ? fromEntity(commentEntity.getParentComment()) : null,
                 replies
