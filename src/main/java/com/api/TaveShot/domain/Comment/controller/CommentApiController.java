@@ -1,10 +1,13 @@
 package com.api.TaveShot.domain.Comment.controller;
 
-import com.api.TaveShot.domain.Comment.dto.CommentDto;
+import com.api.TaveShot.domain.Comment.dto.request.CommentCreateRequest;
+import com.api.TaveShot.domain.Comment.dto.request.CommentUpdateRequest;
+import com.api.TaveShot.domain.Comment.dto.response.CommentResponse;
 import com.api.TaveShot.domain.Comment.service.CommentService;
-import com.api.TaveShot.global.util.SecurityUtil;
+import com.api.TaveShot.global.success.SuccessResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,45 +21,43 @@ public class CommentApiController {
 
     /* CREATE */
     @PostMapping("/post/{id}/comments")
-    public ResponseEntity<Long> save(@PathVariable Long id, @RequestBody CommentDto.Request dto) {
-        Long gitLoginId = Long.valueOf(SecurityUtil.getCurrentMember().getGitLoginId());
-        return ResponseEntity.ok(commentService.save(id, gitLoginId, dto));
+    public SuccessResponse<Long> save(@PathVariable Long id, @RequestBody CommentCreateRequest commentCreateRequest) {
+        Long result = commentService.save(id, commentCreateRequest);
+        return new SuccessResponse<>(result);
     }
 
     /* READ */
     @GetMapping("/post/{id}/comments")
-    public List<CommentDto.Response> read(@PathVariable Long id) {
-        return commentService.findAll(id);
+    public SuccessResponse<Page<CommentResponse>> read(@PathVariable Long id, Pageable pageable) {
+        Page<CommentResponse> responses = commentService.findAll(id, pageable);
+        return new SuccessResponse<>(responses);
     }
 
     /* UPDATE */
-    @PutMapping({"/post/{postId}/comments/{id}"})
-    public ResponseEntity<Long> update(@PathVariable Long postId, @PathVariable Long id, @RequestBody CommentDto.Request dto) {
-        commentService.update(postId, id, dto);
-        return ResponseEntity.ok(id);
+    @PutMapping("/post/{postId}/comments/{id}")
+    public SuccessResponse<Long> update(@PathVariable Long postId, @PathVariable Long commentId, @RequestBody CommentUpdateRequest commentUpdateRequest) {
+        commentService.update(postId, commentId, commentUpdateRequest);
+        return new SuccessResponse<>(commentId);
     }
 
     /* DELETE */
     @DeleteMapping("/post/{postId}/comments/{id}")
-    public ResponseEntity<Long> delete(@PathVariable Long postId, @PathVariable Long id) {
-        commentService.delete(postId, id);
-        return ResponseEntity.ok(id);
+    public SuccessResponse<Long> delete(@PathVariable Long postId, @PathVariable Long commentId) {
+        commentService.delete(postId, commentId);
+        return new SuccessResponse<>(commentId);
     }
 
     /* CREATE REPLY */
     @PostMapping("/post/{postId}/comments/{parentId}")
-    public ResponseEntity<Long> saveReply(
-            @PathVariable Long postId,
-            @PathVariable Long parentId,
-            @RequestBody CommentDto.Request dto
-    ) {
-        Long gitLoginId = SecurityUtil.getCurrentMember().getId();
-        return ResponseEntity.ok(commentService.saveReply(postId, parentId, gitLoginId, dto));
+    public SuccessResponse<Long> saveReply(@PathVariable Long postId, @PathVariable Long parentId, @RequestBody CommentCreateRequest commentCreateRequest) {
+        Long result = commentService.saveReply(postId, parentId, commentCreateRequest);
+        return new SuccessResponse<>(result);
     }
 
     /* READ WITH REPLIES */
     @GetMapping("/post/{postId}/commentsWithReplies")
-    public List<CommentDto.ResponseWithReplies> readWithReplies(@PathVariable Long postId) {
-        return commentService.findAllWithReplies(postId);
+    public SuccessResponse<List<CommentResponse>> readWithReplies(@PathVariable Long postId) {
+        List<CommentResponse> responses = commentService.findAllWithReplies(postId);
+        return new SuccessResponse<>(responses);
     }
 }
