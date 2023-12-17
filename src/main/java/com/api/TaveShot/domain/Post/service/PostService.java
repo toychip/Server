@@ -80,7 +80,7 @@ public class PostService {
     private void validateAuthority(final Post post) {
         Member currentMember = getCurrentMember();
 
-        Long postWriterId = post.getMember().getId();
+        Long postWriterId = post.getMemberId();
         Long currentMemberId = currentMember.getId();
 
         if (!postWriterId.equals(currentMemberId)) {
