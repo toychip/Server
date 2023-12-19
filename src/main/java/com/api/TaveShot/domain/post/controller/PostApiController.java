@@ -11,6 +11,7 @@ import com.api.TaveShot.global.success.SuccessResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -54,8 +55,8 @@ public class PostApiController {
                             schema = @Schema(implementation = ErrorType.class)))
     })
     @PostMapping("/post")
-    public SuccessResponse<PostResponse> save(final @ModelAttribute PostCreateRequest request) {
-        PostResponse postResponse = postService.save(request);
+    public SuccessResponse<PostResponse> register(final @Validated @ModelAttribute PostCreateRequest request) {
+        PostResponse postResponse = postService.register(request);
         return new SuccessResponse<>(postResponse);
     }
 

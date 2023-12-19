@@ -12,7 +12,8 @@ public class PostConverter {
         return Post.builder()
                 .title(request.getTitle())
                 .member(currentMember)
-                .writer(request.getWriter())
+                .writer(currentMember.getGitName())
+                .postTier(request.getPostTier())
                 .build();
     }
 

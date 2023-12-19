@@ -5,9 +5,9 @@ import com.api.TaveShot.domain.post.converter.PostConverter;
 import com.api.TaveShot.domain.post.domain.Post;
 import com.api.TaveShot.domain.post.dto.request.PostCreateRequest;
 import com.api.TaveShot.domain.post.dto.request.PostEditRequest;
+import com.api.TaveShot.domain.post.dto.request.PostSearchCondition;
 import com.api.TaveShot.domain.post.dto.response.PostListResponse;
 import com.api.TaveShot.domain.post.dto.response.PostResponse;
-import com.api.TaveShot.domain.post.dto.request.PostSearchCondition;
 import com.api.TaveShot.domain.post.editor.PostEditor;
 import com.api.TaveShot.domain.post.repository.PostRepository;
 import com.api.TaveShot.global.exception.ApiException;
@@ -31,13 +31,15 @@ public class PostService {
 
     /* --------------------------------- CREATE --------------------------------- */
     @Transactional
-    public PostResponse save(final PostCreateRequest request) {
-        
+    public PostResponse register(final PostCreateRequest request) {
         Member currentMember = getCurrentMember();
         Post post = PostConverter.createDtoToEntity(request, currentMember);
         postRepository.save(post);
-        PostResponse postResponse = PostConverter.entityToResponse(post);
-        return postResponse;
+        return postResponse(post);
+    }
+
+    private PostResponse postResponse(Post post) {
+        return PostConverter.entityToResponse(post);
     }
 
     private Member getCurrentMember() {
@@ -48,8 +50,7 @@ public class PostService {
     /* --------------------------------- READ Single --------------------------------- */
     public PostResponse getSinglePost(final Long postId) {
         Post post = getPost(postId);
-        PostResponse postResponse = PostConverter.entityToResponse(post);
-        return postResponse;
+        return postResponse(post);
     }
 
 
