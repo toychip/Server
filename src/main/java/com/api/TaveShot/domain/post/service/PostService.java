@@ -1,15 +1,15 @@
-package com.api.TaveShot.domain.Post.service;
+package com.api.TaveShot.domain.post.service;
 
 import com.api.TaveShot.domain.Member.domain.Member;
-import com.api.TaveShot.domain.Post.converter.PostConverter;
-import com.api.TaveShot.domain.Post.domain.Post;
-import com.api.TaveShot.domain.Post.dto.request.PostCreateRequest;
-import com.api.TaveShot.domain.Post.dto.request.PostEditRequest;
-import com.api.TaveShot.domain.Post.dto.response.PostListResponse;
-import com.api.TaveShot.domain.Post.dto.response.PostResponse;
-import com.api.TaveShot.domain.Post.dto.request.PostSearchCondition;
-import com.api.TaveShot.domain.Post.editor.PostEditor;
-import com.api.TaveShot.domain.Post.repository.PostRepository;
+import com.api.TaveShot.domain.post.converter.PostConverter;
+import com.api.TaveShot.domain.post.domain.Post;
+import com.api.TaveShot.domain.post.dto.request.PostCreateRequest;
+import com.api.TaveShot.domain.post.dto.request.PostEditRequest;
+import com.api.TaveShot.domain.post.dto.response.PostListResponse;
+import com.api.TaveShot.domain.post.dto.response.PostResponse;
+import com.api.TaveShot.domain.post.dto.request.PostSearchCondition;
+import com.api.TaveShot.domain.post.editor.PostEditor;
+import com.api.TaveShot.domain.post.repository.PostRepository;
 import com.api.TaveShot.global.exception.ApiException;
 import com.api.TaveShot.global.exception.ErrorType;
 import com.api.TaveShot.global.util.SecurityUtil;

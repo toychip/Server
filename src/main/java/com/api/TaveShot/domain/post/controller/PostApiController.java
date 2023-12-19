@@ -1,11 +1,11 @@
-package com.api.TaveShot.domain.Post.controller;
+package com.api.TaveShot.domain.post.controller;
 
-import com.api.TaveShot.domain.Post.dto.request.PostCreateRequest;
-import com.api.TaveShot.domain.Post.dto.request.PostEditRequest;
-import com.api.TaveShot.domain.Post.dto.response.PostListResponse;
-import com.api.TaveShot.domain.Post.dto.response.PostResponse;
-import com.api.TaveShot.domain.Post.dto.request.PostSearchCondition;
-import com.api.TaveShot.domain.Post.service.PostService;
+import com.api.TaveShot.domain.post.dto.request.PostCreateRequest;
+import com.api.TaveShot.domain.post.dto.request.PostEditRequest;
+import com.api.TaveShot.domain.post.dto.response.PostListResponse;
+import com.api.TaveShot.domain.post.dto.response.PostResponse;
+import com.api.TaveShot.domain.post.dto.request.PostSearchCondition;
+import com.api.TaveShot.domain.post.service.PostService;
 import com.api.TaveShot.global.exception.ErrorType;
 import com.api.TaveShot.global.success.SuccessResponse;
 import lombok.RequiredArgsConstructor;
@@ -67,7 +67,7 @@ public class PostApiController {
     }
 
     @GetMapping("/post")
-    public SuccessResponse<PostListResponse> getPagePost(final @RequestBody PostSearchCondition condition,
+    public SuccessResponse<PostListResponse> getPagePost(final @ModelAttribute PostSearchCondition condition,
                                                          final Pageable pageable) {
         PostListResponse postListResponse = postService.searchPostPaging(condition, pageable);
         return new SuccessResponse<>(postListResponse);

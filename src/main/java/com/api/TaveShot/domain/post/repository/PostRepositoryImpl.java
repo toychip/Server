@@ -1,11 +1,11 @@
-package com.api.TaveShot.domain.Post.repository;
+package com.api.TaveShot.domain.post.repository;
 
 
-import static com.api.TaveShot.domain.Post.domain.QPost.post;
+import static com.api.TaveShot.domain.post.domain.QPost.post;
 
-import com.api.TaveShot.domain.Post.dto.response.PostResponse;
-import com.api.TaveShot.domain.Post.dto.request.PostSearchCondition;
-import com.api.TaveShot.domain.Post.dto.QPostResponse;
+import com.api.TaveShot.domain.post.dto.response.PostResponse;
+import com.api.TaveShot.domain.post.dto.request.PostSearchCondition;
+import com.api.TaveShot.domain.post.dto.response.QPostResponse;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.impl.JPAQuery;
