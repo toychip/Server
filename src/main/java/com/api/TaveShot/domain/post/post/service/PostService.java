@@ -93,6 +93,9 @@ public class PostService {
         PostEditor postEditor = getPostEditor(request, post);
 
         post.edit(postEditor);
+
+        // 이미지 수정
+        editImages(request.getAttachmentFile(), post);
     }
 
     private void validateAuthority(final Post post) {
@@ -113,6 +116,14 @@ public class PostService {
                 .content(request.getContent())
                 .build();
         return postEditor;
+    }
+
+    private void editImages(final List<MultipartFile> multipartFiles, final Post post) {
+        imageService.deleteAllByPost(post);
+
+        // 새로운 이미지 업로드
+        List<String> uploadUrls = getImageUrls(multipartFiles);
+        uploadUrls.forEach(uploadUrl -> imageService.register(post, uploadUrl));
     }
 
 

@@ -10,7 +10,6 @@ public class PostEditor {
 
     private final String title;
     private final String content;
-//    private final MultipartFile attachmentFile;
 
     public static PostEditorBuilder builder() {
         return new PostEditorBuilder();
