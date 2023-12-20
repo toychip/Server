@@ -10,15 +10,18 @@ import com.api.TaveShot.domain.post.dto.response.PostListResponse;
 import com.api.TaveShot.domain.post.dto.response.PostResponse;
 import com.api.TaveShot.domain.post.editor.PostEditor;
 import com.api.TaveShot.domain.post.repository.PostRepository;
+import com.api.TaveShot.global.config.S3FileUploader;
 import com.api.TaveShot.global.exception.ApiException;
 import com.api.TaveShot.global.exception.ErrorType;
 import com.api.TaveShot.global.util.SecurityUtil;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @Slf4j
@@ -28,6 +31,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final S3FileUploader s3Uploader;
+    private final ImageService imageService;
 
     /* --------------------------------- CREATE --------------------------------- */
     @Transactional
@@ -35,7 +40,18 @@ public class PostService {
         Member currentMember = getCurrentMember();
         Post post = PostConverter.createDtoToEntity(request, currentMember);
         postRepository.save(post);
+
+        registerImages(request.getAttachmentFile(), post);
         return postResponse(post);
+    }
+
+    private void registerImages(List<MultipartFile> multipartFiles, Post post) {
+        List<String> uploadUrls = getImageUrls(multipartFiles);
+        uploadUrls.forEach(uploadUrl -> imageService.register(post, uploadUrl));
+    }
+
+    private List<String> getImageUrls(List<MultipartFile> multipartFiles) {
+        return s3Uploader.uploadMultipartFiles(multipartFiles);
     }
 
     private Member getCurrentMember() {

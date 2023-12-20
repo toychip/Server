@@ -27,6 +27,7 @@ public class PostConverter {
                 .writerId(post.getMemberId())
                 // ToDo 수정 시간으로 넣을지, 생성 시간을 넣을지 프론트와 협의
                 .writtenTime(post.getCreatedTime())
+                .imageUrls(post.getImages())
 //                .comments() Comment 수정 후 처리
                 .build();
     }

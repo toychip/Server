@@ -34,8 +34,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     private List<PostResponse> getSearchPageContent(final PostSearchCondition condition, final Pageable pageable) {
         return jpaQueryFactory
                 .select(
-                        new QPostResponse(post.id, post.title, post.content,
-                                post.writer, post.viewCount, post.member.id, post.createdDate))
+                        new QPostResponse(post.id, post.title, post.content, post.writer,
+                                post.viewCount, post.member.id, post.createdDate, post.images))
                 .from(post)
                 .where(
                         containTitle(condition.getTitle()),

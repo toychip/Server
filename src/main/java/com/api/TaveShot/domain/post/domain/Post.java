@@ -43,11 +43,8 @@ public class Post extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private PostTier postTier;
 
-    /**
-     * image uri 로 변경
-     */
-//    @Transient
-//    private MultipartFile attachmentFile;
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Image> images;
 
     @Column(nullable = false)
     private String writer;
