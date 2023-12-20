@@ -36,6 +36,14 @@ public enum ErrorType {
     _POST_INVALID_TIER(BAD_REQUEST, "POST_4000", "게시글의 등급이 잘못되었습니다."),
     _POST_NOT_FOUND(NOT_FOUND, "POST_4040", "해당 게시글이 존재하지 않습니다."),
 
+
+    // ------------------------------------------ S3 ------------------------------------------
+    S3_UPLOAD(INTERNAL_SERVER_ERROR, "S5001", "서버오류, S3 사진 업로드 에러입니다."),
+    EXCEEDING_FILE_COUNT(INTERNAL_SERVER_ERROR, "S5001", "서버오류, S3 사진 업로드 에러입니다."),
+    S3_CONNECT(INTERNAL_SERVER_ERROR, "S5002", "서버오류, S3 연결 에러입니다."),
+    S3_CONVERT(INTERNAL_SERVER_ERROR, "S5003", "서버오류, S3 변환 에러입니다."),
+
+
     // ------------------------------------------ USER ------------------------------------------
     _USER_NOT_FOUND_BY_TOKEN(NOT_FOUND, "USER_4040", "제공된 토큰으로 사용자를 찾을 수 없습니다."),
     _UNAUTHORIZED(UNAUTHORIZED, "USER_4010", "로그인되지 않은 상태입니다."),
