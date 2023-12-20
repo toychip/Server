@@ -66,14 +66,13 @@ public class PostService {
 
     /* --------------------------------- READ Single --------------------------------- */
     public PostResponse getSinglePost(final Long postId) {
-        Post post = getPost(postId);
+        Post post = getPostFetchJoin(postId);
         return postResponse(post);
     }
 
-
-    private Post getPost(final Long postId) {
-        return postRepository.findById(postId).orElseThrow(
-                () -> new ApiException(ErrorType._POST_NOT_FOUND));
+    private Post getPostFetchJoin(Long postId) {
+        return postRepository.findPostFetchJoin(postId)
+                .orElseThrow(() -> new ApiException(ErrorType._POST_NOT_FOUND));
     }
 
 
@@ -96,6 +95,11 @@ public class PostService {
 
         // 이미지 수정
         editImages(request.getAttachmentFile(), post);
+    }
+
+    private Post getPost(final Long postId) {
+        return postRepository.findById(postId).orElseThrow(
+                () -> new ApiException(ErrorType._POST_NOT_FOUND));
     }
 
     private void validateAuthority(final Post post) {
