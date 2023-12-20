@@ -1,10 +1,10 @@
-package com.api.TaveShot.domain.post.repository;
+package com.api.TaveShot.domain.post.post.repository;
 
 
 import static com.api.TaveShot.domain.post.domain.QPost.post;
 
-import com.api.TaveShot.domain.post.dto.response.PostResponse;
-import com.api.TaveShot.domain.post.dto.request.PostSearchCondition;
+import com.api.TaveShot.domain.post.post.dto.response.PostResponse;
+import com.api.TaveShot.domain.post.post.dto.request.PostSearchCondition;
 import com.api.TaveShot.domain.post.dto.response.QPostResponse;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Wildcard;
@@ -34,8 +34,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     private List<PostResponse> getSearchPageContent(final PostSearchCondition condition, final Pageable pageable) {
         return jpaQueryFactory
                 .select(
-                        new QPostResponse(post.id, post.title, post.content,
-                                post.writer, post.viewCount, post.member.id))
+                        new QPostResponse(post.id, post.title, post.content, post.writer,
+                                post.viewCount, post.member.id, post.createdDate, post.images))
                 .from(post)
                 .where(
                         containTitle(condition.getTitle()),

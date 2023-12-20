@@ -1,4 +1,4 @@
-package com.api.TaveShot.domain.post.editor;
+package com.api.TaveShot.domain.post.post.editor;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,6 @@ public class PostEditor {
 
     private final String title;
     private final String content;
-//    private final MultipartFile attachmentFile;
 
     public static PostEditorBuilder builder() {
         return new PostEditorBuilder();

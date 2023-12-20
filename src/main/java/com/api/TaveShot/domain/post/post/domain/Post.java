@@ -1,9 +1,12 @@
-package com.api.TaveShot.domain.post.domain;
+package com.api.TaveShot.domain.post.post.domain;
 
 import com.api.TaveShot.domain.Comment.domain.Comment;
 import com.api.TaveShot.domain.Member.domain.Member;
-import com.api.TaveShot.domain.post.editor.PostEditor;
+import com.api.TaveShot.domain.post.image.domain.Image;
+import com.api.TaveShot.domain.post.post.editor.PostEditor;
 import com.api.TaveShot.domain.base.BaseEntity;
+import com.api.TaveShot.domain.post.post.editor.PostEditor.PostEditorBuilder;
+import com.api.TaveShot.global.util.TimeUtil;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,6 +19,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import lombok.*;
@@ -41,11 +45,8 @@ public class Post extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private PostTier postTier;
 
-    /**
-     * image uri 로 변경
-     */
-//    @Transient
-//    private MultipartFile attachmentFile;
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Image> images;
 
     @Column(nullable = false)
     private String writer;
@@ -60,19 +61,24 @@ public class Post extends BaseEntity {
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Comment> comments;
 
-    public PostEditor.PostEditorBuilder toEditor() {
+    public PostEditorBuilder toEditor() {
         return PostEditor.builder()
                 .title(title)
                 .content(content);
     }
 
-    public void edit(PostEditor postEditor) {
+    public void edit(final PostEditor postEditor) {
         this.title = postEditor.getTitle();
         this.content = postEditor.getContent();
     }
 
     public Long getMemberId() {
         return member.getId();
+    }
+
+    public String getCreatedTime() {
+        LocalDateTime createdDate = getCreatedDate();
+        return TimeUtil.formatCreatedDate(createdDate);
     }
 
 }

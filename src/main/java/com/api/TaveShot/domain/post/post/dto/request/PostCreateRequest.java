@@ -1,8 +1,9 @@
-package com.api.TaveShot.domain.post.dto.request;
+package com.api.TaveShot.domain.post.post.dto.request;
 
-import com.api.TaveShot.domain.post.domain.PostTier;
+import com.api.TaveShot.domain.post.post.domain.PostTier;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,8 +26,10 @@ public class PostCreateRequest {
     @NotEmpty
     private String postTier;
 
-    @Schema(description = "게시글 첨부 파일", type = "string", format = "binary")
-    private MultipartFile attachmentFile;
+    @Schema(description = "게시글에 첨부할 이미지 파일. 파일 형식은 binary이며, 지원되는 이미지 형식은 JPEG, PNG 등입니다.",
+            type = "string",
+            format = "binary")
+    private List<MultipartFile> attachmentFile;
 
     public PostTier getPostTier() {
         // 문자열을 enum으로 변환

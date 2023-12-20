@@ -1,11 +1,11 @@
-package com.api.TaveShot.domain.post.controller;
+package com.api.TaveShot.domain.post.post.controller;
 
-import com.api.TaveShot.domain.post.dto.request.PostCreateRequest;
-import com.api.TaveShot.domain.post.dto.request.PostEditRequest;
-import com.api.TaveShot.domain.post.dto.response.PostListResponse;
-import com.api.TaveShot.domain.post.dto.response.PostResponse;
-import com.api.TaveShot.domain.post.dto.request.PostSearchCondition;
-import com.api.TaveShot.domain.post.service.PostService;
+import com.api.TaveShot.domain.post.post.dto.request.PostCreateRequest;
+import com.api.TaveShot.domain.post.post.dto.request.PostEditRequest;
+import com.api.TaveShot.domain.post.post.dto.response.PostListResponse;
+import com.api.TaveShot.domain.post.post.dto.response.PostResponse;
+import com.api.TaveShot.domain.post.post.dto.request.PostSearchCondition;
+import com.api.TaveShot.domain.post.post.service.PostService;
 import com.api.TaveShot.global.exception.ErrorType;
 import com.api.TaveShot.global.success.SuccessResponse;
 import lombok.RequiredArgsConstructor;
