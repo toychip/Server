@@ -38,12 +38,12 @@ public class PostService {
         return postResponse(post);
     }
 
-    private PostResponse postResponse(Post post) {
-        return PostConverter.entityToResponse(post);
-    }
-
     private Member getCurrentMember() {
         return SecurityUtil.getCurrentMember();
+    }
+
+    private PostResponse postResponse(Post post) {
+        return PostConverter.entityToResponse(post);
     }
 
 

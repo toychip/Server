@@ -35,7 +35,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         return jpaQueryFactory
                 .select(
                         new QPostResponse(post.id, post.title, post.content,
-                                post.writer, post.viewCount, post.member.id))
+                                post.writer, post.viewCount, post.member.id, post.createdDate))
                 .from(post)
                 .where(
                         containTitle(condition.getTitle()),
