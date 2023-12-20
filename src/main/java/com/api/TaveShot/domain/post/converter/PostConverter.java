@@ -1,10 +1,10 @@
-package com.api.TaveShot.domain.Post.converter;
+package com.api.TaveShot.domain.post.converter;
 
 import com.api.TaveShot.domain.Member.domain.Member;
-import com.api.TaveShot.domain.Post.domain.Post;
-import com.api.TaveShot.domain.Post.dto.request.PostCreateRequest;
-import com.api.TaveShot.domain.Post.dto.response.PostListResponse;
-import com.api.TaveShot.domain.Post.dto.response.PostResponse;
+import com.api.TaveShot.domain.post.domain.Post;
+import com.api.TaveShot.domain.post.dto.request.PostCreateRequest;
+import com.api.TaveShot.domain.post.dto.response.PostListResponse;
+import com.api.TaveShot.domain.post.dto.response.PostResponse;
 import org.springframework.data.domain.Page;
 
 public class PostConverter {
@@ -12,7 +12,8 @@ public class PostConverter {
         return Post.builder()
                 .title(request.getTitle())
                 .member(currentMember)
-                .writer(request.getWriter())
+                .writer(currentMember.getGitName())
+                .postTier(request.getPostTier())
                 .build();
     }
 

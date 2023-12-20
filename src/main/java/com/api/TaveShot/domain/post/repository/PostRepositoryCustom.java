@@ -1,7 +1,7 @@
-package com.api.TaveShot.domain.Post.repository;
+package com.api.TaveShot.domain.post.repository;
 
-import com.api.TaveShot.domain.Post.dto.response.PostResponse;
-import com.api.TaveShot.domain.Post.dto.request.PostSearchCondition;
+import com.api.TaveShot.domain.post.dto.response.PostResponse;
+import com.api.TaveShot.domain.post.dto.request.PostSearchCondition;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

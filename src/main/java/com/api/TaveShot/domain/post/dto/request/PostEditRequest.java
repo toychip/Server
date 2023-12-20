@@ -1,4 +1,4 @@
-package com.api.TaveShot.domain.Post.dto.request;
+package com.api.TaveShot.domain.post.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +9,9 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 @Builder
 @AllArgsConstructor
-public class PostCreateRequest {
+public class PostEditRequest {
 
     private String title;
     private String content;
-    private String writer;
     private MultipartFile attachmentFile;
 }

@@ -1,4 +1,4 @@
-package com.api.TaveShot.domain.Post.dto.response;
+package com.api.TaveShot.domain.post.dto.response;
 
 import com.api.TaveShot.domain.Comment.dto.response.CommentResponse;
 import com.querydsl.core.annotations.QueryProjection;

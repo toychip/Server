@@ -1,4 +1,4 @@
-package com.api.TaveShot.domain.Post.dto.response;
+package com.api.TaveShot.domain.post.dto.response;
 
 import java.util.List;
 import lombok.Builder;
