@@ -1,4 +1,4 @@
-package com.api.TaveShot.domain.post.domain;
+package com.api.TaveShot.domain.post.post.domain;
 
 import com.api.TaveShot.global.exception.ApiException;
 import com.api.TaveShot.global.exception.ErrorType;

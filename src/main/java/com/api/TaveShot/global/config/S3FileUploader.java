@@ -36,21 +36,21 @@ public class S3FileUploader {
     @Value("${bucket.dirname}")
     private String dirName;
 
-    public List<String> uploadMultipartFiles(List<MultipartFile> multipartFiles) {
+    public List<String> uploadMultipartFiles(final List<MultipartFile> multipartFiles) {
         validFileNumber(multipartFiles.size());
         return multipartFiles.stream()
                 .map(this::uploadSingleFile)
                 .toList();
     }
 
-    private void validFileNumber(int size) {
-        // 임시 값, 몇개로 정할지 프론트와 협의
+    private void validFileNumber(final int size) {
+        // ToDo 임시 값, 몇개로 정할지 프론트와 협의
         if (size > 10) {
             throw new ApiException(EXCEEDING_FILE_COUNT);
         }
     }
 
-    private String uploadSingleFile(MultipartFile multipartFile) {
+    private String uploadSingleFile(final MultipartFile multipartFile) {
         try {
             File uploadFile = convert(multipartFile);
             return upload(uploadFile, dirName);
@@ -59,7 +59,7 @@ public class S3FileUploader {
         }
     }
 
-    private File convert(MultipartFile file) throws IOException {
+    private File convert(final MultipartFile file) throws IOException {
         String originalFilename = file.getOriginalFilename();
         originalFilename = validFileName(originalFilename);
 
@@ -72,20 +72,20 @@ public class S3FileUploader {
         return convertFile;
     }
 
-    private String validFileName(String originalFilename) {
+    private String validFileName(final String originalFilename) {
         if (!StringUtils.hasText(originalFilename)) {
-            originalFilename = UUID.randomUUID().toString();
+            return UUID.randomUUID().toString();
         }
         return originalFilename;
     }
 
-    private void validGenerateLocalFile(File convertFile) throws IOException {
+    private void validGenerateLocalFile(final File convertFile) throws IOException {
         if (!convertFile.createNewFile()) {
             throw new ApiException(S3_CONVERT);
         }
     }
 
-    private String upload(File uploadFile, String dirName) {
+    private String upload(final File uploadFile, final String dirName) {
         String fileName = dirName + "/" + uploadFile.getName();
         String uploadImageUrl = putS3(uploadFile, fileName);
 
@@ -93,7 +93,7 @@ public class S3FileUploader {
         return uploadImageUrl;      // 업로드된 파일의 S3 URL 주소 반환
     }
 
-    private String putS3(File uploadFile, String fileName) {
+    private String putS3(final File uploadFile, final String fileName) {
         amazonS3Client.putObject(
                 new PutObjectRequest(bucket, fileName, uploadFile)
                         .withCannedAcl(CannedAccessControlList.PublicRead)
@@ -101,7 +101,7 @@ public class S3FileUploader {
         return amazonS3Client.getUrl(bucket, fileName).toString();
     }
 
-    private void removeNewFile(File targetFile) {
+    private void removeNewFile(final File targetFile) {
         if (targetFile.delete()) {
             log.info("파일이 삭제되었습니다.");
         } else {

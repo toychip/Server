@@ -1,15 +1,16 @@
-package com.api.TaveShot.domain.post.service;
+package com.api.TaveShot.domain.post.post.service;
 
 import com.api.TaveShot.domain.Member.domain.Member;
-import com.api.TaveShot.domain.post.converter.PostConverter;
-import com.api.TaveShot.domain.post.domain.Post;
-import com.api.TaveShot.domain.post.dto.request.PostCreateRequest;
-import com.api.TaveShot.domain.post.dto.request.PostEditRequest;
-import com.api.TaveShot.domain.post.dto.request.PostSearchCondition;
-import com.api.TaveShot.domain.post.dto.response.PostListResponse;
-import com.api.TaveShot.domain.post.dto.response.PostResponse;
-import com.api.TaveShot.domain.post.editor.PostEditor;
-import com.api.TaveShot.domain.post.repository.PostRepository;
+import com.api.TaveShot.domain.post.image.service.ImageService;
+import com.api.TaveShot.domain.post.post.converter.PostConverter;
+import com.api.TaveShot.domain.post.post.domain.Post;
+import com.api.TaveShot.domain.post.post.dto.request.PostCreateRequest;
+import com.api.TaveShot.domain.post.post.dto.request.PostEditRequest;
+import com.api.TaveShot.domain.post.post.dto.request.PostSearchCondition;
+import com.api.TaveShot.domain.post.post.dto.response.PostListResponse;
+import com.api.TaveShot.domain.post.post.dto.response.PostResponse;
+import com.api.TaveShot.domain.post.post.editor.PostEditor;
+import com.api.TaveShot.domain.post.post.repository.PostRepository;
 import com.api.TaveShot.global.config.S3FileUploader;
 import com.api.TaveShot.global.exception.ApiException;
 import com.api.TaveShot.global.exception.ErrorType;
@@ -45,12 +46,12 @@ public class PostService {
         return postResponse(post);
     }
 
-    private void registerImages(List<MultipartFile> multipartFiles, Post post) {
+    private void registerImages(final List<MultipartFile> multipartFiles, final Post post) {
         List<String> uploadUrls = getImageUrls(multipartFiles);
         uploadUrls.forEach(uploadUrl -> imageService.register(post, uploadUrl));
     }
 
-    private List<String> getImageUrls(List<MultipartFile> multipartFiles) {
+    private List<String> getImageUrls(final List<MultipartFile> multipartFiles) {
         return s3Uploader.uploadMultipartFiles(multipartFiles);
     }
 
@@ -58,7 +59,7 @@ public class PostService {
         return SecurityUtil.getCurrentMember();
     }
 
-    private PostResponse postResponse(Post post) {
+    private PostResponse postResponse(final Post post) {
         return PostConverter.entityToResponse(post);
     }
 
@@ -105,7 +106,7 @@ public class PostService {
         }
     }
 
-    private PostEditor getPostEditor(PostEditRequest request, Post post) {
+    private PostEditor getPostEditor(final PostEditRequest request, final Post post) {
         PostEditor.PostEditorBuilder editorBuilder = post.toEditor();
         PostEditor postEditor = editorBuilder
                 .title(request.getTitle())

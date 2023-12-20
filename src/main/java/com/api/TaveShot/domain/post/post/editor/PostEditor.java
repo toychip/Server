@@ -1,4 +1,4 @@
-package com.api.TaveShot.domain.post.editor;
+package com.api.TaveShot.domain.post.post.editor;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

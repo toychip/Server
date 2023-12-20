@@ -1,8 +1,8 @@
-package com.api.TaveShot.domain.post.service;
+package com.api.TaveShot.domain.post.image.service;
 
-import com.api.TaveShot.domain.post.domain.Post;
-import com.api.TaveShot.domain.post.domain.Image;
-import com.api.TaveShot.domain.post.repository.ImageRepository;
+import com.api.TaveShot.domain.post.post.domain.Post;
+import com.api.TaveShot.domain.post.image.domain.Image;
+import com.api.TaveShot.domain.post.image.repository.ImageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class ImageService {
     private final ImageRepository imageRepository;
 
-    public void register(Post post, String imageUrl) {
+    public void register(final Post post, final String imageUrl) {
         Image image = Image.builder()
                 .post(post)
                 .imageUrl(imageUrl)

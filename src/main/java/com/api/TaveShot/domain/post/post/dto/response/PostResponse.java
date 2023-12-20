@@ -1,6 +1,6 @@
-package com.api.TaveShot.domain.post.dto.response;
+package com.api.TaveShot.domain.post.post.dto.response;
 
-import com.api.TaveShot.domain.post.domain.Image;
+import com.api.TaveShot.domain.post.image.domain.Image;
 import com.api.TaveShot.global.util.TimeUtil;
 import com.querydsl.core.annotations.QueryProjection;
 import java.time.LocalDateTime;

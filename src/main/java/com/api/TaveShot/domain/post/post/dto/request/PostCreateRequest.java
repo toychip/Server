@@ -1,6 +1,6 @@
-package com.api.TaveShot.domain.post.dto.request;
+package com.api.TaveShot.domain.post.post.dto.request;
 
-import com.api.TaveShot.domain.post.domain.PostTier;
+import com.api.TaveShot.domain.post.post.domain.PostTier;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import java.util.List;

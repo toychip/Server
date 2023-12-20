@@ -1,5 +1,6 @@
-package com.api.TaveShot.domain.post.domain;
+package com.api.TaveShot.domain.post.image.domain;
 
+import com.api.TaveShot.domain.post.post.domain.Post;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
