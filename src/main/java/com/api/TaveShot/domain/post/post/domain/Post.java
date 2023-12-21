@@ -1,6 +1,5 @@
 package com.api.TaveShot.domain.post.post.domain;
 
-import com.api.TaveShot.domain.Comment.domain.Comment;
 import com.api.TaveShot.domain.Member.domain.Member;
 import com.api.TaveShot.domain.post.image.domain.Image;
 import com.api.TaveShot.domain.post.post.editor.PostEditor;
@@ -58,8 +57,8 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Comment> comments;
+//    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+//    private List<Comment> comments;
 
     public PostEditorBuilder toEditor() {
         return PostEditor.builder()

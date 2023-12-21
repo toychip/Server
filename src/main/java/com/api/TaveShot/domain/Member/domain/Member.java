@@ -2,6 +2,8 @@ package com.api.TaveShot.domain.Member.domain;
 
 import com.api.TaveShot.domain.base.BaseEntity;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -27,5 +29,11 @@ public class Member extends BaseEntity {
     private String gitName;
     private String profileImageUrl;
 
+    @Enumerated(EnumType.STRING)
+    private Tier tier = Tier.Beginner;
+
+    public String tierName() {
+        return tier.name();
+    }
 }
 
