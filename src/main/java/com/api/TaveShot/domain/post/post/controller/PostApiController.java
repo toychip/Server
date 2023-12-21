@@ -68,7 +68,7 @@ public class PostApiController {
     }
 
     @GetMapping("/post")
-    public SuccessResponse<PostListResponse> getPagePost(final @ModelAttribute PostSearchCondition condition,
+    public SuccessResponse<PostListResponse> getPagePost(final @Validated @ModelAttribute PostSearchCondition condition,
                                                          final Pageable pageable) {
         PostListResponse postListResponse = postService.searchPostPaging(condition, pageable);
         return new SuccessResponse<>(postListResponse);

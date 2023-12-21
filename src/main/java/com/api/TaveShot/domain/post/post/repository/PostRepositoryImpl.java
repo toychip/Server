@@ -1,11 +1,12 @@
 package com.api.TaveShot.domain.post.post.repository;
 
 
-import static com.api.TaveShot.domain.post.domain.QPost.post;
+import static com.api.TaveShot.domain.post.post.domain.QPost.post;
 
-import com.api.TaveShot.domain.post.post.dto.response.PostResponse;
+import com.api.TaveShot.domain.post.post.domain.PostTier;
 import com.api.TaveShot.domain.post.post.dto.request.PostSearchCondition;
-import com.api.TaveShot.domain.post.dto.response.QPostResponse;
+import com.api.TaveShot.domain.post.post.dto.response.PostResponse;
+import com.api.TaveShot.domain.post.post.dto.response.QPostResponse;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -38,6 +39,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                                 post.viewCount, post.member.id, post.createdDate, post.images))
                 .from(post)
                 .where(
+                        judgeTier(condition.getPostTierEnum()),
                         containTitle(condition.getTitle()),
                         containContent(condition.getContent()),
                         containWriter(condition.getWriter())
@@ -47,15 +49,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .fetch();
     }
 
-    private JPAQuery<Long> getSearchPageCount(final PostSearchCondition condition) {
-         return jpaQueryFactory
-                .select(Wildcard.count)
-                .from(post)
-                .where(
-                        containTitle(condition.getTitle()),
-                        containContent(condition.getContent()),
-                        containWriter(condition.getWriter())
-                );
+    private BooleanExpression judgeTier(PostTier postTierEnum) {
+        return post.postTier.eq(postTierEnum);
     }
 
     private BooleanExpression containTitle(final String title) {
@@ -77,6 +72,17 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
             return post.writer.contains(writer);
         }
         return null;
+    }
+
+    private JPAQuery<Long> getSearchPageCount(final PostSearchCondition condition) {
+        return jpaQueryFactory
+                .select(Wildcard.count)
+                .from(post)
+                .where(
+                        containTitle(condition.getTitle()),
+                        containContent(condition.getContent()),
+                        containWriter(condition.getWriter())
+                );
     }
 
 }

@@ -1,9 +1,11 @@
 package com.api.TaveShot.domain.post.post.service;
 
 import com.api.TaveShot.domain.Member.domain.Member;
+import com.api.TaveShot.domain.Member.domain.Tier;
 import com.api.TaveShot.domain.post.image.service.ImageService;
 import com.api.TaveShot.domain.post.post.converter.PostConverter;
 import com.api.TaveShot.domain.post.post.domain.Post;
+import com.api.TaveShot.domain.post.post.domain.PostTier;
 import com.api.TaveShot.domain.post.post.dto.request.PostCreateRequest;
 import com.api.TaveShot.domain.post.post.dto.request.PostEditRequest;
 import com.api.TaveShot.domain.post.post.dto.request.PostSearchCondition;
@@ -39,11 +41,23 @@ public class PostService {
     @Transactional
     public PostResponse register(final PostCreateRequest request) {
         Member currentMember = getCurrentMember();
+
+        validateAuthority(request.getPostTier(), currentMember);
+
         Post post = PostConverter.createDtoToEntity(request, currentMember);
         postRepository.save(post);
 
         registerImages(request.getAttachmentFile(), post);
         return postResponse(post);
+    }
+
+    private void validateAuthority(final PostTier postTier, final Member currentMember) {
+        Tier memberTier = currentMember.getTier();
+
+        boolean isContains = postTier.containsTier(memberTier);
+        if (!isContains) {
+            throw new ApiException(ErrorType._POST_USER_FORBIDDEN);
+        }
     }
 
     private void registerImages(final List<MultipartFile> multipartFiles, final Post post) {
@@ -67,10 +81,13 @@ public class PostService {
     /* --------------------------------- READ Single --------------------------------- */
     public PostResponse getSinglePost(final Long postId) {
         Post post = getPostFetchJoin(postId);
+        PostTier postTier = post.getPostTier();
+
+        validateAuthority(postTier, getCurrentMember());
         return postResponse(post);
     }
 
-    private Post getPostFetchJoin(Long postId) {
+    private Post getPostFetchJoin(final Long postId) {
         return postRepository.findPostFetchJoin(postId)
                 .orElseThrow(() -> new ApiException(ErrorType._POST_NOT_FOUND));
     }
@@ -79,6 +96,10 @@ public class PostService {
     /* --------------------------------- READ Paging --------------------------------- */
     public PostListResponse searchPostPaging(final PostSearchCondition condition, final Pageable pageable) {
         Page<PostResponse> postResponses = postRepository.searchPagePost(condition, pageable);
+
+        PostTier postTier = condition.getPostTierEnum();
+        validateAuthority(postTier, getCurrentMember());
+
         PostListResponse postListResponse = PostConverter.pageToPostListResponse(postResponses);
         return postListResponse;
     }
@@ -88,7 +109,8 @@ public class PostService {
     @Transactional
     public void edit(final Long postId, final PostEditRequest request) {
         Post post = getPost(postId);
-        validateAuthority(post);
+        validate(post);
+
         PostEditor postEditor = getPostEditor(request, post);
 
         post.edit(postEditor);
@@ -97,12 +119,18 @@ public class PostService {
         editImages(request.getAttachmentFile(), post);
     }
 
+    private void validate(final Post post) {
+        validateWriter(post);
+        PostTier postTier = post.getPostTier();
+        validateAuthority(postTier, getCurrentMember());
+    }
+
     private Post getPost(final Long postId) {
         return postRepository.findById(postId).orElseThrow(
                 () -> new ApiException(ErrorType._POST_NOT_FOUND));
     }
 
-    private void validateAuthority(final Post post) {
+    private void validateWriter(final Post post) {
         Member currentMember = getCurrentMember();
 
         Long postWriterId = post.getMemberId();
@@ -136,6 +164,8 @@ public class PostService {
     @Transactional
     public void delete(final Long postId) {
         Post post = getPost(postId);
+        PostTier postTier = post.getPostTier();
+        validateAuthority(postTier, getCurrentMember());
         postRepository.delete(post);
     }
 
