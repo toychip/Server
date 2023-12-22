@@ -30,7 +30,7 @@ public class Member extends BaseEntity {
     private String profileImageUrl;
 
     @Enumerated(EnumType.STRING)
-    private Tier tier = Tier.Beginner;
+    private Tier tier = Tier.BEGINNER;
 
     public String tierName() {
         return tier.name();

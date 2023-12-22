@@ -1,7 +1,7 @@
 package com.api.TaveShot.domain.Member.domain;
 
 public enum Tier {
-    Beginner("Beginner"),
+    BEGINNER("Beginner"),
     BRONZE("Bronze"),
     SILVER("Silver"),
     GOLD("Gold"),
@@ -20,13 +20,4 @@ public enum Tier {
         return tier;
     }
 
-    // 문자열을 enum으로 변환하는 메서드 (옵션)
-    public static Tier fromString(String text) {
-        for (Tier t : Tier.values()) {
-            if (t.tier.equalsIgnoreCase(text)) {
-                return t;
-            }
-        }
-        return null; // 또는 예외 처리
-    }
 }
