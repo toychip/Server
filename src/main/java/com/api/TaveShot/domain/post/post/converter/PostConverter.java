@@ -1,6 +1,7 @@
 package com.api.TaveShot.domain.post.post.converter;
 
 import com.api.TaveShot.domain.Member.domain.Member;
+import com.api.TaveShot.domain.post.image.converter.ImageConverter;
 import com.api.TaveShot.domain.post.post.domain.Post;
 import com.api.TaveShot.domain.post.post.dto.request.PostCreateRequest;
 import com.api.TaveShot.domain.post.post.dto.response.PostListResponse;
@@ -27,7 +28,7 @@ public class PostConverter {
                 .writerId(post.getMemberId())
                 // ToDo 수정 시간으로 넣을지, 생성 시간을 넣을지 프론트와 협의
                 .writtenTime(post.getCreatedTime())
-                .imageUrls(post.getImages())
+                .imageUrls(ImageConverter.imageToImageResponse(post.getImages()))
 //                .comments() Comment 수정 후 처리
                 .build();
     }

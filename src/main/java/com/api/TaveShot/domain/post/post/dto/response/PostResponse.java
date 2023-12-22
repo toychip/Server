@@ -1,6 +1,8 @@
 package com.api.TaveShot.domain.post.post.dto.response;
 
+import com.api.TaveShot.domain.post.image.converter.ImageConverter;
 import com.api.TaveShot.domain.post.image.domain.Image;
+import com.api.TaveShot.domain.post.image.dto.ImageResponse;
 import com.api.TaveShot.global.util.TimeUtil;
 import com.querydsl.core.annotations.QueryProjection;
 import java.time.LocalDateTime;
@@ -22,7 +24,7 @@ public class PostResponse {
     private Long writerId;
     private String writtenTime;
 //    private List<CommentResponse> comments;
-    private List<Image> imageUrls;
+    private List<ImageResponse> imageUrls;
 
     @QueryProjection
     public PostResponse(Long postId, String title, String content, String writer, int view, Long writerId, LocalDateTime createdDate, List<Image> imageUrls) {
@@ -33,6 +35,6 @@ public class PostResponse {
         this.view = view;
         this.writerId = writerId;
         writtenTime = TimeUtil.formatCreatedDate(createdDate);
-        this.imageUrls = imageUrls;
+        this.imageUrls = ImageConverter.imageToImageResponse(imageUrls);
     }
 }
