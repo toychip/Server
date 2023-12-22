@@ -61,12 +61,51 @@ public class PostApiController {
     }
 
     /* READ */
+
+    @Operation(summary = "단일 게시글 조회", description = "게시글 ID에 해당하는 게시글을 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "게시글 조회 성공",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = PostResponse.class))),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+            @ApiResponse(responseCode = "401", description = "인증 실패",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorType.class))),
+            @ApiResponse(responseCode = "403", description = "권한 없음",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorType.class))),
+            @ApiResponse(responseCode = "404", description = "게시글을 찾을 수 없음",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorType.class))),
+            @ApiResponse(responseCode = "500", description = "서버 오류",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorType.class)))
+    })
     @GetMapping("/post/{postId}")
     public SuccessResponse<PostResponse> getSinglePost(final @PathVariable Long postId) {
         PostResponse postResponse = postService.getSinglePost(postId);
         return new SuccessResponse<>(postResponse);
     }
 
+    @Operation(summary = "게시글 페이지 조회",
+            description = "지정된 조건에 따라 게시글을 페이징하여 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "게시글 페이지 조회 성공",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = PostListResponse.class))),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorType.class))),
+            @ApiResponse(responseCode = "401", description = "인증 실패",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorType.class))),
+            @ApiResponse(responseCode = "403", description = "접근 권한 없음",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorType.class))),
+            @ApiResponse(responseCode = "500", description = "서버 오류",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorType.class)))
+    })
     @GetMapping("/post")
     public SuccessResponse<PostListResponse> getPagePost(final @Validated @ModelAttribute PostSearchCondition condition,
                                                          final Pageable pageable) {
