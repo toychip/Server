@@ -1,7 +1,7 @@
 package com.api.TaveShot.domain.Comment.domain;
 
 import com.api.TaveShot.domain.Member.domain.Member;
-import com.api.TaveShot.domain.Post.domain.Post;
+import com.api.TaveShot.domain.post.post.domain.Post;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;

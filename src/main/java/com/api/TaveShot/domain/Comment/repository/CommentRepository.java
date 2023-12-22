@@ -1,7 +1,7 @@
 package com.api.TaveShot.domain.Comment.repository;
 
 import com.api.TaveShot.domain.Comment.domain.Comment;
-import com.api.TaveShot.domain.Post.domain.Post;
+import com.api.TaveShot.domain.post.post.domain.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

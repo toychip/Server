@@ -6,12 +6,13 @@ import com.api.TaveShot.domain.Comment.dto.request.CommentUpdateRequest;
 import com.api.TaveShot.domain.Comment.dto.response.CommentResponse;
 import com.api.TaveShot.domain.Comment.repository.CommentRepository;
 import com.api.TaveShot.domain.Member.domain.Member;
-import com.api.TaveShot.domain.Post.domain.Post;
-import com.api.TaveShot.domain.Post.repository.PostRepository;
+import com.api.TaveShot.domain.post.post.domain.Post;
+import com.api.TaveShot.domain.post.post.repository.PostRepository;
 import com.api.TaveShot.global.exception.ApiException;
 import com.api.TaveShot.global.exception.ErrorType;
 import com.api.TaveShot.global.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,10 +44,10 @@ public class CommentService {
         return comment.getId();
     }
 
-    public List<CommentResponse> findAll(Long postId) {
+    public List<CommentResponse> findAll(Long postId, Pageable pageable) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ApiException(ErrorType._POST_NOT_FOUND));
-        List<Comment> comments = commentRepository.findByPostAndParentCommentIsNullOrderById(post);
+        List<Comment> comments = commentRepository.findByParentCommentIsNull(post);
         return comments.stream()
                 .map(comment -> CommentResponse.fromEntity(comment))
                 .toList();
@@ -93,7 +94,7 @@ public class CommentService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ApiException(ErrorType._POST_NOT_FOUND));
 
-        List<Comment> topLevelComments = commentRepository.findByPostAndParentCommentIsNullOrderById(post);
+        List<Comment> topLevelComments = commentRepository.findByParentCommentIsNull(post);
 
         return topLevelComments.stream()
                 .map(comment -> CommentResponse.fromEntity(comment))
