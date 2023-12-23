@@ -5,11 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
 @Builder
+@AllArgsConstructor
 public class CommentCreateRequest {
-    private final String comment;
-    private final String memberId;
-    private final Long postId;
-    private final Long parentCommentId;
+    private String comment;
+    private Long parentCommentId;
 }
