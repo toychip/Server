@@ -6,6 +6,7 @@ import com.api.TaveShot.domain.post.post.dto.response.PostListResponse;
 import com.api.TaveShot.domain.post.post.dto.response.PostResponse;
 import com.api.TaveShot.domain.post.post.dto.request.PostSearchCondition;
 import com.api.TaveShot.domain.post.post.service.PostService;
+import com.api.TaveShot.global.exception.ApiExceptionResponse;
 import com.api.TaveShot.global.exception.ErrorType;
 import com.api.TaveShot.global.success.SuccessResponse;
 import lombok.RequiredArgsConstructor;
@@ -49,10 +50,10 @@ public class PostApiController {
                             schema = @Schema(implementation = ErrorType.class))),
             @ApiResponse(responseCode = "404", description = "사용자 또는 게시글을 찾을 수 없음",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = ErrorType.class))),
+                            schema = @Schema(implementation = ApiExceptionResponse.class))),
             @ApiResponse(responseCode = "500", description = "서버 오류",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = ErrorType.class)))
+                            schema = @Schema(implementation = ApiExceptionResponse.class)))
     })
     @PostMapping("/post")
     public SuccessResponse<PostResponse> register(final @Validated @ModelAttribute PostCreateRequest request) {
@@ -114,6 +115,25 @@ public class PostApiController {
     }
 
 //    /* UPDATE */
+@Operation(summary = "게시글 수정",
+        description = "게시글 ID에 해당하는 게시글을 조회합니다.")
+@ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "게시글 수정 성공",
+                content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                        schema = @Schema(implementation = PostListResponse.class))),
+        @ApiResponse(responseCode = "400", description = "잘못된 요청",
+                content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                        schema = @Schema(implementation = ErrorType.class))),
+        @ApiResponse(responseCode = "401", description = "인증 실패",
+                content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                        schema = @Schema(implementation = ErrorType.class))),
+        @ApiResponse(responseCode = "403", description = "접근 권한 없음",
+                content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                        schema = @Schema(implementation = ErrorType.class))),
+        @ApiResponse(responseCode = "500", description = "서버 오류",
+                content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                        schema = @Schema(implementation = ErrorType.class)))
+})
     @PatchMapping("/post/{postId}")
     public SuccessResponse<Long> edit(final @PathVariable Long postId,
                                         final @RequestBody PostEditRequest request) {
