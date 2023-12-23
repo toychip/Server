@@ -49,7 +49,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .fetch();
     }
 
-    private BooleanExpression judgeTier(PostTier postTierEnum) {
+    private BooleanExpression judgeTier(final PostTier postTierEnum) {
         return post.postTier.eq(postTierEnum);
     }
 
@@ -79,6 +79,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .select(Wildcard.count)
                 .from(post)
                 .where(
+                        judgeTier(condition.getPostTierEnum()),
                         containTitle(condition.getTitle()),
                         containContent(condition.getContent()),
                         containWriter(condition.getWriter())
