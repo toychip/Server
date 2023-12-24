@@ -33,8 +33,8 @@ public class CommentService {
 
     @Transactional // 데이터 변경하는 메서드에만 명시적으로 적용
     public Long register(final Long postId, final CommentCreateRequest request) {
-        Member currentMember = getCurrentMember();
 
+        Member currentMember = getCurrentMember();
         validateAuthority(request, currentMember);
 
         // 어떤 게시판인지 Post에서 검증하는 것이 아닌 request에서 받고, member의 티어와 비교하면 됨 validateAuthority 참고
@@ -45,6 +45,11 @@ public class CommentService {
 
         Optional<Comment> parentCommentOptional = findParentComment(parentCommentId);
 
+        return createComment(request, currentMember, post, parentCommentOptional);
+    }
+
+    private Long createComment(final CommentCreateRequest request, final Member currentMember,
+                               final Post post, final Optional<Comment> parentCommentOptional) {
         if (parentCommentOptional.isPresent()) {
             Comment parentComment = parentCommentOptional.get();
             return createWithParent(request, currentMember, post, parentComment);
@@ -53,7 +58,7 @@ public class CommentService {
         return createNotParent(request, currentMember, post);
     }
 
-    private void validateAuthority(CommentCreateRequest request, Member currentMember) {
+    private void validateAuthority(final CommentCreateRequest request, final Member currentMember) {
         postService.validateAuthority(request.getPostTier(), currentMember);
     }
 
