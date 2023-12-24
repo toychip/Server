@@ -7,8 +7,10 @@ import com.api.TaveShot.domain.Comment.dto.request.CommentUpdateRequest;
 import com.api.TaveShot.domain.Comment.dto.response.CommentResponse;
 import com.api.TaveShot.domain.Comment.repository.CommentRepository;
 import com.api.TaveShot.domain.Member.domain.Member;
+import com.api.TaveShot.domain.Member.domain.Tier;
 import com.api.TaveShot.domain.post.post.domain.Post;
 import com.api.TaveShot.domain.post.post.repository.PostRepository;
+import com.api.TaveShot.domain.post.post.service.PostService;
 import com.api.TaveShot.global.exception.ApiException;
 import com.api.TaveShot.global.exception.ErrorType;
 import com.api.TaveShot.global.util.SecurityUtil;
@@ -27,13 +29,15 @@ import java.util.stream.Collectors;
 public class CommentService {
 
     private final CommentRepository commentRepository;
-    private final PostRepository postRepository;
+    private final PostService postService;
 
     @Transactional // 데이터 변경하는 메서드에만 명시적으로 적용
     public Long register(final Long postId, final CommentCreateRequest request) {
         Member currentMember = getCurrentMember();
 
-        // ToDo 어떤 티어 게시판인지 검증
+        validateAuthority(request, currentMember);
+
+        // 어떤 게시판인지 Post에서 검증하는 것이 아닌 request에서 받고, member의 티어와 비교하면 됨 validateAuthority 참고
         Post post = getPost(postId);
 
         // ---------------- 부모 댓글 유무 확인 ----------------
@@ -49,13 +53,16 @@ public class CommentService {
         return createNotParent(request, currentMember, post);
     }
 
+    private void validateAuthority(CommentCreateRequest request, Member currentMember) {
+        postService.validateAuthority(request.getPostTier(), currentMember);
+    }
+
     private Member getCurrentMember() {
         return SecurityUtil.getCurrentMember();
     }
 
     private Post getPost(final Long postId) {
-        return postRepository.findById(postId)
-                .orElseThrow(() -> new ApiException(ErrorType._POST_NOT_FOUND));
+        return postService.findById(postId);
     }
 
     private Optional<Comment> findParentComment(final Long parentCommentId) {

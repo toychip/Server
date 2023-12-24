@@ -51,7 +51,7 @@ public class PostService {
         return postResponse(post);
     }
 
-    private void validateAuthority(final PostTier postTier, final Member currentMember) {
+    public void validateAuthority(final PostTier postTier, final Member currentMember) {
         Tier memberTier = currentMember.getTier();
 
         boolean isContains = postTier.containsTier(memberTier);
@@ -167,6 +167,11 @@ public class PostService {
         PostTier postTier = post.getPostTier();
         validateAuthority(postTier, getCurrentMember());
         postRepository.delete(post);
+    }
+
+    public Post findById(Long postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new ApiException(ErrorType._POST_NOT_FOUND));
     }
 
 }
