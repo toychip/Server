@@ -7,7 +7,7 @@ import com.api.TaveShot.domain.post.post.domain.Post;
 
 public class CommentConverter {
 
-    public static Comment createDtoToEntity(String comment, Member member, Post post) {
+    public static Comment createDtoToEntity(final String comment, final Member member, final Post post) {
         return Comment.builder()
                 .comment(comment)
                 .member(member)
@@ -16,7 +16,8 @@ public class CommentConverter {
                 .build();
     }
 
-    public static Comment createDtoToEntity(String comment, Member member, Post post, Comment parentComment) {
+    public static Comment createDtoToEntity(final String comment, final Member member,
+                                            final Post post, final Comment parentComment) {
         return Comment.builder()
                 .comment(comment)
                 .member(member)

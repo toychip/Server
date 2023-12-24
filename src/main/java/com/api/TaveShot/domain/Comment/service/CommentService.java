@@ -30,7 +30,7 @@ public class CommentService {
     private final PostRepository postRepository;
 
     @Transactional // 데이터 변경하는 메서드에만 명시적으로 적용
-    public Long register(Long postId, CommentCreateRequest request) {
+    public Long register(final Long postId, final CommentCreateRequest request) {
         Member currentMember = getCurrentMember();
 
         // ToDo 어떤 티어 게시판인지 검증
@@ -39,46 +39,45 @@ public class CommentService {
         // ---------------- 부모 댓글 유무 확인 ----------------
         Long parentCommentId = request.getParentCommentId();
 
-        Optional<Comment> findParentComment = validatedParent(parentCommentId);
+        Optional<Comment> parentCommentOptional = findParentComment(parentCommentId);
 
-        if (findParentComment.isPresent()) {
-            Comment findParentCommentValue = findParentComment.get();
-            return createWithParent(request, currentMember, post, findParentCommentValue);
+        if (parentCommentOptional.isPresent()) {
+            Comment parentComment = parentCommentOptional.get();
+            return createWithParent(request, currentMember, post, parentComment);
         }
 
         return createNotParent(request, currentMember, post);
     }
 
-    private Optional<Comment> validatedParent(Long parentCommentId) {
+    private Member getCurrentMember() {
+        return SecurityUtil.getCurrentMember();
+    }
+
+    private Post getPost(final Long postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new ApiException(ErrorType._POST_NOT_FOUND));
+    }
+
+    private Optional<Comment> findParentComment(final Long parentCommentId) {
         if (parentCommentId != null) {
             return commentRepository.findById(parentCommentId);
         }
-
         return Optional.empty();
     }
 
-    private Long createWithParent(CommentCreateRequest request, Member currentMember, Post post,
-                                  Comment findParentComment) {
+    private Long createWithParent(final CommentCreateRequest request, final Member currentMember,
+                                  final Post post, final Comment findParentComment) {
         Comment comment = CommentConverter.createDtoToEntity(request.getComment(), currentMember,
                 post, findParentComment);
         commentRepository.save(comment);
         return comment.getId();
     }
 
-    private Long createNotParent(CommentCreateRequest request, Member currentMember, Post post) {
+    private Long createNotParent(final CommentCreateRequest request, final Member currentMember,
+                                 final Post post) {
         Comment comment = CommentConverter.createDtoToEntity(request.getComment(), currentMember, post);
         commentRepository.save(comment);
         return comment.getId();
-    }
-
-    private Post getPost(Long postId) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new ApiException(ErrorType._POST_NOT_FOUND));
-        return post;
-    }
-
-    private Member getCurrentMember() {
-        return SecurityUtil.getCurrentMember();
     }
 
     public List<CommentResponse> findAll(Long postId, Pageable pageable) {
