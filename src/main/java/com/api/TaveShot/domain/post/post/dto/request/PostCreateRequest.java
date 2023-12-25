@@ -22,7 +22,7 @@ public class PostCreateRequest {
     @NotEmpty
     private String content;
 
-    @Schema(description = "게시판 등급", example = "BronzeSilver or Gold or Platinum or High")
+    @Schema(description = "게시판 등급", example = "'POST_BRONZE_SILVER' or 'POST_GOLD' or 'POST_PLATINUM' or 'POST_HIGH'")
     @NotEmpty
     private String postTier;
 

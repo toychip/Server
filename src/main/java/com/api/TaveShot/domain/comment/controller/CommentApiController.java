@@ -1,8 +1,8 @@
-package com.api.TaveShot.domain.Comment.controller;
+package com.api.TaveShot.domain.comment.controller;
 
-import com.api.TaveShot.domain.Comment.dto.request.CommentCreateRequest;
-import com.api.TaveShot.domain.Comment.dto.request.CommentUpdateRequest;
-import com.api.TaveShot.domain.Comment.service.CommentService;
+import com.api.TaveShot.domain.comment.dto.request.CommentCreateRequest;
+import com.api.TaveShot.domain.comment.dto.request.CommentUpdateRequest;
+import com.api.TaveShot.domain.comment.service.CommentService;
 import com.api.TaveShot.global.exception.ErrorType;
 import com.api.TaveShot.global.success.SuccessResponse;
 import lombok.RequiredArgsConstructor;

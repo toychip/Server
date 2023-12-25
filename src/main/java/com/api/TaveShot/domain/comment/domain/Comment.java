@@ -1,4 +1,4 @@
-package com.api.TaveShot.domain.Comment.domain;
+package com.api.TaveShot.domain.comment.domain;
 
 import com.api.TaveShot.domain.Member.domain.Member;
 import com.api.TaveShot.domain.post.post.domain.Post;

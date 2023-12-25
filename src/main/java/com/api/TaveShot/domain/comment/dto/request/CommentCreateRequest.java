@@ -1,8 +1,6 @@
-package com.api.TaveShot.domain.Comment.dto.request;
+package com.api.TaveShot.domain.comment.dto.request;
 
-import com.api.TaveShot.domain.post.post.domain.PostTier;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

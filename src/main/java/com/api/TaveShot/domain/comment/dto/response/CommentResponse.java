@@ -1,6 +1,6 @@
-package com.api.TaveShot.domain.Comment.dto.response;
+package com.api.TaveShot.domain.comment.dto.response;
 
-import com.api.TaveShot.domain.Comment.domain.Comment;
+import com.api.TaveShot.domain.comment.domain.Comment;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 

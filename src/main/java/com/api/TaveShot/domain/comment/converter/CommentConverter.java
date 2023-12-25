@@ -1,7 +1,6 @@
-package com.api.TaveShot.domain.Comment.converter;
+package com.api.TaveShot.domain.comment.converter;
 
-import com.api.TaveShot.domain.Comment.domain.Comment;
-import com.api.TaveShot.domain.Comment.dto.request.CommentCreateRequest;
+import com.api.TaveShot.domain.comment.domain.Comment;
 import com.api.TaveShot.domain.Member.domain.Member;
 import com.api.TaveShot.domain.post.post.domain.Post;
 
