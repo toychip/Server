@@ -1,19 +1,20 @@
 package com.api.TaveShot.domain.post.post.domain;
 
+import static com.api.TaveShot.domain.Member.domain.Tier.*;
+
 import com.api.TaveShot.domain.Member.domain.Tier;
 import com.api.TaveShot.global.exception.ApiException;
 import com.api.TaveShot.global.exception.ErrorType;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import lombok.ToString;
 
 @ToString
 public enum PostTier {
-    BRONZE_SILVER("BronzeSilver", Arrays.asList(Tier.BRONZE, Tier.SILVER)),
-    GOLD("Gold", Collections.singletonList(Tier.GOLD)),
-    PLATINUM("Platinum", Collections.singletonList(Tier.PLATINUM)),
-    HIGH("High", Arrays.asList(Tier.DIAMOND, Tier.RUBY, Tier.MASTER));
+    POST_BRONZE_SILVER("BronzeSilver", Arrays.asList(BRONZE, SILVER, GOLD, PLATINUM, DIAMOND, RUBY, MASTER)),
+    POST_GOLD("Gold", Arrays.asList(GOLD, PLATINUM, DIAMOND, RUBY, MASTER)),
+    POST_PLATINUM("Platinum", Arrays.asList(PLATINUM, DIAMOND, RUBY, MASTER)),
+    POST_HIGH("High", Arrays.asList(DIAMOND, RUBY, MASTER));
 
     private final String tier;
     private final List<Tier> associatedTiers;
