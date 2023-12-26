@@ -7,7 +7,6 @@ import com.api.TaveShot.domain.authorization.dto.GitHubRepositoryInfo;
 import com.api.TaveShot.global.exception.ApiException;
 import com.api.TaveShot.global.exception.ErrorType;
 import com.api.TaveShot.global.util.SecurityUtil;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -26,7 +25,7 @@ public class GitHubApiService {
         String gitLoginId = currentMember.getGitLoginId();
 
         GitHubRepositoryInfo repositoryInfo = webClient.get()
-                .uri("/repos/" + gitLoginId + "/test")
+                .uri("/repos/" + gitLoginId + "/taveshot")
                 .retrieve()
                 .bodyToMono(GitHubRepositoryInfo.class)
                 .block();
@@ -38,7 +37,7 @@ public class GitHubApiService {
         if (repositoryInfo != null) {
             return repositoryInfo.description();
         }
-        throw new ApiException(ErrorType._GITHUB_API_REPO_INVALID);
+        throw new ApiException(ErrorType._GITHUB_REPO_INVALID);
     }
 
     private Member getCurrentMember() {

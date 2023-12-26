@@ -58,7 +58,8 @@ public enum ErrorType {
     _SOLVED_API_NO_BIO_FOUND(BAD_REQUEST, "SOLVED_5003", "Solved Api로 부터 bio 정보를 받을 수 없습니다."),
 
     // ------------------------------------------ GITHUB API ------------------------------------------
-    _GITHUB_API_REPO_INVALID(BAD_REQUEST, "GITHUB_4040", "Github 인증 Repository description이 잘못되었습니다.")
+    _GITHUB_REPO_INVALID(BAD_REQUEST, "GITHUB_4040", "Github 인증 Repository description이 잘못되었습니다."),
+    _GITHUB_NAME_NOT_MATCH(BAD_REQUEST, "GITHUB_4041", "solvedApi 자기소개에 저장된 Github 이름과 ")
 
 
     ;
