@@ -75,7 +75,7 @@ public class CommentApiController {
                             schema = @Schema(implementation = ErrorType.class)))
     })
     @PatchMapping("/post/{postId}/comments/{id}")
-    public SuccessResponse<Long> edit(@PathVariable Long postId, @PathVariable Long commentId, @RequestBody CommentEditRequest commentEditRequest) {
+    public SuccessResponse<Long> edit(final @PathVariable Long postId, final @PathVariable Long commentId, final @RequestBody CommentEditRequest commentEditRequest) {
         commentService.edit(postId, commentId, commentEditRequest);
         return new SuccessResponse<>(commentId);
     }
