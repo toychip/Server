@@ -2,6 +2,7 @@ package com.api.TaveShot.domain.authorization.service;
 
 import com.api.TaveShot.domain.Member.domain.Member;
 import com.api.TaveShot.domain.Member.domain.Tier;
+import com.api.TaveShot.domain.Member.editor.MemberEditor;
 import com.api.TaveShot.domain.authorization.dto.SolvedUserInfo;
 import com.api.TaveShot.global.exception.ApiException;
 import com.api.TaveShot.global.exception.ErrorType;
@@ -17,37 +18,29 @@ public class AuthorizationService {
     private final GitHubApiService gitHubApiService;
 
     public void authorization() {
+        String bojName = getBojNameFromGitHub();
+        SolvedUserInfo solvedUserInfo = getSolvedUserInfo(bojName);
 
-        String bojName = gitHubApiService.getGithubRepoDescription();
+        validateMatch(solvedUserInfo);
+        changeBojInfo(solvedUserInfo);
+    }
 
-        SolvedUserInfo solvedUserInfo = solvedAcApiService.getUserInfoFromSolvedAc(bojName);
+    private String getBojNameFromGitHub() {
+        return gitHubApiService.getGithubRepoDescription();
+    }
+
+    private SolvedUserInfo getSolvedUserInfo(String bojName) {
+        return solvedAcApiService.getUserInfoFromSolvedAc(bojName);
+    }
+
+
+    private void validateMatch(SolvedUserInfo solvedUserInfo) {
         String gitHubNameBySolvedBio = solvedUserInfo.getBio();
-
-        validateMatch(gitHubNameBySolvedBio);
-
-        Integer bojTier = solvedUserInfo.getBojTier();
-
-        // ToDo currentMember 티어 정보 추가
-        Tier tierBySolvedApi = getTierBySolvedApi(bojTier);
-
-        // ToDo 백준 닉네임 정보 추가
-        changeBojName();
-    }
-
-    private Tier getTierBySolvedApi(Integer bojTier) {
-        return Tier.fromBojTier(bojTier);
-    }
-
-    private void changeBojName() {
-
-    }
-
-    private void validateMatch(String githubNameBySolvedBio) {
 
         Member currentMember = getCurrentMember();
         String gitLoginId = currentMember.getGitLoginId();
 
-        if (!githubNameBySolvedBio.equals(gitLoginId)) {
+        if (!gitHubNameBySolvedBio.equals(gitLoginId)) {
             throw new ApiException(ErrorType._GITHUB_NAME_NOT_MATCH);
         }
     }
@@ -56,5 +49,30 @@ public class AuthorizationService {
         return SecurityUtil.getCurrentMember();
     }
 
+    private void changeBojInfo(SolvedUserInfo solvedUserInfo) {
+        Integer bojTier = solvedUserInfo.getBojTier();
+        Tier tier = calculateTier(bojTier);
+
+        String bojName = solvedUserInfo.getBio();
+
+        MemberEditor memberEditor = getMemberEditor(tier, bojName);
+
+        Member member = getCurrentMember();
+        member.changeBojInfo(memberEditor);
+    }
+
+    private Tier calculateTier(Integer bojTier) {
+        return Tier.fromBojTier(bojTier);
+    }
+
+    private MemberEditor getMemberEditor(final Tier tier, final String bojName) {
+        Member member = getCurrentMember();
+        MemberEditor.MemberEditorBuilder editorBuilder = member.toEditor();
+        MemberEditor memberEditor = editorBuilder
+                .bojName(bojName)
+                .tier(tier)
+                .build();
+        return memberEditor;
+    }
 
 }
