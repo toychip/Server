@@ -16,7 +16,7 @@ public class SwaggerConfig {
         Info info = new Info()
                 .title("Tave 100 Shot Server API")
                 .description("Tave 100 Shot Server API 명세서")
-                .version("1.0.0");
+                .version("v1.0.0");
 
         String jwtSchemeName = "JWT TOKEN";
 
