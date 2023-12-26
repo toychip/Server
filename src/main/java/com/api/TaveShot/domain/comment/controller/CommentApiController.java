@@ -1,19 +1,14 @@
 package com.api.TaveShot.domain.comment.controller;
 
 import com.api.TaveShot.domain.comment.dto.request.CommentCreateRequest;
-import com.api.TaveShot.domain.comment.dto.request.CommentUpdateRequest;
+import com.api.TaveShot.domain.comment.dto.request.CommentEditRequest;
 import com.api.TaveShot.domain.comment.service.CommentService;
+import com.api.TaveShot.domain.post.post.dto.response.PostListResponse;
 import com.api.TaveShot.global.exception.ErrorType;
 import com.api.TaveShot.global.success.SuccessResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -42,6 +37,9 @@ public class CommentApiController {
                             schema = @Schema(implementation = ErrorType.class))),
             @ApiResponse(responseCode = "404", description = "게시글을 찾을 수 없음",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorType.class))),
+            @ApiResponse(responseCode = "500", description = "서버 오류",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = ErrorType.class)))
     })
     @PostMapping("/post/{postId}/comments")
@@ -58,9 +56,27 @@ public class CommentApiController {
 //    }
 
     /* UPDATE */
-    @PutMapping("/post/{postId}/comments/{id}")
-    public SuccessResponse<Long> update(@PathVariable Long postId, @PathVariable Long commentId, @RequestBody CommentUpdateRequest commentUpdateRequest) {
-        commentService.update(postId, commentId, commentUpdateRequest);
+    @Operation(summary = "댓글 수정", description = "지정된 댓글을 수정합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "댓글 수정 성공",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = PostListResponse.class))),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorType.class))),
+            @ApiResponse(responseCode = "401", description = "인증 실패",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorType.class))),
+            @ApiResponse(responseCode = "403", description = "접근 권한 없음",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorType.class))),
+            @ApiResponse(responseCode = "500", description = "서버 오류",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorType.class)))
+    })
+    @PatchMapping("/post/{postId}/comments/{id}")
+    public SuccessResponse<Long> edit(@PathVariable Long postId, @PathVariable Long commentId, @RequestBody CommentEditRequest commentEditRequest) {
+        commentService.edit(postId, commentId, commentEditRequest);
         return new SuccessResponse<>(commentId);
     }
 

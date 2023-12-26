@@ -3,8 +3,9 @@ package com.api.TaveShot.domain.comment.service;
 import com.api.TaveShot.domain.comment.converter.CommentConverter;
 import com.api.TaveShot.domain.comment.domain.Comment;
 import com.api.TaveShot.domain.comment.dto.request.CommentCreateRequest;
-import com.api.TaveShot.domain.comment.dto.request.CommentUpdateRequest;
+import com.api.TaveShot.domain.comment.dto.request.CommentEditRequest;
 import com.api.TaveShot.domain.comment.dto.response.CommentResponse;
+import com.api.TaveShot.domain.comment.editor.CommentEditor;
 import com.api.TaveShot.domain.comment.repository.CommentRepository;
 import com.api.TaveShot.domain.Member.domain.Member;
 import com.api.TaveShot.domain.post.post.domain.Post;
@@ -15,7 +16,7 @@ import com.api.TaveShot.global.exception.ErrorType;
 import com.api.TaveShot.global.util.SecurityUtil;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final PostService postService;
 
+    /* --------------------------------- CREATE --------------------------------- */
     @Transactional // 데이터 변경하는 메서드에만 명시적으로 적용
     public Long register(final Long postId, final CommentCreateRequest request) {
 
@@ -100,14 +102,44 @@ public class CommentService {
                 .toList();
     }
 
-    @Transactional
-    public void update(Long postId, Long commentId, CommentUpdateRequest dto) {
-        Comment comment = commentRepository.findByPostIdAndId(postId, commentId).orElseThrow(() ->
-                new IllegalArgumentException("해당 댓글이 존재하지 않습니다. " + commentId));
 
-        comment.update(dto.getComment());
+
+
+    /* --------------------------------- EDIT --------------------------------- */
+    @Transactional
+    public void edit(Long postId, Long commentId, CommentEditRequest request) {
+        Member currentMember = getCurrentMember();
+        Comment comment = getComment(commentId);
+
+        validateComment(comment, currentMember);
+
+        CommentEditor commentEditor = CommentEditor.builder()
+                .comment(request.getComment())
+                .build();
+
+        comment.edit(commentEditor);
     }
 
+    private void validateComment(Comment comment, Member currentMember) {
+        validateCommentWriter(comment, currentMember);
+        validateAuthority(comment.getPost().getPostTier(), currentMember);
+    }
+
+    private void validateCommentWriter(Comment comment, Member currentMember) {
+        if (!comment.getMember().getId().equals(currentMember.getId())) {
+            throw new ApiException(ErrorType._UNAUTHORIZED);
+        }
+    }
+
+    private Comment getComment(Long commentId) {
+        return commentRepository.findById(commentId)
+                .orElseThrow(() -> new ApiException(ErrorType._POST_NOT_FOUND));//COMMENT ErrorType으로 변경
+    }
+
+
+
+
+    /* --------------------------------- DELETE --------------------------------- */
     @Transactional
     public void delete(Long postId, Long commentId) {
         Comment comment = commentRepository.findByPostIdAndId(postId, commentId)
@@ -116,33 +148,33 @@ public class CommentService {
         commentRepository.delete(comment);
     }
 
-    @Transactional
-    public Long saveReply(Long postId, Long parentCommentId, CommentCreateRequest dto) {
-        Member currentMember = getCurrentMember();
-
-        Post post = getPost(postId);
-
-        Comment parentComment = commentRepository.findById(parentCommentId).orElseThrow(() ->
-                new IllegalArgumentException("부모 댓글이 존재하지 않습니다. id=" + parentCommentId));
-
-        Comment replyComment = Comment.builder()
-                .comment(dto.getComment())
-                .member(currentMember)
-                .post(post)
-                .parentComment(parentComment)
-                .build();
-        commentRepository.save(replyComment);
-
-        return replyComment.getId();
-    }
-
-    public List<CommentResponse> findAllWithReplies(Long postId) {
-        Post post = getPost(postId);
-
-        List<Comment> topLevelComments = commentRepository.findByParentCommentIsNull(post);
-
-        return topLevelComments.stream()
-                .map(comment -> CommentResponse.fromEntity(comment))
-                .collect(Collectors.toList());
-    }
+//    @Transactional
+//    public Long saveReply(Long postId, Long parentCommentId, CommentCreateRequest dto) {
+//        Member currentMember = getCurrentMember();
+//
+//        Post post = getPost(postId);
+//
+//        Comment parentComment = commentRepository.findById(parentCommentId).orElseThrow(() ->
+//                new IllegalArgumentException("부모 댓글이 존재하지 않습니다. id=" + parentCommentId));
+//
+//        Comment replyComment = Comment.builder()
+//                .comment(dto.getComment())
+//                .member(currentMember)
+//                .post(post)
+//                .parentComment(parentComment)
+//                .build();
+//        commentRepository.save(replyComment);
+//
+//        return replyComment.getId();
+//    }
+//
+//    public List<CommentResponse> findAllWithReplies(Long postId) {
+//        Post post = getPost(postId);
+//
+//        List<Comment> topLevelComments = commentRepository.findByParentCommentIsNull(post);
+//
+//        return topLevelComments.stream()
+//                .map(comment -> CommentResponse.fromEntity(comment))
+//                .collect(Collectors.toList());
+//    }
 }
