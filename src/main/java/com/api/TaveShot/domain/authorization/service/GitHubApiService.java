@@ -12,12 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
-@RequiredArgsConstructor
 public class GitHubApiService {
     private final WebClient webClient;
 
     public GitHubApiService() {
-        this.webClient = WebClient.builder()
+        webClient = WebClient.builder()
                 .baseUrl(GITHUB_URI)
                 .build();
     }
@@ -42,7 +41,7 @@ public class GitHubApiService {
         throw new ApiException(ErrorType._GITHUB_API_REPO_INVALID);
     }
 
-    public Member getCurrentMember() {
+    private Member getCurrentMember() {
         return SecurityUtil.getCurrentMember();
     }
 }
