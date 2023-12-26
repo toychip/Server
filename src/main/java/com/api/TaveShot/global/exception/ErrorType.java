@@ -51,12 +51,6 @@ public enum ErrorType {
     _USER_NOT_FOUND_DB(NOT_FOUND, "USER_4041", "존재하지 않는 회원입니다."),
 
 
-    // ------------------------------------------ SOLVED API ------------------------------------------
-    _SOLVED_API_CONNECT_URI(INTERNAL_SERVER_ERROR, "SOLVED_5000", "Solved Api Uri 관련 오류입니다."),
-    _SOLVED_API_CONNECT_HTTP(INTERNAL_SERVER_ERROR, "SOLVED_5001", "Solved Api 네트워크 문제, 서버 문제 또는 기타 입출력 관련 문제입니다."),
-    _SOLVED_API_CONNECT_INTERRUPT(INTERNAL_SERVER_ERROR, "SOLVED_5002", "Solved Api 스레드가 대기, 수면 또는 다른 차단 작업 중에 인터럽트"),
-    _SOLVED_API_NO_BIO_FOUND(BAD_REQUEST, "SOLVED_5003", "Solved Api로 부터 bio 정보를 받을 수 없습니다."),
-
     // ------------------------------------------ GITHUB API ------------------------------------------
     _GITHUB_REPO_INVALID(BAD_REQUEST, "GITHUB_4040", "Github 인증 Repository description이 잘못되었습니다."),
     _GITHUB_NAME_NOT_MATCH(BAD_REQUEST, "GITHUB_4041", "solvedApi 자기소개에 저장된 Github 이름과 ")
