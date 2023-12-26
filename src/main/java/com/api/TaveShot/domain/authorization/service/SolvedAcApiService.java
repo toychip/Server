@@ -1,6 +1,6 @@
-package com.api.TaveShot.domain.solved;
+package com.api.TaveShot.domain.authorization.service;
 
-import static com.api.TaveShot.global.constant.SolvedAcConstant.SOLVED_REQUEST_USER_BIO_URI;
+import static com.api.TaveShot.global.constant.ApiConstant.SOLVED_REQUEST_USER_BIO_URI;
 
 import com.api.TaveShot.global.exception.ApiException;
 import com.api.TaveShot.global.exception.ErrorType;
@@ -36,7 +36,7 @@ public class SolvedAcApiService {
             ioe.printStackTrace();
             throw new ApiException(ErrorType._SOLVED_API_CONNECT_HTTP);
         } catch (InterruptedException ie) {
-            ie.printStackTrace();가
+            ie.printStackTrace();
             throw new ApiException(ErrorType._SOLVED_API_CONNECT_INTERRUPT);
         }
     }

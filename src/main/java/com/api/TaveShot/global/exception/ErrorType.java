@@ -54,7 +54,13 @@ public enum ErrorType {
     // ------------------------------------------ SOLVED API ------------------------------------------
     _SOLVED_API_CONNECT_URI(INTERNAL_SERVER_ERROR, "SOLVED_5000", "Solved Api Uri 관련 오류입니다."),
     _SOLVED_API_CONNECT_HTTP(INTERNAL_SERVER_ERROR, "SOLVED_5001", "Solved Api 네트워크 문제, 서버 문제 또는 기타 입출력 관련 문제입니다."),
-    _SOLVED_API_CONNECT_INTERRUPT(INTERNAL_SERVER_ERROR, "SOLVED_5002", "Solved Api 스레드가 대기, 수면 또는 다른 차단 작업 중에 인터럽트")
+    _SOLVED_API_CONNECT_INTERRUPT(INTERNAL_SERVER_ERROR, "SOLVED_5002", "Solved Api 스레드가 대기, 수면 또는 다른 차단 작업 중에 인터럽트"),
+
+
+    // ------------------------------------------ GITHUB API ------------------------------------------
+    _GITHUB_API_REPO_INVALID(BAD_REQUEST, "GITHUB_4040", "Github 인증 Repository description이 잘못되었습니다.")
+
+
     ;
 
     private final HttpStatus status;
