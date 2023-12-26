@@ -3,6 +3,7 @@ package com.api.TaveShot.domain.authorization.service;
 import com.api.TaveShot.domain.Member.domain.Member;
 import com.api.TaveShot.domain.Member.domain.Tier;
 import com.api.TaveShot.domain.Member.editor.MemberEditor;
+import com.api.TaveShot.domain.authorization.dto.MemberResponse;
 import com.api.TaveShot.domain.authorization.dto.SolvedUserInfo;
 import com.api.TaveShot.global.exception.ApiException;
 import com.api.TaveShot.global.exception.ErrorType;
@@ -17,12 +18,14 @@ public class AuthorizationService {
     private final SolvedAcApiService solvedAcApiService;
     private final GitHubApiService gitHubApiService;
 
-    public void authorization() {
+    public MemberResponse authorization() {
         String bojName = getBojNameFromGitHub();
         SolvedUserInfo solvedUserInfo = getSolvedUserInfo(bojName);
 
         validateMatch(solvedUserInfo);
         changeBojInfo(solvedUserInfo);
+
+        return response();
     }
 
     private String getBojNameFromGitHub() {
@@ -32,7 +35,6 @@ public class AuthorizationService {
     private SolvedUserInfo getSolvedUserInfo(String bojName) {
         return solvedAcApiService.getUserInfoFromSolvedAc(bojName);
     }
-
 
     private void validateMatch(SolvedUserInfo solvedUserInfo) {
         String gitHubNameBySolvedBio = solvedUserInfo.getBio();
@@ -73,6 +75,19 @@ public class AuthorizationService {
                 .tier(tier)
                 .build();
         return memberEditor;
+    }
+
+    private MemberResponse response() {
+        Member currentMember = getCurrentMember();
+        String gitLoginId = currentMember.getGitLoginId();
+        Tier tier = currentMember.getTier();
+        String bojName = currentMember.getBojName();
+
+        return MemberResponse.builder()
+                .gitLoginId(gitLoginId)
+                .tier(tier)
+                .bojName(bojName)
+                .build();
     }
 
 }
