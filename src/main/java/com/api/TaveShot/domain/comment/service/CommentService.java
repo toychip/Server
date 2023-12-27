@@ -99,7 +99,7 @@ public class CommentService {
 
     public Page<CommentResponse> findAll(Long postId, Pageable pageable) {
         Post post = getPost(postId);
-        Page<Comment> comments = commentRepository.findByPostOrderByCreated(post,pageable);
+        Page<Comment> comments = commentRepository.findByPost(post,pageable);
         return comments.map(CommentResponse::fromEntity);
     }
 
@@ -139,43 +139,20 @@ public class CommentService {
 
 
 
-
     /* --------------------------------- DELETE --------------------------------- */
     @Transactional
-    public void delete(Long postId, Long commentId) {
-        Comment comment = commentRepository.findByPostIdAndId(postId, commentId)
-                .orElseThrow(() -> new ApiException(ErrorType._POST_NOT_FOUND));
+    public void delete(final Long postId, final Long commentId) {
+        Member currentMember = getCurrentMember();
+        Comment comment = getComment(commentId);
+        Post post = getPost(postId);
 
+        validateAuthority(post.getPostTier(), currentMember);
         commentRepository.delete(comment);
     }
+    public Comment findByPostIdAndId (Long postId, Long commentId){
+        return commentRepository.findByPostIdAndId(postId, commentId)
+                .orElseThrow(() -> new ApiException(ErrorType._POST_NOT_FOUND));
 
-//    @Transactional
-//    public Long saveReply(Long postId, Long parentCommentId, CommentCreateRequest dto) {
-//        Member currentMember = getCurrentMember();
-//
-//        Post post = getPost(postId);
-//
-//        Comment parentComment = commentRepository.findById(parentCommentId).orElseThrow(() ->
-//                new IllegalArgumentException("부모 댓글이 존재하지 않습니다. id=" + parentCommentId));
-//
-//        Comment replyComment = Comment.builder()
-//                .comment(dto.getComment())
-//                .member(currentMember)
-//                .post(post)
-//                .parentComment(parentComment)
-//                .build();
-//        commentRepository.save(replyComment);
-//
-//        return replyComment.getId();
-//    }
-//
-//    public List<CommentResponse> findAllWithReplies(Long postId) {
-//        Post post = getPost(postId);
-//
-//        List<Comment> topLevelComments = commentRepository.findByParentCommentIsNull(post);
-//
-//        return topLevelComments.stream()
-//                .map(comment -> CommentResponse.fromEntity(comment))
-//                .collect(Collectors.toList());
-//    }
+    }
+
 }

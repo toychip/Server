@@ -110,23 +110,9 @@ public class CommentApiController {
 
 
     /* DELETE */
-    @DeleteMapping("/post/{postId}/comments/{id}")
-    public SuccessResponse<Long> delete(@PathVariable Long postId, @PathVariable Long commentId) {
+    @DeleteMapping("/post/{postId}/comments/{commentId}")
+    public SuccessResponse<Long> delete(final @PathVariable Long postId, final @PathVariable Long commentId) {
         commentService.delete(postId, commentId);
         return new SuccessResponse<>(commentId);
     }
-
-//    /* CREATE REPLY */
-//    @PostMapping("/post/{postId}/comments/{parentId}")
-//    public SuccessResponse<Long> saveReply(@PathVariable Long postId, @PathVariable Long parentId, @RequestBody CommentCreateRequest commentCreateRequest) {
-//        Long result = commentService.saveReply(postId, parentId, commentCreateRequest);
-//        return new SuccessResponse<>(result);
-//    }
-//
-//    /* READ WITH REPLIES */
-//    @GetMapping("/post/{postId}/commentsWithReplies")
-//    public SuccessResponse<List<CommentResponse>> readWithReplies(@PathVariable Long postId) {
-//        List<CommentResponse> responses = commentService.findAllWithReplies(postId);
-//        return new SuccessResponse<>(responses);
-//    }
 }

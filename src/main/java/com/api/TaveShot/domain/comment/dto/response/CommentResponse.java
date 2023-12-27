@@ -30,15 +30,13 @@ public class CommentResponse {
     public static CommentResponse fromEntity(Comment commentEntity) {
         List<CommentResponse> replies = commentEntity.getChildComments().stream()
                 .map(CommentResponse::fromEntity)
-                .collect(Collectors.toList());
+                .toList();
 
         return new CommentResponse(
                 commentEntity.getId(),
                 commentEntity.getComment(),
                 commentEntity.getMember().getGitLoginId(),
                 commentEntity.getPost().getId(),
-                commentEntity.getParentComment() != null ? fromEntity(commentEntity.getParentComment()) : null,
-                replies
-        );
+                commentEntity.getParentComment() != null ? fromEntity(commentEntity.getParentComment()) : null, replies);
     }
 }
