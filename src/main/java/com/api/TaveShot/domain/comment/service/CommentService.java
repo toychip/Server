@@ -14,10 +14,13 @@ import com.api.TaveShot.domain.post.post.service.PostService;
 import com.api.TaveShot.global.exception.ApiException;
 import com.api.TaveShot.global.exception.ErrorType;
 import com.api.TaveShot.global.util.SecurityUtil;
+
+import java.lang.foreign.PaddingLayout;
 import java.util.List;
 import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -94,12 +97,10 @@ public class CommentService {
         return comment.getId();
     }
 
-    public List<CommentResponse> findAll(Long postId, Pageable pageable) {
+    public Page<CommentResponse> findAll(Long postId, Pageable pageable) {
         Post post = getPost(postId);
-        List<Comment> comments = commentRepository.findByParentCommentIsNull(post);
-        return comments.stream()
-                .map(comment -> CommentResponse.fromEntity(comment))
-                .toList();
+        Page<Comment> comments = commentRepository.findByPostOrderByCreated(post,pageable);
+        return comments.map(CommentResponse::fromEntity);
     }
 
 
