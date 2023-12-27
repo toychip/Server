@@ -15,8 +15,6 @@ import com.api.TaveShot.global.exception.ApiException;
 import com.api.TaveShot.global.exception.ErrorType;
 import com.api.TaveShot.global.util.SecurityUtil;
 
-import java.lang.foreign.PaddingLayout;
-import java.util.List;
 import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
