@@ -74,7 +74,7 @@ public class CommentApiController {
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = ErrorType.class)))
     })
-    @PatchMapping("/post/{postId}/comments/{id}")
+    @PatchMapping("/post/{postId}/comments/{commentId}")
     public SuccessResponse<Long> edit(final @PathVariable Long postId, final @PathVariable Long commentId, final @RequestBody CommentEditRequest commentEditRequest) {
         commentService.edit(postId, commentId, commentEditRequest);
         return new SuccessResponse<>(commentId);
