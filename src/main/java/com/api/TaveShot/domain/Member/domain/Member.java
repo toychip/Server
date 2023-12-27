@@ -32,6 +32,7 @@ public class Member extends BaseEntity {
     private String profileImageUrl;
     private String bojName;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     private Tier tier = Tier.BEGINNER;
 

@@ -45,6 +45,7 @@ public class Post extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private PostTier postTier;
 
+    @Builder.Default
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
 
@@ -52,6 +53,7 @@ public class Post extends BaseEntity {
     private String writer;
 
     // default = 0 설정
+    @Builder.Default
     private int viewCount = 0;
 
     @ManyToOne(fetch = FetchType.LAZY)
