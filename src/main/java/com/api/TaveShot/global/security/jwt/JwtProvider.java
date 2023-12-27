@@ -5,6 +5,7 @@ import static com.api.TaveShot.global.exception.ErrorType._JWT_EXPIRED;
 import static com.api.TaveShot.global.exception.ErrorType._JWT_PARSING_ERROR;
 import static com.api.TaveShot.global.exception.ErrorType._USER_NOT_FOUND_BY_TOKEN;
 
+import com.api.TaveShot.domain.Member.domain.Member;
 import com.api.TaveShot.domain.Member.repository.MemberRepository;
 import com.api.TaveShot.global.exception.ApiException;
 import io.jsonwebtoken.Claims;
@@ -13,11 +14,16 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.crypto.SecretKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -79,15 +85,26 @@ public class JwtProvider {
     public void getAuthenticationFromToken(final String jwtToken) {
 
         log.info("-------------- getAuthenticationFromToken jwt token: " + jwtToken);
-        getGitLoginId(jwtToken);
+        Member loginMember = getGitLoginId(jwtToken);
 
+        setContextHolder(jwtToken, loginMember);
     }
 
     // token 으로부터 유저 정보 확인
-    private void getGitLoginId(final String jwtToken) {
+    private Member getGitLoginId(final String jwtToken) {
         Long userId = Long.valueOf(getUserIdFromToken(jwtToken));
-        memberRepository.findById(userId)
+        return memberRepository.findById(userId)
                 .orElseThrow(() -> new ApiException(_USER_NOT_FOUND_BY_TOKEN));
+    }
+
+    private void setContextHolder(String jwtToken, Member loginMember) {
+
+        // ToDO 현재 비어있는 권한 등록, 추후에 수정
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(loginMember, jwtToken, authorities);
+
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
 
     // 토큰에서 유저 아이디 얻기
