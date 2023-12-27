@@ -17,6 +17,7 @@ public final class OauthConstant {
     public static final String NAME_PATTERN = "name";
     public static final String EMAIL_PATTERN = "email";
     public static final long ACCESS_TOKEN_VALID_TIME = 15 * 60 * 1000L;
-    public static final String REDIRECT_URL = "http://localhost:5173";
+    // ToDo 배포 후 프론트 url로 수정, 프론트 개발을 위해 로컬로 임시 설정
+    public static final String REDIRECT_URL = "http://localhost:3000";
 
 }

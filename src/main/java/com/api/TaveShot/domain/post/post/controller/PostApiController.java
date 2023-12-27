@@ -39,20 +39,20 @@ public class PostApiController {
     @Operation(summary = "새로운 게시글 생성", description = "새로운 게시글을 생성합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게시글 생성 성공",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
                             schema = @Schema(implementation = PostResponse.class))),
             @ApiResponse(responseCode = "400", description = "잘못된 요청"),
             @ApiResponse(responseCode = "401", description = "인증 실패",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
                             schema = @Schema(implementation = ErrorType.class))),
             @ApiResponse(responseCode = "403", description = "권한 없음",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
                             schema = @Schema(implementation = ErrorType.class))),
             @ApiResponse(responseCode = "404", description = "사용자 또는 게시글을 찾을 수 없음",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
                             schema = @Schema(implementation = ApiExceptionResponse.class))),
             @ApiResponse(responseCode = "500", description = "서버 오류",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
                             schema = @Schema(implementation = ApiExceptionResponse.class)))
     })
     @PostMapping("/post")

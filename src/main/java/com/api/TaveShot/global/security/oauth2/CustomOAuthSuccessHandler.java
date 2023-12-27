@@ -76,23 +76,20 @@ public class CustomOAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         String ourToken = jwtProvider.generateJwtToken(loginMemberId);
         // 어세스 토큰은 헤더에 담아서 응답으로 보냄
         response.setHeader("Authorization", ourToken);
+        log.info("ourToken = " + ourToken);
     }
 
     private void registerResponse(final HttpServletResponse response,
                                   final AuthResponse authResponse) throws IOException {
         String encodedMemberId = URLEncoder.encode(String.valueOf(authResponse.memberId()), StandardCharsets.UTF_8);
         String encodedLoginId = URLEncoder.encode(authResponse.gitLoginId(), StandardCharsets.UTF_8);
-//        String encodedGitProfileImageUrl = URLEncoder.encode(authResponse.gitProfileImageUrl(), StandardCharsets.UTF_8);
+        String encodedGitProfileImageUrl = URLEncoder.encode(authResponse.gitProfileImageUrl(), StandardCharsets.UTF_8);
 
         // 프론트엔드 페이지로 토큰과 함께 리다이렉트
         String frontendRedirectUrl = String.format(
-                "%s/oauth2/github/code?memberId=%s&gitLoginId=%s"
-//                        + "&profileImgUrl=%s"
-                ,
-                REDIRECT_URL, encodedMemberId, encodedLoginId
-//                , encodedGitProfileImageUrl
+                "%s/oauth2/github/code?memberId=%s&gitLoginId=%s&profileImgUrl=%s",
+                REDIRECT_URL, encodedMemberId, encodedLoginId, encodedGitProfileImageUrl
         );
-
         response.sendRedirect(frontendRedirectUrl);
     }
 
