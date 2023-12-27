@@ -32,11 +32,11 @@ public class AuthorizationService {
         return gitHubApiService.getGithubRepoDescription();
     }
 
-    private SolvedUserInfo getSolvedUserInfo(String bojName) {
+    private SolvedUserInfo getSolvedUserInfo(final String bojName) {
         return solvedAcApiService.getUserInfoFromSolvedAc(bojName);
     }
 
-    private void validateMatch(SolvedUserInfo solvedUserInfo) {
+    private void validateMatch(final SolvedUserInfo solvedUserInfo) {
         String gitHubNameBySolvedBio = solvedUserInfo.getBio();
 
         Member currentMember = getCurrentMember();
@@ -51,7 +51,7 @@ public class AuthorizationService {
         return SecurityUtil.getCurrentMember();
     }
 
-    private void changeBojInfo(SolvedUserInfo solvedUserInfo) {
+    private void changeBojInfo(final SolvedUserInfo solvedUserInfo) {
         Integer bojTier = solvedUserInfo.getBojTier();
         Tier tier = calculateTier(bojTier);
 
