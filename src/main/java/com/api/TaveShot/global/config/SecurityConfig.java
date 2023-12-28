@@ -56,7 +56,7 @@ public class SecurityConfig {
                                 .anyRequest().permitAll());
         http
                 .oauth2Login()
-                .authorizationEndpoint().baseUri("/login/oauth2/code/github")
+                .authorizationEndpoint().baseUri("/login/oauth/authorize")
                     .and()
                 .userInfoEndpoint()
                 .userService(customOAuth2UserService)

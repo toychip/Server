@@ -24,7 +24,7 @@ public class SearchController {
 
     @GetMapping
     public SuccessResponse<GoogleListResponseDto> getList(@RequestParam String query){
-        List<GoogleResponseDto> dto = searchService.findBlog(query);
-        return new SuccessResponse(dto);
+        GoogleListResponseDto response = searchService.findBlog(query);
+        return new SuccessResponse<>(response);
     }
 }

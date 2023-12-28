@@ -1,5 +1,7 @@
 package com.api.TaveShot.domain.Member.domain;
 
+import com.api.TaveShot.domain.Member.editor.MemberEditor;
+import com.api.TaveShot.domain.Member.editor.MemberEditor.MemberEditorBuilder;
 import com.api.TaveShot.domain.base.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -28,12 +30,25 @@ public class Member extends BaseEntity {
     private String gitEmail;
     private String gitName;
     private String profileImageUrl;
+    private String bojName;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     private Tier tier = Tier.BEGINNER;
 
     public String tierName() {
         return tier.name();
+    }
+
+    public MemberEditorBuilder toEditor() {
+        return MemberEditor.builder()
+                .bojName(bojName)
+                .tier(tier);
+    }
+
+    public void changeBojInfo(MemberEditor memberEditor) {
+        this.bojName = memberEditor.getBojName();
+        this.tier = memberEditor.getTier();
     }
 }
 

@@ -29,7 +29,7 @@ public class SearchService {
     private String CX;
 
 
-    public List<GoogleResponseDto> findBlog(String query){
+    public GoogleListResponseDto findBlog(String query){
         WebClient webClient = WebClient.builder()
                 .baseUrl("https://www.googleapis.com/customsearch/v1")
                 .build();
@@ -46,7 +46,11 @@ public class SearchService {
 
         log.info("{}", dto.collectList().block());
 
-        return dto.collectList().block();
+        List<GoogleResponseDto> googleResponseDtos = dto.collectList().block();
+
+        return GoogleListResponseDto.builder()
+                .dtos(googleResponseDtos)
+                .build();
 
     }
 }
