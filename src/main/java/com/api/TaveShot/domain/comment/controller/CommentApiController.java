@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -49,7 +50,7 @@ public class CommentApiController {
                             schema = @Schema(implementation = ErrorType.class)))
     })
     @PostMapping("/post/{postId}/comments")
-    public SuccessResponse<Long> register(final @PathVariable Long postId, final @RequestBody CommentCreateRequest commentCreateRequest) {
+    public SuccessResponse<Long> register(final @PathVariable @Validated Long postId, final @RequestBody CommentCreateRequest commentCreateRequest) {
         Long createdCommentId = commentService.register(postId, commentCreateRequest);
         return new SuccessResponse<>(createdCommentId);
     }
