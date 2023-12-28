@@ -108,9 +108,11 @@ public class CommentService {
     @Transactional
     public void edit(Long postId, Long commentId, CommentEditRequest request) {
         Member currentMember = getCurrentMember();
+        Post post = getPost(postId);
         Comment comment = getComment(commentId);
 
-        validateComment(comment, currentMember);
+        validateComment(comment, currentMember, post);
+        validateAuthority(comment.getPost().getPostTier(), currentMember);
 
         CommentEditor commentEditor = CommentEditor.builder()
                 .comment(request.getComment())
@@ -119,9 +121,9 @@ public class CommentService {
         comment.edit(commentEditor);
     }
 
-    private void validateComment(Comment comment, Member currentMember) {
+    private void validateComment(Comment comment, Member currentMember, Post post) {
         validateCommentWriter(comment, currentMember);
-        validateAuthority(comment.getPost().getPostTier(), currentMember);
+        validateAuthority(post.getPostTier(), currentMember);
     }
 
     private void validateCommentWriter(Comment comment, Member currentMember) {
@@ -141,10 +143,13 @@ public class CommentService {
     @Transactional
     public void delete(final Long postId, final Long commentId) {
         Member currentMember = getCurrentMember();
-        Comment comment = getComment(commentId);
         Post post = getPost(postId);
+        Comment comment = getComment(commentId);
 
-        validateAuthority(post.getPostTier(), currentMember);
+        validateComment(comment, currentMember, post);
+
+        validateAuthority(comment.getPost().getPostTier(), currentMember);
+
         commentRepository.delete(comment);
     }
     public Comment findByPostIdAndId (Long postId, Long commentId){
