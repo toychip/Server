@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/oauth/authorize")
+@RequestMapping("login/oauth/authorize")
 public class GithubOAuthController {
 
     @GetMapping("/github")
