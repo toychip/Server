@@ -13,7 +13,6 @@ public class CommentEditor {
     public static CommentEditorBuilder builder() {
         return new CommentEditorBuilder();
     }
-
     public static class CommentEditorBuilder {
         private String comment;
 
@@ -28,7 +27,7 @@ public class CommentEditor {
         }
 
         public CommentEditor build() {
-            return new CommentEditor(this.comment);
+            return new CommentEditor(comment);
         }
     }
 }

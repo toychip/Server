@@ -1,5 +1,6 @@
 package com.api.TaveShot.domain.comment.dto.response;
 
+import com.api.TaveShot.domain.comment.converter.CommentConverter;
 import com.api.TaveShot.domain.comment.domain.Comment;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
@@ -24,19 +25,10 @@ public class CommentResponse {
         this.memberId = memberId;
         this.postId = postId;
         this.parentComment = parentComment;
-        this.replies = Collections.emptyList();
+        this.replies = replies;
     }
 
     public static CommentResponse fromEntity(Comment commentEntity) {
-        List<CommentResponse> replies = commentEntity.getChildComments().stream()
-                .map(CommentResponse::fromEntity)
-                .toList();
-
-        return new CommentResponse(
-                commentEntity.getId(),
-                commentEntity.getComment(),
-                commentEntity.getMember().getGitLoginId(),
-                commentEntity.getPost().getId(),
-                commentEntity.getParentComment() != null ? fromEntity(commentEntity.getParentComment()) : null, replies);
+        return CommentConverter.entityToDto(commentEntity);
     }
 }
