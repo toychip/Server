@@ -51,20 +51,6 @@ public class CommentService {
         return createComment(request, currentMember, post, parentCommentOptional);
     }
 
-    private Long createComment(final CommentCreateRequest request, final Member currentMember,
-                               final Post post, final Optional<Comment> parentCommentOptional) {
-        if (parentCommentOptional.isPresent()) {
-            Comment parentComment = parentCommentOptional.get();
-            return createWithParent(request, currentMember, post, parentComment);
-        }
-
-        return createNotParent(request, currentMember, post);
-    }
-
-    private void validateAuthority(final PostTier postTier, final Member currentMember) {
-        postService.validateAuthority(postTier, currentMember);
-    }
-
     private Member getCurrentMember() {
         return SecurityUtil.getCurrentMember();
     }
@@ -73,11 +59,25 @@ public class CommentService {
         return postService.findById(postId);
     }
 
+    private void validateAuthority(final PostTier postTier, final Member currentMember) {
+        postService.validateAuthority(postTier, currentMember);
+    }
+
     private Optional<Comment> findParentComment(final Long parentCommentId) {
         if (parentCommentId != null) {
             return commentRepository.findById(parentCommentId);
         }
         return Optional.empty();
+    }
+
+    private Long createComment(final CommentCreateRequest request, final Member currentMember,
+                               final Post post, final Optional<Comment> parentCommentOptional) {
+        if (parentCommentOptional.isPresent()) {
+            Comment parentComment = parentCommentOptional.get();
+            return createWithParent(request, currentMember, post, parentComment);
+        }
+
+        return createNotParent(request, currentMember, post);
     }
 
     private Long createWithParent(final CommentCreateRequest request, final Member currentMember,
@@ -106,52 +106,47 @@ public class CommentService {
 
     /* --------------------------------- EDIT --------------------------------- */
     @Transactional
-    public void edit(Long postId, Long commentId, CommentEditRequest request) {
+    public void edit(Long commentId, CommentEditRequest request) {
         Member currentMember = getCurrentMember();
-        Post post = getPost(postId);
         Comment comment = getComment(commentId);
 
-        validateComment(comment, currentMember, post);
-        validateAuthority(comment.getPost().getPostTier(), currentMember);
+        validateCommentWriter(comment, currentMember);
 
-        CommentEditor commentEditor = CommentEditor.builder()
-                .comment(request.getComment())
-                .build();
+        CommentEditor commentEditor = getCommentEditor(request);
 
         comment.edit(commentEditor);
     }
 
-    private void validateComment(Comment comment, Member currentMember, Post post) {
-        validateCommentWriter(comment, currentMember);
-        validateAuthority(post.getPostTier(), currentMember);
+    private Comment getComment(Long commentId) {
+        return commentRepository.findById(commentId)
+                .orElseThrow(() -> new ApiException(ErrorType._COMMENT_NOT_FOUND));
     }
 
     private void validateCommentWriter(Comment comment, Member currentMember) {
         if (!comment.getMember().getId().equals(currentMember.getId())) {
-            throw new ApiException(ErrorType._UNAUTHORIZED);
+            throw new ApiException(ErrorType._POST_USER_FORBIDDEN);
         }
     }
 
-    private Comment getComment(Long commentId) {
-        return commentRepository.findById(commentId)
-                .orElseThrow(() -> new ApiException(ErrorType._POST_NOT_FOUND));//COMMENT ErrorType으로 변경
+    private CommentEditor getCommentEditor(CommentEditRequest request) {
+        return CommentEditor.builder()
+                .comment(request.getComment())
+                .build();
     }
-
 
 
     /* --------------------------------- DELETE --------------------------------- */
     @Transactional
-    public void delete(final Long postId, final Long commentId) {
+    public void delete(final Long commentId) {
         Member currentMember = getCurrentMember();
-        Post post = getPost(postId);
         Comment comment = getComment(commentId);
 
-        validateComment(comment, currentMember, post);
-
-        validateAuthority(comment.getPost().getPostTier(), currentMember);
+        validateCommentWriter(comment, currentMember);
 
         commentRepository.delete(comment);
     }
+
+
     public Comment findByPostIdAndId (Long postId, Long commentId){
         return commentRepository.findByPostIdAndId(postId, commentId)
                 .orElseThrow(() -> new ApiException(ErrorType._POST_NOT_FOUND));
