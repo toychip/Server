@@ -8,19 +8,24 @@ import com.api.TaveShot.domain.post.post.dto.response.PostListResponse;
 import com.api.TaveShot.domain.post.post.dto.response.PostResponse;
 import com.api.TaveShot.global.exception.ErrorType;
 import com.api.TaveShot.global.success.SuccessResponse;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -50,7 +55,7 @@ public class CommentApiController {
                             schema = @Schema(implementation = ErrorType.class)))
     })
     @PostMapping("/post/{postId}/comments")
-    public SuccessResponse<Long> register(final @PathVariable @Validated Long postId, final @RequestBody CommentCreateRequest commentCreateRequest) {
+    public SuccessResponse<Long> register(final @PathVariable Long postId, final @RequestBody CommentCreateRequest commentCreateRequest) {
         Long createdCommentId = commentService.register(postId, commentCreateRequest);
         return new SuccessResponse<>(createdCommentId);
     }
@@ -103,17 +108,17 @@ public class CommentApiController {
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = ErrorType.class)))
     })
-    @PatchMapping("/post/{postId}/comments/{commentId}")
-    public SuccessResponse<Long> edit(final @PathVariable Long postId, final @PathVariable Long commentId, final @RequestBody CommentEditRequest commentEditRequest) {
-        commentService.edit(postId, commentId, commentEditRequest);
+    @PatchMapping("/post/comments/{commentId}")
+    public SuccessResponse<Long> edit(final @PathVariable Long commentId, final @RequestBody CommentEditRequest commentEditRequest) {
+        commentService.edit(commentId, commentEditRequest);
         return new SuccessResponse<>(commentId);
     }
 
 
     /* DELETE */
-    @DeleteMapping("/post/{postId}/comments/{commentId}")
-    public SuccessResponse<Long> delete(final @PathVariable Long postId, final @PathVariable Long commentId) {
-        commentService.delete(postId, commentId);
+    @DeleteMapping("/post/comments/{commentId}")
+    public SuccessResponse<Long> delete(final @PathVariable Long commentId) {
+        commentService.delete(commentId);
         return new SuccessResponse<>(commentId);
     }
 }
