@@ -4,7 +4,6 @@ import com.api.TaveShot.domain.Member.domain.Member;
 import com.api.TaveShot.domain.base.BaseEntity;
 import com.api.TaveShot.domain.comment.editor.CommentEditor;
 import com.api.TaveShot.domain.post.post.domain.Post;
-import com.api.TaveShot.domain.post.post.editor.PostEditor;
 import com.api.TaveShot.global.util.TimeUtil;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -41,7 +40,7 @@ public class Comment extends BaseEntity {
     private Long id;
 
     @Column(columnDefinition = "TEXT", nullable = false)
-    private String comment; // 댓글 내용
+    private String content; // 댓글 내용
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
@@ -52,19 +51,19 @@ public class Comment extends BaseEntity {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_comment_id")
-    private Comment parentComment;
+    @JoinColumn(name = "parent_id")
+    private Comment parent;
 
-    @OneToMany(mappedBy = "parentComment", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Comment> childComments = new ArrayList<>(); // 자식 댓글들
+    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Comment> child = new ArrayList<>(); // 자식 댓글들
 
     public CommentEditor.CommentEditorBuilder toEditor(){
         return CommentEditor.builder()
-                .comment(comment);
+                .comment(content);
     }
 
     public void edit(final CommentEditor commentEditor) {
-        this.comment = commentEditor.getComment();
+        this.content = commentEditor.getContent();
     }
 
     public String getCreatedTime() {

@@ -8,26 +8,26 @@ import org.springframework.util.StringUtils;
 @RequiredArgsConstructor
 public class CommentEditor {
 
-    private final String comment;
+    private final String content;
 
     public static CommentEditorBuilder builder() {
         return new CommentEditorBuilder();
     }
     public static class CommentEditorBuilder {
-        private String comment;
+        private String content;
 
         CommentEditorBuilder() {
         }
 
-        public CommentEditorBuilder comment(final String comment) {
-            if (StringUtils.hasText(comment)) {
-                this.comment = comment;
+        public CommentEditorBuilder comment(final String content) {
+            if (StringUtils.hasText(content)) {
+                this.content = content;
             }
             return this;
         }
 
         public CommentEditor build() {
-            return new CommentEditor(comment);
+            return new CommentEditor(content);
         }
     }
 }
