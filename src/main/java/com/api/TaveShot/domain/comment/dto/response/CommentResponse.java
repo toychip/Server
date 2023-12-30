@@ -5,26 +5,24 @@ import com.api.TaveShot.domain.comment.domain.Comment;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 public class CommentResponse {
     private final Long id;
-    private final String comment;
+    private final String content;
     private final String memberId;
     private final Long postId;
-    private final CommentResponse parentComment;
+    private final CommentResponse parent;
     private final List<CommentResponse> replies;
 
     @QueryProjection
-    public CommentResponse(Long id, String comment, String memberId, Long postId, CommentResponse parentComment, List<CommentResponse> replies) {
+    public CommentResponse(Long id, String content, String memberId, Long postId, Comment parent, List<CommentResponse> replies) {
         this.id = id;
-        this.comment = comment;
+        this.content = content;
         this.memberId = memberId;
         this.postId = postId;
-        this.parentComment = parentComment;
+        this.parent = CommentConverter.getParentCommentResponse(parent);
         this.replies = replies;
     }
 

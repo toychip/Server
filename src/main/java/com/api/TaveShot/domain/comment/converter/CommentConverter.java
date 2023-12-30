@@ -27,18 +27,26 @@ public class CommentConverter {
                 .parent(parentComment)
                 .build();
     }
-//
-//    public static CommentResponse entityToDto(final Comment commentEntity) {
-//        List<CommentResponse> replies = commentEntity.getChildComments().stream()
-//                .map(CommentConverter::entityToDto)
-//                .toList();
-//
-//        return new CommentResponse(
-//                commentEntity.getId(),
-//                commentEntity.getComment(),
-//                commentEntity.getMember().getGitLoginId(),
-//                commentEntity.getPost().getId(),
-//                commentEntity.getParentComment() != null ? entityToDto(commentEntity.getParentComment()) : null,
-//                replies);
-//    }
+
+    public static CommentResponse entityToDto(final Comment commentEntity) {
+        List<CommentResponse> replies = commentEntity.getChild().stream()
+                .map(CommentConverter::entityToDto)
+                .toList();
+
+        return new CommentResponse(
+                commentEntity.getId(),
+                commentEntity.getContent(),
+                commentEntity.getMember().getGitLoginId(),
+                commentEntity.getPost().getId(),
+                commentEntity.getParent(),
+                replies);
+    }
+
+    public static CommentResponse getParentCommentResponse(Comment commentEntity) {
+        if (commentEntity.getParent() != null) {
+            return entityToDto(commentEntity.getParent());
+        } else {
+            return null;
+        }
+    }
 }
