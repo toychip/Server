@@ -4,6 +4,7 @@ import com.api.TaveShot.domain.comment.converter.CommentConverter;
 import com.api.TaveShot.domain.comment.domain.Comment;
 import com.api.TaveShot.domain.comment.dto.request.CommentCreateRequest;
 import com.api.TaveShot.domain.comment.dto.request.CommentEditRequest;
+import com.api.TaveShot.domain.comment.dto.response.CommentListResponse;
 import com.api.TaveShot.domain.comment.dto.response.CommentResponse;
 import com.api.TaveShot.domain.comment.editor.CommentEditor;
 import com.api.TaveShot.domain.comment.repository.CommentRepository;
@@ -15,6 +16,7 @@ import com.api.TaveShot.global.exception.ApiException;
 import com.api.TaveShot.global.exception.ErrorType;
 import com.api.TaveShot.global.util.SecurityUtil;
 
+import java.util.List;
 import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
@@ -95,13 +97,17 @@ public class CommentService {
         return comment.getId();
     }
 
-    public Page<CommentResponse> findAll(Long postId, Pageable pageable) {
-        Post post = getPost(postId);
-        Page<Comment> comments = commentRepository.findByPost(post,pageable);
-        return comments.map(CommentResponse::fromEntity);
+
+    /* --------------------------------- READ --------------------------------- */
+    public CommentListResponse findComments(Long postId, Pageable pageable) {
+        Page<Comment> commentPage = commentRepository.findByPostId(postId, pageable);
+
+        List<Comment> comments = commentPage.getContent();
+        List<CommentResponse> commentResponses = CommentConverter.commentsToResponses(comments);
+        CommentListResponse response = CommentConverter.toCommentListResponse(commentPage, commentResponses);
+        return response;
+
     }
-
-
 
 
     /* --------------------------------- EDIT --------------------------------- */
@@ -146,11 +152,5 @@ public class CommentService {
         commentRepository.delete(comment);
     }
 
-
-    public Comment findByPostIdAndId (Long postId, Long commentId){
-        return commentRepository.findByPostIdAndId(postId, commentId)
-                .orElseThrow(() -> new ApiException(ErrorType._POST_NOT_FOUND));
-
-    }
 
 }
