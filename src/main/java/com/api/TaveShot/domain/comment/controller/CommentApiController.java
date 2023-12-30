@@ -2,7 +2,7 @@ package com.api.TaveShot.domain.comment.controller;
 
 import com.api.TaveShot.domain.comment.dto.request.CommentCreateRequest;
 import com.api.TaveShot.domain.comment.dto.request.CommentEditRequest;
-import com.api.TaveShot.domain.comment.dto.response.CommentResponse;
+import com.api.TaveShot.domain.comment.dto.response.CommentListResponse;
 import com.api.TaveShot.domain.comment.service.CommentService;
 import com.api.TaveShot.domain.post.post.dto.response.PostListResponse;
 import com.api.TaveShot.domain.post.post.dto.response.PostResponse;
@@ -14,7 +14,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,20 +38,7 @@ public class CommentApiController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "댓글 등록 성공",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = Long.class))),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청"),
-            @ApiResponse(responseCode = "401", description = "인증 실패",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = ErrorType.class))),
-            @ApiResponse(responseCode = "403", description = "권한 없음",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = ErrorType.class))),
-            @ApiResponse(responseCode = "404", description = "게시글을 찾을 수 없음",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = ErrorType.class))),
-            @ApiResponse(responseCode = "500", description = "서버 오류",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = ErrorType.class)))
+                            schema = @Schema(implementation = Long.class)))
     })
     @PostMapping("/post/{postId}/comments")
     public SuccessResponse<Long> register(final @PathVariable Long postId, final @RequestBody CommentCreateRequest commentCreateRequest) {
@@ -61,32 +47,19 @@ public class CommentApiController {
     }
 
 
-
     /* READ */
     @Operation(summary = "특정 게시글 댓글 조회", description = "특정 게시글에 해당하는 댓글들을 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "댓글 조회 성공",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = PostResponse.class))),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청"),
-            @ApiResponse(responseCode = "401", description = "인증 실패",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = ErrorType.class))),
-            @ApiResponse(responseCode = "403", description = "권한 없음",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = ErrorType.class))),
-            @ApiResponse(responseCode = "404", description = "게시글을 찾을 수 없음",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = ErrorType.class))),
-            @ApiResponse(responseCode = "500", description = "서버 오류",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = ErrorType.class)))
+                            schema = @Schema(implementation = CommentListResponse.class)))
     })
     @GetMapping("/post/{postId}/comments")
-    public SuccessResponse<Page<CommentResponse>> read(final @PathVariable Long postId, final Pageable pageable) {
-        Page<CommentResponse> commentResponses = commentService.findAll(postId, pageable);
-        return new SuccessResponse<>(commentResponses);
+    public SuccessResponse<CommentListResponse> read(final @PathVariable Long postId, final Pageable pageable) {
+        CommentListResponse commentListResponse = commentService.findComments(postId, pageable);
+        return new SuccessResponse<>(commentListResponse);
     }
+
 
 
     /* UPDATE */
@@ -94,19 +67,7 @@ public class CommentApiController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "댓글 수정 성공",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = PostListResponse.class))),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = ErrorType.class))),
-            @ApiResponse(responseCode = "401", description = "인증 실패",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = ErrorType.class))),
-            @ApiResponse(responseCode = "403", description = "접근 권한 없음",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = ErrorType.class))),
-            @ApiResponse(responseCode = "500", description = "서버 오류",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = ErrorType.class)))
+                            schema = @Schema(implementation = Long.class)))
     })
     @PatchMapping("/post/comments/{commentId}")
     public SuccessResponse<Long> edit(final @PathVariable Long commentId, final @RequestBody CommentEditRequest commentEditRequest) {
@@ -116,6 +77,12 @@ public class CommentApiController {
 
 
     /* DELETE */
+    @Operation(summary = "댓글 삭제", description = "지정된 댓글을 삭제합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "댓글 수정 성공",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = Long.class)))
+    })
     @DeleteMapping("/post/comments/{commentId}")
     public SuccessResponse<Long> delete(final @PathVariable Long commentId) {
         commentService.delete(commentId);
