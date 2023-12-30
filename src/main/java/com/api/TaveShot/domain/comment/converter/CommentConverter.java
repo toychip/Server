@@ -33,16 +33,19 @@ public class CommentConverter {
                 .map(CommentConverter::entityToDto)
                 .toList();
 
-        return new CommentResponse(
-                commentEntity.getId(),
-                commentEntity.getContent(),
-                commentEntity.getMember().getGitLoginId(),
-                commentEntity.getPost().getId(),
-                commentEntity.getParent(),
-                replies);
+        CommentResponse parentResponse = getParentResponse(commentEntity);
+
+        return CommentResponse.builder()
+                .id(commentEntity.getId())
+                .content(commentEntity.getContent())
+                .memberId(commentEntity.getMember().getGitLoginId())
+                .postId(commentEntity.getPost().getId())
+                .parent(parentResponse)
+                .replies(replies)
+                .build();
     }
 
-    public static CommentResponse getParentCommentResponse(Comment commentEntity) {
+    public static CommentResponse getParentResponse(Comment commentEntity) {
         if (commentEntity.getParent() != null) {
             return entityToDto(commentEntity.getParent());
         } else {
