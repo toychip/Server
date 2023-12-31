@@ -39,6 +39,9 @@ public enum ErrorType {
     _POST_USER_FORBIDDEN(FORBIDDEN, "POST_4030", "해당 게시글에 접근 권한이 없습니다."),
 
 
+    // ------------------------------------------ COMMENT ------------------------------------------
+    _COMMENT_NOT_FOUND(NOT_FOUND, "POST_4040", "해당 게시글이 존재하지 않습니다."),
+
     // ------------------------------------------ S3 ------------------------------------------
     EXCEEDING_FILE_COUNT(BAD_REQUEST, "S4001", "사진 개수가 너무 많습니다."),
     S3_UPLOAD(INTERNAL_SERVER_ERROR, "S5001", "서버오류, S3 사진 업로드 에러입니다."),

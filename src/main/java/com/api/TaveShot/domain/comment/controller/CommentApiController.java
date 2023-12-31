@@ -1,24 +1,30 @@
 package com.api.TaveShot.domain.comment.controller;
 
 import com.api.TaveShot.domain.comment.dto.request.CommentCreateRequest;
-import com.api.TaveShot.domain.comment.dto.request.CommentUpdateRequest;
+import com.api.TaveShot.domain.comment.dto.request.CommentEditRequest;
+import com.api.TaveShot.domain.comment.dto.response.CommentListResponse;
 import com.api.TaveShot.domain.comment.service.CommentService;
+import com.api.TaveShot.domain.post.post.dto.response.PostListResponse;
+import com.api.TaveShot.domain.post.post.dto.response.PostResponse;
 import com.api.TaveShot.global.exception.ErrorType;
 import com.api.TaveShot.global.success.SuccessResponse;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -32,17 +38,7 @@ public class CommentApiController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "댓글 등록 성공",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = Long.class))),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청"),
-            @ApiResponse(responseCode = "401", description = "인증 실패",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = ErrorType.class))),
-            @ApiResponse(responseCode = "403", description = "권한 없음",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = ErrorType.class))),
-            @ApiResponse(responseCode = "404", description = "게시글을 찾을 수 없음",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = ErrorType.class)))
+                            schema = @Schema(implementation = Long.class)))
     })
     @PostMapping("/post/{postId}/comments")
     public SuccessResponse<Long> register(final @PathVariable Long postId, final @RequestBody CommentCreateRequest commentCreateRequest) {
@@ -50,38 +46,46 @@ public class CommentApiController {
         return new SuccessResponse<>(createdCommentId);
     }
 
+
     /* READ */
-//    @GetMapping("/post/{id}/comments")
-//    public SuccessResponse<Page<CommentResponse>> read(@PathVariable Long id, Pageable pageable) {
-//        Page<CommentResponse> responses = commentService.findAll(id, pageable);
-//        return new SuccessResponse<>(responses);
-//    }
+    @Operation(summary = "특정 게시글 댓글 조회", description = "특정 게시글에 해당하는 댓글들을 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "댓글 조회 성공",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = CommentListResponse.class)))
+    })
+    @GetMapping("/post/{postId}/comments")
+    public SuccessResponse<CommentListResponse> read(final @PathVariable Long postId, final Pageable pageable) {
+        CommentListResponse commentListResponse = commentService.findComments(postId, pageable);
+        return new SuccessResponse<>(commentListResponse);
+    }
+
+
 
     /* UPDATE */
-    @PutMapping("/post/{postId}/comments/{id}")
-    public SuccessResponse<Long> update(@PathVariable Long postId, @PathVariable Long commentId, @RequestBody CommentUpdateRequest commentUpdateRequest) {
-        commentService.update(postId, commentId, commentUpdateRequest);
+    @Operation(summary = "댓글 수정", description = "지정된 댓글을 수정합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "댓글 수정 성공",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = Long.class)))
+    })
+    @PatchMapping("/post/comments/{commentId}")
+    public SuccessResponse<Long> edit(final @PathVariable Long commentId, final @RequestBody CommentEditRequest commentEditRequest) {
+        commentService.edit(commentId, commentEditRequest);
         return new SuccessResponse<>(commentId);
     }
+
 
     /* DELETE */
-    @DeleteMapping("/post/{postId}/comments/{id}")
-    public SuccessResponse<Long> delete(@PathVariable Long postId, @PathVariable Long commentId) {
-        commentService.delete(postId, commentId);
+    @Operation(summary = "댓글 삭제", description = "지정된 댓글을 삭제합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "댓글 수정 성공",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = Long.class)))
+    })
+    @DeleteMapping("/post/comments/{commentId}")
+    public SuccessResponse<Long> delete(final @PathVariable Long commentId) {
+        commentService.delete(commentId);
         return new SuccessResponse<>(commentId);
     }
-
-//    /* CREATE REPLY */
-//    @PostMapping("/post/{postId}/comments/{parentId}")
-//    public SuccessResponse<Long> saveReply(@PathVariable Long postId, @PathVariable Long parentId, @RequestBody CommentCreateRequest commentCreateRequest) {
-//        Long result = commentService.saveReply(postId, parentId, commentCreateRequest);
-//        return new SuccessResponse<>(result);
-//    }
-//
-//    /* READ WITH REPLIES */
-//    @GetMapping("/post/{postId}/commentsWithReplies")
-//    public SuccessResponse<List<CommentResponse>> readWithReplies(@PathVariable Long postId) {
-//        List<CommentResponse> responses = commentService.findAllWithReplies(postId);
-//        return new SuccessResponse<>(responses);
-//    }
 }
