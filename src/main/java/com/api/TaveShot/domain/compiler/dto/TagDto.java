@@ -1,19 +1,16 @@
 package com.api.TaveShot.domain.compiler.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProblemResponseDto {
-
-    private int problemId;
-    private String titleKo;
-    private int level;
-    private List<TagDto> tags;
-
+@Builder
+public class TagDto {
+    private String key;
+    private int bojTagId;
+    private String name;
 }

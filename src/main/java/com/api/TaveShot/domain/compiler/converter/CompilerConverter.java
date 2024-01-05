@@ -9,7 +9,8 @@ public class CompilerConverter {
         return new ProblemInfoDto(
                 response.getProblemId(),
                 response.getTitleKo(),
-                response.getLevel()
+                response.getLevel(),
+                response.getTags()
         );
     }
 

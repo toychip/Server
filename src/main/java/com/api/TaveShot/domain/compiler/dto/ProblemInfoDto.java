@@ -16,5 +16,6 @@ public class ProblemInfoDto {
     private int problemId;
     private String titleKo;
     private int level;
+    private List<TagDto> tags;
 
 }
