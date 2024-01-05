@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 @RestController
 @Slf4j
@@ -19,8 +20,8 @@ public class CompilerController {
 
     private final CompilerService compilerService;
     @GetMapping
-    public SuccessResponse<ProblemInfoDto> getProblemInfo(@RequestParam int problemId) {
-        ProblemInfoDto problemInfo = compilerService.getProblemInfo(problemId);
-        return new SuccessResponse<>(problemInfo);
+    public Mono<SuccessResponse<ProblemInfoDto>> getProblemInfo(@RequestParam int problemId) {
+        return compilerService.getProblemInfo(problemId)
+                .map(SuccessResponse::new);
     }
 }
