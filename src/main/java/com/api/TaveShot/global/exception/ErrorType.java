@@ -33,6 +33,13 @@ public enum ErrorType {
     _JWT_EXPIRED(UNAUTHORIZED, "JWT_4010", "Jwt Token의 유효 기간이 만료되었습니다."),
 
 
+    // ------------------------------------------ PAGING ------------------------------------------
+    _PAGING_INVALID_PAGE_SIZE(BAD_REQUEST, "PAGING_4001", "게시글 사이즈가 너무 큽니다. 최대 100개까지 조회 가능합니다."),
+    _PAGING_INVALID_PAGE_NUMBER(BAD_REQUEST, "PAGING_4002", "게시글 사이즈가 너무 큽니다. 최대 1000 페이지까지 조회 가능합니다."),
+    _PAGING_INVALID_DATA_SIZE(BAD_REQUEST, "PAGING_4003", "요청된 페이지 번호가 데이터 범위를 초과합니다."),
+
+
+
     // ------------------------------------------ POST ------------------------------------------
     _POST_INVALID_TIER(BAD_REQUEST, "POST_4000", "게시글의 등급이 잘못되었습니다."),
     _POST_NOT_FOUND(NOT_FOUND, "POST_4040", "해당 게시글이 존재하지 않습니다."),

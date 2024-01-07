@@ -12,8 +12,9 @@ public class PostConverter {
     public static Post createDtoToEntity(final PostCreateRequest request, final Member currentMember) {
         return Post.builder()
                 .title(request.getTitle())
+                .content(request.getContent())
                 .member(currentMember)
-                .writer(currentMember.getGitName())
+                .writer(currentMember.getGitLoginId())
                 .postTier(request.getPostTier())
                 .build();
     }
