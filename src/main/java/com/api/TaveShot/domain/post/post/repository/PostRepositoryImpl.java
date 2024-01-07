@@ -1,7 +1,7 @@
 package com.api.TaveShot.domain.post.post.repository;
 
 
-import static com.api.TaveShot.domain.post.image.domain.QImage.*;
+import static com.api.TaveShot.domain.post.image.domain.QImage.image;
 import static com.api.TaveShot.domain.post.post.domain.QPost.post;
 import static com.api.TaveShot.global.constant.OauthConstant.MAX_PAGE_NUMBER;
 import static com.api.TaveShot.global.constant.OauthConstant.MAX_PAGE_SIZE;
@@ -38,7 +38,6 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     }
 
     private List<PostResponse> getSearchPageContent(final PostSearchCondition condition, final Pageable pageable) {
-
         validatePaging(condition, pageable);
 
         List<Post> posts = jpaQueryFactory
@@ -57,7 +56,6 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .fetch();
 
         List<PostResponse> postResponseList = toPostResponses(posts);
-
         return postResponseList;
     }
 
@@ -71,7 +69,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
             throw new ApiException(ErrorType._PAGING_INVALID_PAGE_NUMBER);
         }
 
-        long totalPosts = getSearchPageCount(condition).fetchOne();
+        long totalPosts = safeFetchCount(getSearchPageCount(condition));
         long expectedStartIndex = pageable.getOffset();
         long expectedEndIndex = expectedStartIndex + pageable.getPageSize();
 
@@ -79,6 +77,14 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         if (expectedStartIndex >= totalPosts || expectedEndIndex > totalPosts) {
             throw new ApiException(ErrorType._PAGING_INVALID_DATA_SIZE);
         }
+    }
+
+    private long safeFetchCount(JPAQuery<Long> query) {
+        Long count = query.fetchOne();
+        if (count != null) {
+            return count;
+        }
+        return 0L;
     }
 
     private BooleanExpression judgeTier(final PostTier postTierEnum) {
