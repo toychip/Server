@@ -1,12 +1,13 @@
 package com.api.TaveShot.domain.post.post.repository;
 
 
+import static com.api.TaveShot.domain.post.image.domain.QImage.*;
 import static com.api.TaveShot.domain.post.post.domain.QPost.post;
 
+import com.api.TaveShot.domain.post.post.domain.Post;
 import com.api.TaveShot.domain.post.post.domain.PostTier;
 import com.api.TaveShot.domain.post.post.dto.request.PostSearchCondition;
 import com.api.TaveShot.domain.post.post.dto.response.PostResponse;
-import com.api.TaveShot.domain.post.post.dto.response.QPostResponse;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -33,10 +34,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     }
 
     private List<PostResponse> getSearchPageContent(final PostSearchCondition condition, final Pageable pageable) {
-        return jpaQueryFactory
-                .select(
-                        new QPostResponse(post.id, post.title, post.content, post.writer,
-                                post.viewCount, post.member.id, post.createdDate, post.images))
+        List<Post> posts = jpaQueryFactory
+                .select(post)
                 .from(post)
                 .where(
                         judgeTier(condition.getPostTierEnum()),
@@ -44,9 +43,15 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                         containContent(condition.getContent()),
                         containWriter(condition.getWriter())
                 )
+                .leftJoin(post.images, image)
+                .fetchJoin()
                 .limit(pageable.getPageSize())
                 .offset(pageable.getOffset())
                 .fetch();
+
+        List<PostResponse> postResponseList = toPostResponses(posts);
+
+        return postResponseList;
     }
 
     private BooleanExpression judgeTier(final PostTier postTierEnum) {
@@ -72,6 +77,13 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
             return post.writer.contains(writer);
         }
         return null;
+    }
+
+    private List<PostResponse> toPostResponses(List<Post> posts) {
+        return posts.stream()
+                .map(p -> new PostResponse(p.getId(), p.getTitle(), p.getContent(), p.getWriter(),
+                        p.getViewCount(), p.getMemberId(), p.getCreatedDate(), p.getImages()))
+                .toList();
     }
 
     private JPAQuery<Long> getSearchPageCount(final PostSearchCondition condition) {
