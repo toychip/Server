@@ -1,20 +1,9 @@
 package com.api.TaveShot.domain.compiler.converter;
 
-import com.api.TaveShot.domain.compiler.dto.ProblemInfoDto;
-import com.api.TaveShot.domain.compiler.dto.ProblemResponseDto;
 import com.api.TaveShot.domain.compiler.dto.SubmissionResponseDto;
 import com.api.TaveShot.domain.compiler.dto.SubmissionResultDto;
 
 public class CompilerConverter {
-
-    public static ProblemInfoDto responseToInfoDto(final ProblemResponseDto response){
-        return new ProblemInfoDto(
-                response.getProblemId(),
-                response.getTitleKo(),
-                response.getLevel(),
-                response.getTags()
-        );
-    }
 
     public static SubmissionResultDto responseToSubmissionResultDto(final SubmissionResponseDto details) {
         boolean isSuccess = false;
