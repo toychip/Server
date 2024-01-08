@@ -66,6 +66,8 @@ dependencies {
 	// redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	implementation 'io.lettuce:lettuce-core'
+
+	implementation 'com.opencsv:opencsv:5.5.2'
 }
 
 tasks.named('bootBuildImage') {
