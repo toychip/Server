@@ -4,29 +4,55 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.Map;
+
 @AllArgsConstructor
 @Getter
 @Builder
 public class SubmissionResponseDto {
     private int id;
     private boolean executing;
+    private String date;
+    private Compiler compiler;
     private Result result;
 
-    @Builder
     @Getter
-    public static class Result {
-        private Status status; // 채점 상태 객체
-        private double time; // 실행 시간
-        private int memory; // 메모리 사용량
-        private String output; // 프로그램의 출력
-        private String stderr; // 표준 에러 출력
-        private String cmpinfo; // 컴파일 정보
+    @Builder
+    public static class Compiler {
+        private int id;
+        private String name;
+        private Version version;
 
-        @Builder
         @Getter
+        @Builder
+        public static class Version {
+            private int id;
+            private String name;
+        }
+    }
+
+    @Getter
+    @Builder
+    public static class Result {
+        private Status status;
+        private double time;
+        private int memory;
+        private int signal;
+        private String signal_desc;
+        private Map<String, Stream> streams;
+
+        @Getter
+        @Builder
         public static class Status {
-            private int code; // 채점 상태 코드
-            private String name; // 채점 상태 이름
+            private int code;
+            private String name;
+        }
+
+        @Getter
+        @Builder
+        public static class Stream {
+            private int size;
+            private String uri;
         }
     }
 }

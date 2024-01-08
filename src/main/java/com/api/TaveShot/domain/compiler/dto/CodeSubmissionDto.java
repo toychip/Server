@@ -8,9 +8,6 @@ import lombok.Getter;
 @AllArgsConstructor
 @Builder
 public class CodeSubmissionDto {
-    private int problemId;
-    private String sourceCode;
+    private String source;
     private int compilerId; //Sphere Engine에서 지정한 언어별 컴파일러 ID
-    private String input;
 }
-
