@@ -31,7 +31,7 @@ public class SearchService {
     private String CX;
 
 
-    public GoogleListResponseDto findBlog(String query) {
+    public GoogleListResponseDto findBlog(String query, int index) {
         WebClient webClient = WebClient.builder()
                 .baseUrl("https://www.googleapis.com/customsearch/v1")
                 .build();
@@ -41,6 +41,7 @@ public class SearchService {
                         .queryParam("key", KEY)
                         .queryParam("cx", CX)
                         .queryParam("q", query)
+                        .queryParam("start", index)
                         .build())
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()

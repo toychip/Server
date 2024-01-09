@@ -33,7 +33,7 @@ public class SecurityConfig {
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
                     CorsConfiguration cors = new CorsConfiguration();
                     cors.setAllowedOrigins(List.of("*", "http://localhost:3000", "http://localhost:8080"));
-                    cors.setAllowedMethods(List.of("GET", "POST", "PATCH", "DELETE"));
+                    cors.setAllowedMethods(List.of("GET", "POST", "PATCH", "DELETE", "OPTIONS"));
                     // cookie 비활성화
                     cors.setAllowCredentials(false);
                     // Authorization Header 노출
