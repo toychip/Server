@@ -1,12 +1,12 @@
 package com.api.TaveShot.domain.problem.service;
 
 import com.api.TaveShot.domain.problem.dto.ProblemDto;
+import com.api.TaveShot.global.exception.ApiException;
+import com.api.TaveShot.global.exception.ErrorType;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 import jakarta.annotation.PostConstruct;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -18,18 +18,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import org.apache.commons.io.input.BOMInputStream;
 
 @Service
 public class ProblemService {
-    private static final Logger log = LoggerFactory.getLogger(ProblemService.class);
     private Map<String , ProblemDto> problemMap;
 
     @PostConstruct
     public void init() {
 
         Resource resource = new ClassPathResource("baekjoon_problems.csv");
-        try (InputStream is = resource.getInputStream();
-             Reader reader = new InputStreamReader(is, StandardCharsets.UTF_8)) {
+        try (InputStream inputStream = resource.getInputStream();
+             BOMInputStream bomInputStream = new BOMInputStream(inputStream);
+             Reader reader = new InputStreamReader(bomInputStream, StandardCharsets.UTF_8)) {
 
 
             HeaderColumnNameMappingStrategy<ProblemDto> strategy = new HeaderColumnNameMappingStrategy<>();
@@ -45,13 +46,17 @@ public class ProblemService {
 
             problemMap = problems.stream()
                     .filter(problem -> problem.getID() != null)
-                    .collect(Collectors.toMap(ProblemDto::getID, Function.identity(), (existing, replacement) -> existing));
+                    .collect(Collectors.toUnmodifiableMap(
+                            ProblemDto::getID,
+                            Function.identity()
+                    ));
+
         } catch (Exception e) {
-            log.error("Error loading problems from CSV", e);
+            throw new ApiException(ErrorType._WEB_CLIENT_ERROR);
         }
     }
-
     public ProblemDto getProblemById(String id) {
         return problemMap.get(id);
     }
+
 }
