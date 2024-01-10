@@ -3,7 +3,6 @@ package com.api.TaveShot.global.config;
 import com.api.TaveShot.global.security.jwt.JwtAuthenticationFilter;
 import com.api.TaveShot.global.security.oauth2.CustomOAuth2UserService;
 import com.api.TaveShot.global.security.oauth2.CustomOAuthSuccessHandler;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +14,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -30,16 +31,8 @@ public class SecurityConfig {
         http
                 .httpBasic(HttpBasicConfigurer::disable)
                 .csrf(CsrfConfigurer::disable)
-                .cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
-                    CorsConfiguration cors = new CorsConfiguration();
-                    cors.setAllowedOrigins(List.of("*", "http://localhost:3000", "http://localhost:8080"));
-                    cors.setAllowedMethods(List.of("GET", "POST", "PATCH", "DELETE", "OPTIONS"));
-                    // cookie 비활성화
-                    cors.setAllowCredentials(false);
-                    // Authorization Header 노출
-                    cors.addExposedHeader("Authorization");
-                    return cors;
-                }))
+                .cors()
+                .and()
                 .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize ->
                         authorize
@@ -71,4 +64,17 @@ public class SecurityConfig {
         return http.build();
     }
 
+    // CORS
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOriginPattern("*");
+        config.addExposedHeader("Authorization");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
+    }
 }

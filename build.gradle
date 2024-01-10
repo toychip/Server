@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.api'
-version = '0.3.3-token'
+version = '0.7.0-CORS'
 
 java {
 	sourceCompatibility = '17'
