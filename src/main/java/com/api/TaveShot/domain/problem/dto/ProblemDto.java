@@ -1,5 +1,6 @@
 package com.api.TaveShot.domain.problem.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.opencsv.bean.CsvBindByName;
 import lombok.*;
@@ -10,31 +11,60 @@ import lombok.*;
 @Builder
 public class ProblemDto {
 
-    @JsonRawValue
     @CsvBindByName(column = "ID")
     private String ID;
 
-    @JsonRawValue
     @CsvBindByName(column = "Title")
     private String Title;
 
-    @JsonRawValue
     @CsvBindByName(column = "Description")
     private String Description;
 
-    @JsonRawValue
     @CsvBindByName(column = "Input Description")
     private String inputDescription;
 
-    @JsonRawValue
     @CsvBindByName(column = "Output Description")
     private String outputDescription;
 
-    @JsonRawValue
     @CsvBindByName(column = "Sample Input")
     private String sampleInput;
 
-    @JsonRawValue
     @CsvBindByName(column = "Sample Output")
     private String sampleOutput;
+
+    @JsonRawValue
+    public String getID(){
+        return ID;
+    }
+    @JsonRawValue
+    public String getTitle(){
+        return Title;
+    }
+
+    @JsonRawValue
+    public String getDescription(){
+        return Description;
+    }
+
+    @JsonRawValue
+    public String getInputDescription(){
+        return inputDescription;
+    }
+
+    @JsonRawValue
+    public String getOutputDescription(){
+        return outputDescription;
+    }
+
+    @JsonRawValue
+    public String getSampleInput(){
+        return sampleInput;
+    }
+
+    @JsonRawValue
+    public String getSampleOutput(){
+        return sampleOutput;
+    }
+
+
 }
