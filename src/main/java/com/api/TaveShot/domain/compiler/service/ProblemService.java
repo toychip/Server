@@ -1,6 +1,6 @@
-package com.api.TaveShot.domain.problem.service;
+package com.api.TaveShot.domain.compiler.service;
 
-import com.api.TaveShot.domain.problem.dto.ProblemDto;
+import com.api.TaveShot.domain.compiler.dto.ProblemDto;
 import com.api.TaveShot.global.exception.ApiException;
 import com.api.TaveShot.global.exception.ErrorType;
 import com.opencsv.bean.CsvToBean;
@@ -56,6 +56,11 @@ public class ProblemService {
         }
     }
     public ProblemDto getProblemById(String id) {
+        ProblemDto problem = problemMap.get(id);
+
+        if (problem == null) {
+            throw new ApiException(ErrorType._SOLVED_INVALID_REQUEST); //에러 타입 수정 필요
+        }
         return problemMap.get(id);
     }
 

@@ -1,4 +1,4 @@
-package com.api.TaveShot.domain.problem.dto;
+package com.api.TaveShot.domain.compiler.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRawValue;
