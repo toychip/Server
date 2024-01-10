@@ -23,11 +23,9 @@ public class PostResponse {
     private int view;
     private Long writerId;
     private String writtenTime;
-//    private List<CommentResponse> comments;
     private List<ImageResponse> imageUrls;
 
-    @QueryProjection
-    public PostResponse(Long postId, String title, String content, String writer, int view, Long writerId, LocalDateTime createdDate, List<Image> imageUrls) {
+    public PostResponse(Long postId, String title, String content, String writer, Integer view, Long writerId, LocalDateTime createdDate, List<Image> images) {
         this.postId = postId;
         this.title = title;
         this.content = content;
@@ -35,6 +33,6 @@ public class PostResponse {
         this.view = view;
         this.writerId = writerId;
         writtenTime = TimeUtil.formatCreatedDate(createdDate);
-        this.imageUrls = ImageConverter.imageToImageResponse(imageUrls);
+        this.imageUrls = ImageConverter.imageToImageResponse(images);
     }
 }

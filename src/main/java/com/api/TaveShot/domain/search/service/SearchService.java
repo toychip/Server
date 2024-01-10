@@ -1,5 +1,6 @@
 package com.api.TaveShot.domain.search.service;
 
+import com.api.TaveShot.domain.search.dto.GoogleItemDto;
 import com.api.TaveShot.domain.search.dto.GoogleListResponseDto;
 import com.api.TaveShot.domain.search.dto.GoogleResponseDto;
 import lombok.AllArgsConstructor;
@@ -14,6 +15,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Transactional
@@ -29,7 +31,7 @@ public class SearchService {
     private String CX;
 
 
-    public GoogleListResponseDto findBlog(String query){
+    public GoogleListResponseDto findBlog(String query, int index) {
         WebClient webClient = WebClient.builder()
                 .baseUrl("https://www.googleapis.com/customsearch/v1")
                 .build();
@@ -39,12 +41,20 @@ public class SearchService {
                         .queryParam("key", KEY)
                         .queryParam("cx", CX)
                         .queryParam("q", query)
+                        .queryParam("start", index)
                         .build())
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToFlux(GoogleResponseDto.class);
 
-        log.info("{}", dto.collectList().block());
+
+        dto = dto.map(googleResponseDto -> {
+            for (GoogleItemDto googleItemDto : googleResponseDto.getItems()){
+                googleItemDto.modifyBlog(googleItemDto.getLink());
+                googleItemDto.modifyCreatedDate();
+            }
+            return googleResponseDto;
+        });
 
         List<GoogleResponseDto> googleResponseDtos = dto.collectList().block();
 

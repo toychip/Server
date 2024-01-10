@@ -24,7 +24,13 @@ public class SearchController {
 
     @GetMapping
     public SuccessResponse<GoogleListResponseDto> getList(@RequestParam String query){
-        GoogleListResponseDto response = searchService.findBlog(query);
+        GoogleListResponseDto response = searchService.findBlog(query, 1);
+        return new SuccessResponse<>(response);
+    }
+
+    @GetMapping("/refresh")
+    public SuccessResponse<GoogleListResponseDto> getRefresh(@RequestParam String query, @RequestParam(value = "start") int index){
+        GoogleListResponseDto response = searchService.findBlog(query, index);
         return new SuccessResponse<>(response);
     }
 }

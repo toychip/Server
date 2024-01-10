@@ -83,7 +83,7 @@ public class PostApiController {
     })
     @PatchMapping("/post/{postId}")
     public SuccessResponse<Long> edit(final @PathVariable Long postId,
-                                        final @RequestBody PostEditRequest request) {
+                                        final @ModelAttribute PostEditRequest request) {
         postService.edit(postId, request);
         return new SuccessResponse<>(postId);
     }
