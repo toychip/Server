@@ -7,6 +7,7 @@ import com.api.TaveShot.domain.compiler.dto.ProblemDto;
 import com.api.TaveShot.domain.compiler.service.ProblemService;
 import com.api.TaveShot.global.success.SuccessResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
@@ -26,7 +27,8 @@ public class CompilerController {
     }
 
     @PostMapping("/submit")
-    public Mono<SubmissionResultDto> submitCode(@RequestBody CodeSubmissionDto submission) {
-        return compilerService.compileAndJudge(submission);
+    public SuccessResponse<String> submitCode(@RequestBody CodeSubmissionDto submissionDto) {
+        compilerService.submitCode(submissionDto);
+        return new SuccessResponse<>("Submission successful"); // 이후에 변경
     }
 }
