@@ -98,6 +98,18 @@ public class PostService {
         return PostConverter.entityToResponse(post, commentListResponse);
     }
 
+
+    /* ---------------------------------CREATE TEST--------------------------------- */
+    // *********** 테스트 용도 ***********
+    public void registerTest(final PostCreateRequest request, final Member member) {
+
+        Post post = PostConverter.createDtoToEntity(request, member);
+        postRepository.save(post);
+
+        registerImages(request.getAttachmentFile(), post);
+    }
+
+
     /* --------------------------------- READ Single --------------------------------- */
 
     public PostResponse getSinglePost(final Long postId) {

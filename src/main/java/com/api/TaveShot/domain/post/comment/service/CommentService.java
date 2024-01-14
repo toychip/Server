@@ -32,7 +32,7 @@ public class CommentService {
     private final PostValidator postValidator;
 
     /* --------------------------------- CREATE --------------------------------- */
-    @Transactional // 데이터 변경하는 메서드에만 명시적으로 적용
+    @Transactional
     public Long register(final Long postId, final CommentCreateRequest request) {
 
         Member currentMember = getCurrentMember();
@@ -93,6 +93,20 @@ public class CommentService {
         Comment comment = CommentConverter.createDtoToEntity(request.getComment(), currentMember, post);
         commentRepository.save(comment);
         return comment.getId();
+    }
+
+
+    /* ---------------------------------CREATE TEST--------------------------------- */
+    // *********** 테스트 용도 ***********
+
+    public Long registerTest(final Long postId, final CommentCreateRequest request, final Member member) {
+        Post post = getPost(postId);
+
+        // ---------------- 부모 댓글 유무 확인 ----------------
+        Long parentCommentId = request.getParentCommentId();
+        Optional<Comment> parentCommentOptional = findParentComment(parentCommentId);
+
+        return createComment(request, member, post, parentCommentOptional);
     }
 
 
