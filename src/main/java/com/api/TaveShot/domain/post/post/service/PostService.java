@@ -1,9 +1,8 @@
 package com.api.TaveShot.domain.post.post.service;
 
 import com.api.TaveShot.domain.Member.domain.Member;
-import com.api.TaveShot.domain.Member.domain.Tier;
-import com.api.TaveShot.domain.comment.dto.response.CommentListResponse;
-import com.api.TaveShot.domain.comment.service.CommentService;
+import com.api.TaveShot.domain.post.comment.dto.response.CommentListResponse;
+import com.api.TaveShot.domain.post.comment.service.CommentService;
 import com.api.TaveShot.domain.post.image.service.ImageService;
 import com.api.TaveShot.domain.post.post.PostValidator;
 import com.api.TaveShot.domain.post.post.converter.PostConverter;

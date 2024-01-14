@@ -1,6 +1,6 @@
 package com.api.TaveShot.domain.post.post.dto.response;
 
-import com.api.TaveShot.domain.comment.dto.response.CommentListResponse;
+import com.api.TaveShot.domain.post.comment.dto.response.CommentListResponse;
 import com.api.TaveShot.domain.post.image.converter.ImageConverter;
 import com.api.TaveShot.domain.post.image.domain.Image;
 import com.api.TaveShot.domain.post.image.dto.ImageResponse;

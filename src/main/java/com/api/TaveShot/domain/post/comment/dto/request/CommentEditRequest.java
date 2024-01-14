@@ -1,4 +1,4 @@
-package com.api.TaveShot.domain.comment.dto.request;
+package com.api.TaveShot.domain.post.comment.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package com.api.TaveShot.domain.comment.dto.response;
+package com.api.TaveShot.domain.post.comment.dto.response;
 
 import java.util.List;
 import lombok.Builder;

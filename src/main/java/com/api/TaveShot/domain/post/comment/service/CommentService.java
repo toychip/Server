@@ -1,14 +1,14 @@
-package com.api.TaveShot.domain.comment.service;
+package com.api.TaveShot.domain.post.comment.service;
 
 import com.api.TaveShot.domain.Member.domain.Member;
-import com.api.TaveShot.domain.comment.converter.CommentConverter;
-import com.api.TaveShot.domain.comment.domain.Comment;
-import com.api.TaveShot.domain.comment.dto.request.CommentCreateRequest;
-import com.api.TaveShot.domain.comment.dto.request.CommentEditRequest;
-import com.api.TaveShot.domain.comment.dto.response.CommentListResponse;
-import com.api.TaveShot.domain.comment.dto.response.CommentResponse;
-import com.api.TaveShot.domain.comment.editor.CommentEditor;
-import com.api.TaveShot.domain.comment.repository.CommentRepository;
+import com.api.TaveShot.domain.post.comment.converter.CommentConverter;
+import com.api.TaveShot.domain.post.comment.domain.Comment;
+import com.api.TaveShot.domain.post.comment.dto.request.CommentCreateRequest;
+import com.api.TaveShot.domain.post.comment.dto.request.CommentEditRequest;
+import com.api.TaveShot.domain.post.comment.dto.response.CommentListResponse;
+import com.api.TaveShot.domain.post.comment.dto.response.CommentResponse;
+import com.api.TaveShot.domain.post.comment.editor.CommentEditor;
+import com.api.TaveShot.domain.post.comment.repository.CommentRepository;
 import com.api.TaveShot.domain.post.post.PostValidator;
 import com.api.TaveShot.domain.post.post.domain.Post;
 import com.api.TaveShot.domain.post.post.domain.PostTier;

@@ -1,14 +1,13 @@
-package com.api.TaveShot.domain.comment.converter;
+package com.api.TaveShot.domain.post.comment.converter;
 
-import com.api.TaveShot.domain.comment.domain.Comment;
+import com.api.TaveShot.domain.post.comment.domain.Comment;
 import com.api.TaveShot.domain.Member.domain.Member;
-import com.api.TaveShot.domain.comment.dto.response.CommentListResponse;
-import com.api.TaveShot.domain.comment.dto.response.CommentResponse;
+import com.api.TaveShot.domain.post.comment.dto.response.CommentListResponse;
+import com.api.TaveShot.domain.post.comment.dto.response.CommentResponse;
 import com.api.TaveShot.domain.post.post.domain.Post;
 
 import java.util.List;
 import java.util.Optional;
-import org.springframework.data.domain.Page;
 
 public class CommentConverter {
 

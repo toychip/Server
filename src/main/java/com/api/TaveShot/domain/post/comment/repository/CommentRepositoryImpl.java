@@ -1,8 +1,8 @@
-package com.api.TaveShot.domain.comment.repository;
+package com.api.TaveShot.domain.post.comment.repository;
 
 import static com.api.TaveShot.domain.comment.domain.QComment.comment;
 
-import com.api.TaveShot.domain.comment.domain.Comment;
+import com.api.TaveShot.domain.post.comment.domain.Comment;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
