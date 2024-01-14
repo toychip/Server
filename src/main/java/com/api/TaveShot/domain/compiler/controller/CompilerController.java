@@ -27,8 +27,13 @@ public class CompilerController {
     }
 
     @PostMapping("/submit")
-    public SuccessResponse<String> submitCode(@RequestBody CodeSubmissionDto submissionDto) {
-        compilerService.submitCode(submissionDto);
-        return new SuccessResponse<>("Submission successful"); // 이후에 변경
+    public Mono<SubmissionResultDto> submitCode(@RequestBody CodeSubmissionDto submission) {
+        return compilerService.compileAndJudge(submission);
     }
+
+//    @PostMapping("/submit")
+//    public SuccessResponse<String> submitCode(@RequestBody CodeSubmissionDto submissionDto) {
+//        compilerService.submitCode(submissionDto);
+//        return new SuccessResponse<>("Submission successful"); // 이후에 변경
+//    }
 }
