@@ -27,7 +27,9 @@ public class SolvedAcApiService {
     public SolvedUserInfo getUserInfoFromSolvedAc(final String handle) {
         try {
             return webClient.get()
-                    .uri(uriBuilder -> uriBuilder.path("/{handle}").build(handle))
+                    .uri(uriBuilder -> uriBuilder.queryParam(
+                            "handle", handle)
+                    .build())
                     .retrieve()
                     .onStatus(BAD_REQUEST::equals, response ->
                             Mono.error(new ApiException(ErrorType._SOLVED_INVALID_REQUEST))) // 400 오류 처리
