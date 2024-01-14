@@ -3,27 +3,37 @@ package com.api.TaveShot.domain.authorization.service;
 import com.api.TaveShot.domain.Member.domain.Member;
 import com.api.TaveShot.domain.Member.domain.Tier;
 import com.api.TaveShot.domain.Member.editor.MemberEditor;
+import com.api.TaveShot.domain.Member.repository.MemberRepository;
 import com.api.TaveShot.domain.authorization.dto.MemberResponse;
 import com.api.TaveShot.domain.authorization.dto.SolvedUserInfo;
 import com.api.TaveShot.global.exception.ApiException;
 import com.api.TaveShot.global.exception.ErrorType;
 import com.api.TaveShot.global.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class AuthorizationService {
 
     private final SolvedAcApiService solvedAcApiService;
     private final GitHubApiService gitHubApiService;
+    private final MemberRepository memberRepository;
 
+    @Transactional
     public MemberResponse authorization() {
         String bojName = getBojNameFromGitHub();
+        log.info("------------------1-------------------"+bojName);
         SolvedUserInfo solvedUserInfo = getSolvedUserInfo(bojName);
 
         validateMatch(solvedUserInfo);
-        changeBojInfo(solvedUserInfo);
+        log.info("------------------2-------------------"+solvedUserInfo);
+
+        changeBojInfo(solvedUserInfo.getBojTier(), bojName);
+        log.info("------------------3-------------------"+solvedUserInfo);
 
         return response();
     }
@@ -48,23 +58,25 @@ public class AuthorizationService {
     }
 
     private Member getCurrentMember() {
-        return SecurityUtil.getCurrentMember();
+        Member currentMember = SecurityUtil.getCurrentMember();
+        Long currentMemberId = currentMember.getId();
+        return memberRepository.findById(currentMemberId)
+                .orElseThrow(() -> new ApiException(ErrorType._USER_NOT_FOUND_DB));
     }
 
-    private void changeBojInfo(final SolvedUserInfo solvedUserInfo) {
-        Integer bojTier = solvedUserInfo.getBojTier();
-        Tier tier = calculateTier(bojTier);
+    private Tier calculateTier(Integer bojTier) {
+        return Tier.fromBojTier(bojTier);
+    }
 
-        String bojName = solvedUserInfo.getBio();
+    @Transactional
+    public void changeBojInfo(final Integer bojTier, final String bojName) {
+        Tier tier = calculateTier(bojTier);
+        log.info("------------------2.2-------------------"+bojName);
 
         MemberEditor memberEditor = getMemberEditor(tier, bojName);
 
         Member member = getCurrentMember();
         member.changeBojInfo(memberEditor);
-    }
-
-    private Tier calculateTier(Integer bojTier) {
-        return Tier.fromBojTier(bojTier);
     }
 
     private MemberEditor getMemberEditor(final Tier tier, final String bojName) {
@@ -82,7 +94,7 @@ public class AuthorizationService {
         String gitLoginId = currentMember.getGitLoginId();
         Tier tier = currentMember.getTier();
         String bojName = currentMember.getBojName();
-
+        log.info("------------------4-------------------"+bojName);
         return MemberResponse.builder()
                 .gitLoginId(gitLoginId)
                 .tier(tier)

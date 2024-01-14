@@ -1,6 +1,6 @@
 package com.api.TaveShot.domain.post.comment.repository;
 
-import static com.api.TaveShot.domain.comment.domain.QComment.comment;
+import static com.api.TaveShot.domain.post.comment.domain.QComment.comment;
 
 import com.api.TaveShot.domain.post.comment.domain.Comment;
 import com.querydsl.jpa.impl.JPAQueryFactory;
