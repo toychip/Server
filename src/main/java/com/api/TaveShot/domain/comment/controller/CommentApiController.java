@@ -47,21 +47,6 @@ public class CommentApiController {
     }
 
 
-    /* READ */
-    @Operation(summary = "특정 게시글 댓글 조회", description = "특정 게시글에 해당하는 댓글들을 조회합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "댓글 조회 성공",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = CommentListResponse.class)))
-    })
-    @GetMapping("/post/{postId}/comments")
-    public SuccessResponse<CommentListResponse> read(final @PathVariable Long postId, final Pageable pageable) {
-        CommentListResponse commentListResponse = commentService.findComments(postId, pageable);
-        return new SuccessResponse<>(commentListResponse);
-    }
-
-
-
     /* UPDATE */
     @Operation(summary = "댓글 수정", description = "지정된 댓글을 수정합니다.")
     @ApiResponses(value = {

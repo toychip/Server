@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface PostRepository extends JpaRepository<Post,Long>, PostRepositoryCustom {
 
-    @Query("select p from Post p where p.id = :id")
+    @Query("select p from Post p where p.id = :id order by p.id desc")
     @EntityGraph(attributePaths = {"images"})
     Optional<Post> findPostFetchJoin(Long id);
 }

@@ -1,5 +1,6 @@
 package com.api.TaveShot.domain.comment.service;
 
+import com.api.TaveShot.domain.Member.domain.Member;
 import com.api.TaveShot.domain.comment.converter.CommentConverter;
 import com.api.TaveShot.domain.comment.domain.Comment;
 import com.api.TaveShot.domain.comment.dto.request.CommentCreateRequest;
@@ -8,20 +9,16 @@ import com.api.TaveShot.domain.comment.dto.response.CommentListResponse;
 import com.api.TaveShot.domain.comment.dto.response.CommentResponse;
 import com.api.TaveShot.domain.comment.editor.CommentEditor;
 import com.api.TaveShot.domain.comment.repository.CommentRepository;
-import com.api.TaveShot.domain.Member.domain.Member;
+import com.api.TaveShot.domain.post.post.PostValidator;
 import com.api.TaveShot.domain.post.post.domain.Post;
 import com.api.TaveShot.domain.post.post.domain.PostTier;
-import com.api.TaveShot.domain.post.post.service.PostService;
+import com.api.TaveShot.domain.post.post.repository.PostRepository;
 import com.api.TaveShot.global.exception.ApiException;
 import com.api.TaveShot.global.exception.ErrorType;
 import com.api.TaveShot.global.util.SecurityUtil;
-
 import java.util.List;
 import java.util.Optional;
-
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommentService {
 
     private final CommentRepository commentRepository;
-    private final PostService postService;
+    private final PostRepository postRepository;
+    private final PostValidator postValidator;
 
     /* --------------------------------- CREATE --------------------------------- */
     @Transactional // 데이터 변경하는 메서드에만 명시적으로 적용
@@ -58,11 +56,11 @@ public class CommentService {
     }
 
     private Post getPost(final Long postId) {
-        return postService.findById(postId);
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new ApiException(ErrorType._POST_NOT_FOUND));
     }
-
     private void validateAuthority(final PostTier postTier, final Member currentMember) {
-        postService.validateAuthority(postTier, currentMember);
+        postValidator.validateAuthority(postTier, currentMember);
     }
 
     private Optional<Comment> findParentComment(final Long parentCommentId) {
@@ -99,14 +97,11 @@ public class CommentService {
 
 
     /* --------------------------------- READ --------------------------------- */
-    public CommentListResponse findComments(Long postId, Pageable pageable) {
-        Page<Comment> commentPage = commentRepository.findByPostId(postId, pageable);
-
-        List<Comment> comments = commentPage.getContent();
+    public CommentListResponse findComments(final Long postId) {
+        List<Comment> comments = commentRepository.findByPostId(postId);
         List<CommentResponse> commentResponses = CommentConverter.commentsToResponses(comments);
-        CommentListResponse response = CommentConverter.toCommentListResponse(commentPage, commentResponses);
+        CommentListResponse response = CommentConverter.toCommentListResponse(commentResponses);
         return response;
-
     }
 
 

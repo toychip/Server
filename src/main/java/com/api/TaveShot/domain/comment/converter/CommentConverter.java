@@ -31,26 +31,21 @@ public class CommentConverter {
                 .build();
     }
 
-    public static CommentListResponse toCommentListResponse(Page<Comment> commentPage,
-                                                            List<CommentResponse> commentResponses) {
+    public static CommentListResponse toCommentListResponse(final List<CommentResponse> commentResponses) {
         return CommentListResponse.builder()
                 .commentResponses(commentResponses)
-                .totalPage(commentPage.getTotalPages())
-                .totalElements(commentPage.getTotalElements())
-                .isFirst(commentPage.isFirst())
-                .isLast(commentPage.isLast())
                 .build();
     }
 
-    public static List<CommentResponse> commentsToResponses(List<Comment> comments) {
+    public static List<CommentResponse> commentsToResponses(final List<Comment> comments) {
         return comments.stream()
                 .map(CommentConverter::commentToResponse)
                 .toList();
     }
 
-    public static CommentResponse commentToResponse(Comment comment) {
+    public static CommentResponse commentToResponse(final Comment comment) {
         return CommentResponse.builder()
-                .id(comment.getId())
+                .commentId(comment.getId())
                 .content(comment.getContent())
                 .gitLoginId(comment.getMember().getGitLoginId())
                 .postId(comment.getPost().getId())

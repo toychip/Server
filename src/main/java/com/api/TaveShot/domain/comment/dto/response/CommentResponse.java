@@ -4,5 +4,5 @@ import lombok.Builder;
 
 
 @Builder
-public record CommentResponse(Long id, String content, String gitLoginId, Long postId, Long parentId) {
+public record CommentResponse(Long commentId, String content, String gitLoginId, Long postId, Long parentId) {
 }
