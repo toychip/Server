@@ -67,6 +67,10 @@ public class JwtProvider {
 
     // 토큰의 유효성 검사
     public void isValidToken(final String jwtToken) {
+
+        log.info("JwtProvider.isValidToken");
+        log.info("jwtToken = " + jwtToken);
+
         try {
             SecretKey key = generateKey();
             Jwts.parserBuilder()
@@ -84,8 +88,15 @@ public class JwtProvider {
     // jwtToken 으로 Authentication 에 사용자 등록
     public void getAuthenticationFromToken(final String jwtToken) {
 
+        log.info("--------------------------------------------");
+        log.info("JwtProvider.getAuthenticationFromToken");
+        log.info("jwtToken = " + jwtToken);
+
+
         log.info("-------------- getAuthenticationFromToken jwt token: " + jwtToken);
         Member loginMember = getGitLoginId(jwtToken);
+        // setContextHolder 메서드 내에서 로그 추가
+        log.debug("Setting SecurityContext with Member: {}", loginMember);
 
         setContextHolder(jwtToken, loginMember);
     }
@@ -93,7 +104,7 @@ public class JwtProvider {
     // token 으로부터 유저 정보 확인
     private Member getGitLoginId(final String jwtToken) {
         Long userId = Long.valueOf(getUserIdFromToken(jwtToken));
-        return memberRepository.findById(userId)
+        return memberRepository.findByGitId(userId)
                 .orElseThrow(() -> new ApiException(_USER_NOT_FOUND_BY_TOKEN));
     }
 

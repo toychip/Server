@@ -6,9 +6,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -27,6 +29,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         String authorizationHeader = request.getHeader("Authorization");
+
+        log.info("JwtAuthenticationFilter.doFilterInternal");
+        log.info("--------------------   authorizationHeader = " + authorizationHeader);
 
         if (authorizationHeader != null && isBearer(authorizationHeader)) {
             // "Bearer " 이후의 문자열을 추출
@@ -50,9 +55,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private boolean isPublicUri(final String requestURI) {
         return
                 requestURI.startsWith("/swagger-ui/**") ||
-                requestURI.startsWith("/**") ||
+//                requestURI.startsWith("/**") ||
                 requestURI.startsWith("/favicon.ico") ||
-                requestURI.startsWith("/oauth/**") ||
                 requestURI.startsWith("/login/**");
     }
 }
