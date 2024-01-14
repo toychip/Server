@@ -5,9 +5,9 @@ import com.api.TaveShot.domain.Member.domain.Tier;
 import com.api.TaveShot.domain.post.post.domain.PostTier;
 import com.api.TaveShot.global.exception.ApiException;
 import com.api.TaveShot.global.exception.ErrorType;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 public class PostValidator {
 
     public void validateAuthority(final PostTier postTier, final Member currentMember) {

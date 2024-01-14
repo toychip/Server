@@ -15,6 +15,7 @@ import com.api.TaveShot.domain.post.post.dto.response.PostListResponse;
 import com.api.TaveShot.domain.post.post.dto.response.PostResponse;
 import com.api.TaveShot.domain.post.post.editor.PostEditor;
 import com.api.TaveShot.domain.post.post.repository.PostRepository;
+import com.api.TaveShot.domain.post.view.service.ViewService;
 import com.api.TaveShot.global.config.S3FileUploader;
 import com.api.TaveShot.global.exception.ApiException;
 import com.api.TaveShot.global.exception.ErrorType;
@@ -40,15 +41,44 @@ public class PostService {
     private final ImageService imageService;
     private final CommentService commentService;
     private final PostValidator postValidator;
+    private final ViewService viewService;
 
-    /* --------------------------------- CREATE --------------------------------- */
-    @Transactional
-    public Long register(final PostCreateRequest request) {
+    private Member getCurrentMember() {
+        return SecurityUtil.getCurrentMember();
+    }
+
+    // 수정 삭제시에 검증하는 메서드
+    private void validate(final Post post) {
+        PostTier postTier = post.getPostTier();
+        validateAuthority(postTier);
+        validateWriter(post);
+    }
+
+    // 요청한 글의 티어와, 사용자의 티어를 검증하는 메서드
+    private void validateAuthority(PostTier postTier) {
+        postValidator.validateAuthority(postTier, getCurrentMember());
+    }
+
+    private void validateWriter(final Post post) {
         Member currentMember = getCurrentMember();
 
-        postValidator.validateAuthority(request.getPostTier(), currentMember);
+        Long postWriterId = post.getMemberId();
+        Long currentMemberId = currentMember.getId();
 
-        Post post = PostConverter.createDtoToEntity(request, currentMember);
+        if (!postWriterId.equals(currentMemberId)) {
+            throw new ApiException(ErrorType._UNAUTHORIZED);
+        }
+    }
+
+    /* --------------------------------- CREATE --------------------------------- */
+
+    @Transactional
+    public Long register(final PostCreateRequest request) {
+
+        PostTier requestPostTier = request.getPostTier();
+        validateAuthority(requestPostTier);
+
+        Post post = PostConverter.createDtoToEntity(request, getCurrentMember());
         postRepository.save(post);
 
         registerImages(request.getAttachmentFile(), post);
@@ -64,21 +94,19 @@ public class PostService {
         return s3Uploader.uploadMultipartFiles(multipartFiles);
     }
 
-    private Member getCurrentMember() {
-        return SecurityUtil.getCurrentMember();
-    }
-
     private PostResponse postResponse(final Post post, final CommentListResponse commentListResponse) {
         return PostConverter.entityToResponse(post, commentListResponse);
     }
 
-
     /* --------------------------------- READ Single --------------------------------- */
+
     public PostResponse getSinglePost(final Long postId) {
         Post post = getPostFetchJoin(postId);
         PostTier postTier = post.getPostTier();
 
-        postValidator.validateAuthority(postTier, getCurrentMember());
+        validateAuthority(postTier);
+        addViewCount(postId);
+
         CommentListResponse commentResponses = commentService.findComments(postId);
         return postResponse(post, commentResponses);
     }
@@ -88,20 +116,24 @@ public class PostService {
                 .orElseThrow(() -> new ApiException(ErrorType._POST_NOT_FOUND));
     }
 
+    private void addViewCount(Long postId) {
+        viewService.checkAndAddViewHistory(postId);
+    }
 
     /* --------------------------------- READ Paging --------------------------------- */
+
     public PostListResponse searchPostPaging(final PostSearchCondition condition, final Pageable pageable) {
         Page<PostResponse> postResponses = postRepository.searchPagePost(condition, pageable);
 
         PostTier postTier = condition.getPostTierEnum();
-        postValidator.validateAuthority(postTier, getCurrentMember());
+        validateAuthority(postTier);
 
         PostListResponse postListResponse = PostConverter.pageToPostListResponse(postResponses);
         return postListResponse;
     }
 
-
     /* --------------------------------- EDIT --------------------------------- */
+
     @Transactional
     public void edit(final Long postId, final PostEditRequest request) {
         Post post = getPost(postId);
@@ -115,26 +147,9 @@ public class PostService {
         editImages(request.getAttachmentFile(), post);
     }
 
-    private void validate(final Post post) {
-        validateWriter(post);
-        PostTier postTier = post.getPostTier();
-        postValidator.validateAuthority(postTier, getCurrentMember());
-    }
-
     private Post getPost(final Long postId) {
         return postRepository.findById(postId).orElseThrow(
                 () -> new ApiException(ErrorType._POST_NOT_FOUND));
-    }
-
-    private void validateWriter(final Post post) {
-        Member currentMember = getCurrentMember();
-
-        Long postWriterId = post.getMemberId();
-        Long currentMemberId = currentMember.getId();
-
-        if (!postWriterId.equals(currentMemberId)) {
-            throw new ApiException(ErrorType._UNAUTHORIZED);
-        }
     }
 
     private PostEditor getPostEditor(final PostEditRequest request, final Post post) {
@@ -160,14 +175,9 @@ public class PostService {
     @Transactional
     public void delete(final Long postId) {
         Post post = getPost(postId);
-        PostTier postTier = post.getPostTier();
-        postValidator.validateAuthority(postTier, getCurrentMember());
-        postRepository.delete(post);
-    }
+        validate(post);
 
-    public Post findById(Long postId) {
-        return postRepository.findById(postId)
-                .orElseThrow(() -> new ApiException(ErrorType._POST_NOT_FOUND));
+        postRepository.delete(post);
     }
 
 }
