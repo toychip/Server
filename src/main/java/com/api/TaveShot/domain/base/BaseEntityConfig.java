@@ -1,6 +1,6 @@
 package com.api.TaveShot.domain.base;
 
-import com.api.TaveShot.global.security.oauth2.CustomOauth2User;
+import com.api.TaveShot.domain.Member.domain.Member;
 import java.util.Optional;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,9 +21,8 @@ public class BaseEntityConfig {
                 return Optional.of("Anonymous");
             }
 
-            Object principal = authentication.getPrincipal();
-            CustomOauth2User userDetails = (CustomOauth2User) principal;
-            return Optional.ofNullable(userDetails.getName());
+            Member member = (Member) authentication.getPrincipal();
+            return Optional.ofNullable(member.getGitLoginId());
         };
     }
 }
