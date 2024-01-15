@@ -112,12 +112,13 @@ public class PostService {
 
     /* --------------------------------- READ Single --------------------------------- */
 
+    @Transactional
     public PostResponse getSinglePost(final Long postId) {
         Post post = getPostFetchJoin(postId);
         PostTier postTier = post.getPostTier();
 
         validateAuthority(postTier);
-        addViewCount(postId);
+        addViewCount(post);
 
         CommentListResponse commentResponses = commentService.findComments(postId);
         return postResponse(post, commentResponses);
@@ -128,8 +129,12 @@ public class PostService {
                 .orElseThrow(() -> new ApiException(ErrorType._POST_NOT_FOUND));
     }
 
-    private void addViewCount(Long postId) {
-        viewService.checkAndAddViewHistory(postId);
+    private void addViewCount(Post post) {
+        Long postId = post.getId();
+        boolean isAlreadyView = viewService.checkAndAddViewHistory(postId);
+        if (!isAlreadyView) {
+            post.addCount();
+        }
     }
 
     /* --------------------------------- READ Paging --------------------------------- */

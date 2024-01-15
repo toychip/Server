@@ -7,7 +7,6 @@ import com.api.TaveShot.global.util.SecurityUtil;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,13 +14,14 @@ public class ViewService {
 
     private final ViewHistoryRepository viewHistoryRepository;
 
-    @Transactional
-    public void checkAndAddViewHistory(final Long postId) {
+    public boolean checkAndAddViewHistory(final Long postId) {
         Long currentMemberId = getCurrentMember().getId();
         boolean isAlreadyViewed = isAlreadyViewed(postId, currentMemberId);
         if (!isAlreadyViewed) {
             register(postId, currentMemberId);
+            return false;
         }
+        return true;
     }
 
     private Member getCurrentMember() {
@@ -29,13 +29,13 @@ public class ViewService {
     }
 
     private boolean isAlreadyViewed(final Long postId, final Long userId) {
-        return viewHistoryRepository.existsByPostIdAndUserId(postId, userId);
+        return viewHistoryRepository.existsByPostIdAndMemberId(postId, userId);
     }
 
     public void register(final Long postId, final Long memberId) {
         ViewHistory viewHistory = ViewHistory.builder()
                 .postId(postId)
-                .userId(memberId)
+                .memberId(memberId)
                 .viewTime(LocalDateTime.now())
                 .build();
 

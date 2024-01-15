@@ -19,6 +19,6 @@ public class ViewHistory {
     private Long id;
 
     private Long postId;
-    private Long userId;
+    private Long memberId;
     private LocalDateTime viewTime;
 }

@@ -83,4 +83,8 @@ public class Post extends BaseEntity {
         return TimeUtil.formatCreatedDate(createdDate);
     }
 
+    public void addCount() {
+        viewCount++;
+    }
+
 }
