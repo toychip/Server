@@ -96,20 +96,6 @@ public class CommentService {
     }
 
 
-    /* ---------------------------------CREATE TEST--------------------------------- */
-    // *********** 테스트 용도 ***********
-
-    public Long registerTest(final Long postId, final CommentCreateRequest request, final Member member) {
-        Post post = getPost(postId);
-
-        // ---------------- 부모 댓글 유무 확인 ----------------
-        Long parentCommentId = request.getParentCommentId();
-        Optional<Comment> parentCommentOptional = findParentComment(parentCommentId);
-
-        return createComment(request, member, post, parentCommentOptional);
-    }
-
-
     /* --------------------------------- READ --------------------------------- */
     public CommentListResponse findComments(final Long postId) {
         List<Comment> comments = commentRepository.findByPostId(postId);
