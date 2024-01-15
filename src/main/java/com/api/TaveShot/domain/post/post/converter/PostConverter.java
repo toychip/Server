@@ -28,11 +28,10 @@ public class PostConverter {
                 .writer(post.getWriter())
                 .view(post.getViewCount())
                 .writerId(post.getMemberId())
-                // ToDo 수정 시간으로 넣을지, 생성 시간을 넣을지 프론트와 협의
+                .commentCount(post.getComments().size())
                 .writtenTime(post.getCreatedTime())
                 .imageUrls(ImageConverter.imageToImageResponse(post.getImages()))
                 .commentListResponse(commentListResponse)
-//                .comments() Comment 수정 후 처리
                 .build();
     }
 
