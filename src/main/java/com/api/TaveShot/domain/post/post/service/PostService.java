@@ -81,7 +81,12 @@ public class PostService {
         Post post = PostConverter.createDtoToEntity(request, getCurrentMember());
         postRepository.save(post);
 
-        registerImages(request.getAttachmentFile(), post);
+        List<MultipartFile> attachmentFile = request.getAttachmentFile();
+
+        if (attachmentFile != null && !attachmentFile.isEmpty()) {
+            registerImages(attachmentFile, post);
+        }
+
         return post.getId();
     }
 
@@ -96,17 +101,6 @@ public class PostService {
 
     private PostResponse postResponse(final Post post, final CommentListResponse commentListResponse) {
         return PostConverter.entityToResponse(post, commentListResponse);
-    }
-
-
-    /* ---------------------------------CREATE TEST--------------------------------- */
-    // *********** 테스트 용도 ***********
-    public void registerTest(final PostCreateRequest request, final Member member) {
-
-        Post post = PostConverter.createDtoToEntity(request, member);
-        postRepository.save(post);
-
-        registerImages(request.getAttachmentFile(), post);
     }
 
 
@@ -125,8 +119,7 @@ public class PostService {
     }
 
     private Post getPostFetchJoin(final Long postId) {
-        return postRepository.findPostFetchJoin(postId)
-                .orElseThrow(() -> new ApiException(ErrorType._POST_NOT_FOUND));
+        return postRepository.findPostFetchJoin(postId);
     }
 
     private void addViewCount(Post post) {
@@ -160,8 +153,12 @@ public class PostService {
 
         post.edit(postEditor);
 
+        List<MultipartFile> attachmentFile = request.getAttachmentFile();
+
         // 이미지 수정
-        editImages(request.getAttachmentFile(), post);
+        if (attachmentFile != null && !attachmentFile.isEmpty()) {
+            editImages(attachmentFile, post);
+        }
     }
 
     private Post getPost(final Long postId) {

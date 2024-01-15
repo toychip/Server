@@ -24,14 +24,17 @@ public class PostResponse {
     private Long writerId;
     private String writtenTime;
     private List<ImageResponse> imageUrls;
+    private int commentCount;
     private CommentListResponse commentListResponse;
 
-    public PostResponse(Long postId, String title, String content, String writer, Integer view, Long writerId, LocalDateTime createdDate, List<Image> images) {
+    @Builder
+    public PostResponse(Long postId, String title, String content, String writer, Integer view, Integer commentCount, Long writerId, LocalDateTime createdDate, List<Image> images) {
         this.postId = postId;
         this.title = title;
         this.content = content;
         this.writer = writer;
         this.view = view;
+        this.commentCount = commentCount;
         this.writerId = writerId;
         writtenTime = TimeUtil.formatCreatedDate(createdDate);
         this.imageUrls = ImageConverter.imageToImageResponse(images);
