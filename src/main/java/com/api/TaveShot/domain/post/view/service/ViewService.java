@@ -32,7 +32,7 @@ public class ViewService {
         return viewHistoryRepository.existsByPostIdAndMemberId(postId, userId);
     }
 
-    public void register(final Long postId, final Long memberId) {
+    private void register(final Long postId, final Long memberId) {
         ViewHistory viewHistory = ViewHistory.builder()
                 .postId(postId)
                 .memberId(memberId)

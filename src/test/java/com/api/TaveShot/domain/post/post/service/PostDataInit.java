@@ -14,6 +14,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -22,12 +24,19 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+
+// -----   실제 사용시 주석을 해제하여 데이터 값 삽입   -----
+//@Transactional
+//@Rollback(value = false)
 public class PostDataInit {
 
     @Autowired
@@ -39,10 +48,21 @@ public class PostDataInit {
     @Autowired
     CommentService commentService;
 
+    @BeforeEach
+    void setUp() {
+        Member member = getMember("toychip");
+        Authentication auth = new UsernamePasswordAuthenticationToken(member, null, null);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+    }
+
+    @AfterEach
+    void tearDown() {
+        SecurityContextHolder.clearContext();
+    }
+
+
     @Test
     @DisplayName("팀원들 계정으로 예시 게시글 생성")
-    @Transactional
-    @Rollback(false)
     @Order(1)
     void initExPost() throws IOException {
 
@@ -75,7 +95,8 @@ public class PostDataInit {
                     .attachmentFile(multipartFiles)
                     .build();
 
-            postService.registerTest(request, member);
+//            postService.registerTest(request, member);
+            postService.register(request);
         }
     }
 
@@ -96,8 +117,6 @@ public class PostDataInit {
 
     @Test
     @DisplayName("팀원들 계정으로 예시 댓글 생성")
-    @Transactional
-    @Rollback(false)
     @Order(2)
     void initExComment() {
 
@@ -125,7 +144,8 @@ public class PostDataInit {
                     .parentCommentId(parentCommentId)
                     .build();
 
-            Long newCommentId = commentService.registerTest(postId, req, member);
+//            Long newCommentId = commentService.registerTest(postId, req, member);
+            Long newCommentId = commentService.register(postId, req);
             System.out.println("newCommentId = " + newCommentId);
         }
     }
