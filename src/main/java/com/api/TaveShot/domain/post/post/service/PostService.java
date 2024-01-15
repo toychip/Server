@@ -82,8 +82,9 @@ public class PostService {
         postRepository.save(post);
 
         List<MultipartFile> attachmentFile = request.getAttachmentFile();
-        if (!attachmentFile.isEmpty()) {
-            registerImages(request.getAttachmentFile(), post);
+
+        if (attachmentFile != null && !attachmentFile.isEmpty()) {
+            registerImages(attachmentFile, post);
         }
 
         return post.getId();
@@ -152,8 +153,12 @@ public class PostService {
 
         post.edit(postEditor);
 
+        List<MultipartFile> attachmentFile = request.getAttachmentFile();
+
         // 이미지 수정
-        editImages(request.getAttachmentFile(), post);
+        if (attachmentFile != null && !attachmentFile.isEmpty()) {
+            editImages(attachmentFile, post);
+        }
     }
 
     private Post getPost(final Long postId) {
