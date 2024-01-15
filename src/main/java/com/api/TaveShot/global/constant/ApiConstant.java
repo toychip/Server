@@ -9,6 +9,6 @@ public final class ApiConstant {
         throw new ApiException(ErrorType._CANT_TRANCE_INSTANCE);
     }
 
-    public static String SOLVED_REQUEST_USER_BIO_URI = "https://solved.ac/api/v3/user/show?handle=";
+    public static String SOLVED_REQUEST_USER_BIO_URI = "https://solved.ac/api/v3/user/show";
     public static String GITHUB_URI = "https://api.github.com";
 }

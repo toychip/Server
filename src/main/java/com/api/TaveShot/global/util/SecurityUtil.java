@@ -10,6 +10,10 @@ public class SecurityUtil {
 
     public static Member getCurrentMember() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("authentication = " + authentication.getName());
+        System.out.println("authentication.getPrincipal() = " + authentication.getPrincipal());
+        System.out.println("authentication.getAuthorities() = " + authentication.getAuthorities());
+
 
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new ApiException(ErrorType._UNAUTHORIZED);
@@ -17,10 +21,6 @@ public class SecurityUtil {
 
         Object principal = authentication.getPrincipal();
 
-        if (principal instanceof Member) {
-            return (Member) principal;
-        }
-
-        throw new ApiException(ErrorType._USER_NOT_FOUND_DB);
+        return (Member) principal;
     }
 }

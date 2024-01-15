@@ -1,8 +1,8 @@
-package com.api.TaveShot.domain.comment.domain;
+package com.api.TaveShot.domain.post.comment.domain;
 
 import com.api.TaveShot.domain.Member.domain.Member;
 import com.api.TaveShot.domain.base.BaseEntity;
-import com.api.TaveShot.domain.comment.editor.CommentEditor;
+import com.api.TaveShot.domain.post.comment.editor.CommentEditor;
 import com.api.TaveShot.domain.post.post.domain.Post;
 import com.api.TaveShot.global.util.TimeUtil;
 import jakarta.persistence.CascadeType;

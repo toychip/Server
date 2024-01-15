@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.api'
-version = '0.7.0-CORS'
+version = '0.9.8-addView'
 
 java {
 	sourceCompatibility = '17'

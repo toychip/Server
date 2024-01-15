@@ -40,7 +40,6 @@ public class SecurityConfig {
                                         "/actuator/**"
                                         , "/swagger-ui/**"
                                         , "/api-docs/swagger-config"
-                                        , "/members/login"
                                         ,"/oauth/**"
                                         ,"/favicon.ico"
                                         ,"/login/**"
