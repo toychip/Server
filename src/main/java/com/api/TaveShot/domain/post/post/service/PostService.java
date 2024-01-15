@@ -81,7 +81,11 @@ public class PostService {
         Post post = PostConverter.createDtoToEntity(request, getCurrentMember());
         postRepository.save(post);
 
-        registerImages(request.getAttachmentFile(), post);
+        List<MultipartFile> attachmentFile = request.getAttachmentFile();
+        if (!attachmentFile.isEmpty()) {
+            registerImages(request.getAttachmentFile(), post);
+        }
+
         return post.getId();
     }
 
@@ -125,8 +129,7 @@ public class PostService {
     }
 
     private Post getPostFetchJoin(final Long postId) {
-        return postRepository.findPostFetchJoin(postId)
-                .orElseThrow(() -> new ApiException(ErrorType._POST_NOT_FOUND));
+        return postRepository.findPostFetchJoin(postId);
     }
 
     private void addViewCount(Post post) {
