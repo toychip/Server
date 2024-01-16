@@ -1,8 +1,5 @@
 package com.api.TaveShot.domain.compiler.controller;
 
-import com.api.TaveShot.domain.compiler.dto.CodeSubmissionDto;
-import com.api.TaveShot.domain.compiler.dto.SubmissionResultDto;
-import com.api.TaveShot.domain.compiler.service.CompilerService;
 import com.api.TaveShot.domain.compiler.dto.ProblemDto;
 import com.api.TaveShot.domain.compiler.service.ProblemService;
 import com.api.TaveShot.global.success.SuccessResponse;
@@ -17,7 +14,6 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/api/compile")
 public class CompilerController {
 
-    private final CompilerService compilerService;
     private final ProblemService problemService;
 
     @GetMapping("/problems/{id}")
@@ -26,14 +22,4 @@ public class CompilerController {
         return new SuccessResponse<>(problem);
     }
 
-    @PostMapping("/submit")
-    public Mono<SubmissionResultDto> submitCode(@RequestBody CodeSubmissionDto submission) {
-        return compilerService.compileAndJudge(submission);
-    }
-
-//    @PostMapping("/submit")
-//    public SuccessResponse<String> submitCode(@RequestBody CodeSubmissionDto submissionDto) {
-//        compilerService.submitCode(submissionDto);
-//        return new SuccessResponse<>("Submission successful"); // 이후에 변경
-//    }
 }
