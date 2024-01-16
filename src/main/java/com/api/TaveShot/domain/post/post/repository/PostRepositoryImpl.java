@@ -3,12 +3,14 @@ package com.api.TaveShot.domain.post.post.repository;
 
 import static com.api.TaveShot.domain.post.comment.domain.QComment.comment;
 import static com.api.TaveShot.domain.post.image.domain.QImage.image;
+import static com.api.TaveShot.domain.post.post.domain.QPost.*;
 import static com.api.TaveShot.domain.post.post.domain.QPost.post;
 import static com.api.TaveShot.global.constant.OauthConstant.MAX_PAGE_NUMBER;
 import static com.api.TaveShot.global.constant.OauthConstant.MAX_PAGE_SIZE;
 
 import com.api.TaveShot.domain.post.post.domain.Post;
 import com.api.TaveShot.domain.post.post.domain.PostTier;
+import com.api.TaveShot.domain.post.post.domain.QPost;
 import com.api.TaveShot.domain.post.post.dto.request.PostSearchCondition;
 import com.api.TaveShot.domain.post.post.dto.response.PostResponse;
 import com.api.TaveShot.global.exception.ApiException;
@@ -18,6 +20,7 @@ import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,7 +43,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
 
     @Override
     public Post findPostFetchJoin(Long id) {
-        return jpaQueryFactory
+        Post findPost = jpaQueryFactory
                 .select(post)
                 .distinct()
                 .from(post)
@@ -50,6 +53,9 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .fetchJoin()
                 .orderBy(post.id.desc())
                 .fetchOne();
+
+        return Optional.ofNullable(findPost)
+                .orElseThrow(() -> new ApiException(ErrorType._POST_NOT_FOUND));
     }
 
     private List<PostResponse> getSearchPageContent(final PostSearchCondition condition, final Pageable pageable) {
