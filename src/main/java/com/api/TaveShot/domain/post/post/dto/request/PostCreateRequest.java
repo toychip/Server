@@ -3,6 +3,7 @@ package com.api.TaveShot.domain.post.post.dto.request;
 import com.api.TaveShot.domain.post.post.domain.PostTier;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

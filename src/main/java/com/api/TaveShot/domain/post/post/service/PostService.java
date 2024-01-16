@@ -1,8 +1,10 @@
 package com.api.TaveShot.domain.post.post.service;
 
 import com.api.TaveShot.domain.Member.domain.Member;
-import com.api.TaveShot.domain.Member.domain.Tier;
+import com.api.TaveShot.domain.post.comment.dto.response.CommentListResponse;
+import com.api.TaveShot.domain.post.comment.service.CommentService;
 import com.api.TaveShot.domain.post.image.service.ImageService;
+import com.api.TaveShot.domain.post.post.PostValidator;
 import com.api.TaveShot.domain.post.post.converter.PostConverter;
 import com.api.TaveShot.domain.post.post.domain.Post;
 import com.api.TaveShot.domain.post.post.domain.PostTier;
@@ -13,6 +15,7 @@ import com.api.TaveShot.domain.post.post.dto.response.PostListResponse;
 import com.api.TaveShot.domain.post.post.dto.response.PostResponse;
 import com.api.TaveShot.domain.post.post.editor.PostEditor;
 import com.api.TaveShot.domain.post.post.repository.PostRepository;
+import com.api.TaveShot.domain.post.view.service.ViewService;
 import com.api.TaveShot.global.config.S3FileUploader;
 import com.api.TaveShot.global.exception.ApiException;
 import com.api.TaveShot.global.exception.ErrorType;
@@ -36,98 +39,24 @@ public class PostService {
     private final PostRepository postRepository;
     private final S3FileUploader s3Uploader;
     private final ImageService imageService;
-
-    /* --------------------------------- CREATE --------------------------------- */
-    @Transactional
-    public PostResponse register(final PostCreateRequest request) {
-        Member currentMember = getCurrentMember();
-
-        validateAuthority(request.getPostTier(), currentMember);
-
-        Post post = PostConverter.createDtoToEntity(request, currentMember);
-        postRepository.save(post);
-
-        registerImages(request.getAttachmentFile(), post);
-        return postResponse(post);
-    }
-
-    public void validateAuthority(final PostTier postTier, final Member currentMember) {
-        Tier memberTier = currentMember.getTier();
-
-        boolean isContains = postTier.containsTier(memberTier);
-        if (!isContains) {
-            throw new ApiException(ErrorType._POST_USER_FORBIDDEN);
-        }
-    }
-
-    private void registerImages(final List<MultipartFile> multipartFiles, final Post post) {
-        List<String> uploadUrls = getImageUrls(multipartFiles);
-        uploadUrls.forEach(uploadUrl -> imageService.register(post, uploadUrl));
-    }
-
-    private List<String> getImageUrls(final List<MultipartFile> multipartFiles) {
-        return s3Uploader.uploadMultipartFiles(multipartFiles);
-    }
+    private final CommentService commentService;
+    private final PostValidator postValidator;
+    private final ViewService viewService;
 
     private Member getCurrentMember() {
         return SecurityUtil.getCurrentMember();
     }
 
-    private PostResponse postResponse(final Post post) {
-        return PostConverter.entityToResponse(post);
-    }
-
-
-    /* --------------------------------- READ Single --------------------------------- */
-    public PostResponse getSinglePost(final Long postId) {
-        Post post = getPostFetchJoin(postId);
-        PostTier postTier = post.getPostTier();
-
-        validateAuthority(postTier, getCurrentMember());
-        return postResponse(post);
-    }
-
-    private Post getPostFetchJoin(final Long postId) {
-        return postRepository.findPostFetchJoin(postId)
-                .orElseThrow(() -> new ApiException(ErrorType._POST_NOT_FOUND));
-    }
-
-
-    /* --------------------------------- READ Paging --------------------------------- */
-    public PostListResponse searchPostPaging(final PostSearchCondition condition, final Pageable pageable) {
-        Page<PostResponse> postResponses = postRepository.searchPagePost(condition, pageable);
-
-        PostTier postTier = condition.getPostTierEnum();
-        validateAuthority(postTier, getCurrentMember());
-
-        PostListResponse postListResponse = PostConverter.pageToPostListResponse(postResponses);
-        return postListResponse;
-    }
-
-
-    /* --------------------------------- EDIT --------------------------------- */
-    @Transactional
-    public void edit(final Long postId, final PostEditRequest request) {
-        Post post = getPost(postId);
-        validate(post);
-
-        PostEditor postEditor = getPostEditor(request, post);
-
-        post.edit(postEditor);
-
-        // 이미지 수정
-        editImages(request.getAttachmentFile(), post);
-    }
-
+    // 수정 삭제시에 검증하는 메서드
     private void validate(final Post post) {
-        validateWriter(post);
         PostTier postTier = post.getPostTier();
-        validateAuthority(postTier, getCurrentMember());
+        validateAuthority(postTier);
+        validateWriter(post);
     }
 
-    private Post getPost(final Long postId) {
-        return postRepository.findById(postId).orElseThrow(
-                () -> new ApiException(ErrorType._POST_NOT_FOUND));
+    // 요청한 글의 티어와, 사용자의 티어를 검증하는 메서드
+    private void validateAuthority(PostTier postTier) {
+        postValidator.validateAuthority(postTier, getCurrentMember());
     }
 
     private void validateWriter(final Post post) {
@@ -139,6 +68,102 @@ public class PostService {
         if (!postWriterId.equals(currentMemberId)) {
             throw new ApiException(ErrorType._UNAUTHORIZED);
         }
+    }
+
+    /* --------------------------------- CREATE --------------------------------- */
+
+    @Transactional
+    public Long register(final PostCreateRequest request) {
+
+        PostTier requestPostTier = request.getPostTier();
+        validateAuthority(requestPostTier);
+
+        Post post = PostConverter.createDtoToEntity(request, getCurrentMember());
+        postRepository.save(post);
+
+        List<MultipartFile> attachmentFile = request.getAttachmentFile();
+
+        if (attachmentFile != null && !attachmentFile.isEmpty()) {
+            registerImages(attachmentFile, post);
+        }
+
+        return post.getId();
+    }
+
+    private void registerImages(final List<MultipartFile> multipartFiles, final Post post) {
+        List<String> uploadUrls = getImageUrls(multipartFiles);
+        uploadUrls.forEach(uploadUrl -> imageService.register(post, uploadUrl));
+    }
+
+    private List<String> getImageUrls(final List<MultipartFile> multipartFiles) {
+        return s3Uploader.uploadMultipartFiles(multipartFiles);
+    }
+
+    private PostResponse postResponse(final Post post, final CommentListResponse commentListResponse) {
+        return PostConverter.entityToResponse(post, commentListResponse);
+    }
+
+
+    /* --------------------------------- READ Single --------------------------------- */
+
+    @Transactional
+    public PostResponse getSinglePost(final Long postId) {
+        Post post = getPostFetchJoin(postId);
+        PostTier postTier = post.getPostTier();
+
+        validateAuthority(postTier);
+        addViewCount(post);
+
+        CommentListResponse commentResponses = commentService.findComments(postId);
+        return postResponse(post, commentResponses);
+    }
+
+    private Post getPostFetchJoin(final Long postId) {
+        return postRepository.findPostFetchJoin(postId);
+    }
+
+    private void addViewCount(Post post) {
+        Long postId = post.getId();
+        boolean isAlreadyView = viewService.checkAndAddViewHistory(postId);
+        if (!isAlreadyView) {
+            post.addCount();
+        }
+    }
+
+    /* --------------------------------- READ Paging --------------------------------- */
+
+    public PostListResponse searchPostPaging(final PostSearchCondition condition, final Pageable pageable) {
+        Page<PostResponse> postResponses = postRepository.searchPagePost(condition, pageable);
+
+        PostTier postTier = condition.getPostTierEnum();
+        validateAuthority(postTier);
+
+        PostListResponse postListResponse = PostConverter.pageToPostListResponse(postResponses);
+        return postListResponse;
+    }
+
+    /* --------------------------------- EDIT --------------------------------- */
+
+    @Transactional
+    public void edit(final Long postId, final PostEditRequest request) {
+        Post post = getPost(postId);
+        validate(post);
+
+        PostEditor postEditor = getPostEditor(request, post);
+
+        post.edit(postEditor);
+
+        List<MultipartFile> attachmentFile = request.getAttachmentFile();
+
+        // 이미지 수정
+        if (attachmentFile != null && !attachmentFile.isEmpty()) {
+            editImages(attachmentFile, post);
+        }
+    }
+
+    private Post getPost(final Long postId) {
+        return postRepository.findById(postId).orElseThrow(
+                () -> new ApiException(ErrorType._POST_NOT_FOUND));
     }
 
     private PostEditor getPostEditor(final PostEditRequest request, final Post post) {
@@ -164,14 +189,9 @@ public class PostService {
     @Transactional
     public void delete(final Long postId) {
         Post post = getPost(postId);
-        PostTier postTier = post.getPostTier();
-        validateAuthority(postTier, getCurrentMember());
-        postRepository.delete(post);
-    }
+        validate(post);
 
-    public Post findById(Long postId) {
-        return postRepository.findById(postId)
-                .orElseThrow(() -> new ApiException(ErrorType._POST_NOT_FOUND));
+        postRepository.delete(post);
     }
 
 }

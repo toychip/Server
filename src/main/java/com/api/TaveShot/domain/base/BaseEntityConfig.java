@@ -1,5 +1,6 @@
 package com.api.TaveShot.domain.base;
 
+import com.api.TaveShot.domain.Member.domain.Member;
 import java.util.Optional;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,8 +21,8 @@ public class BaseEntityConfig {
                 return Optional.of("Anonymous");
             }
 
-            String name = authentication.getName();
-            return Optional.of(name);
+            Member member = (Member) authentication.getPrincipal();
+            return Optional.ofNullable(member.getGitLoginId());
         };
     }
 }

@@ -1,13 +1,16 @@
 package com.api.TaveShot.domain.post.post.repository;
 
 
+import static com.api.TaveShot.domain.post.comment.domain.QComment.comment;
 import static com.api.TaveShot.domain.post.image.domain.QImage.image;
+import static com.api.TaveShot.domain.post.post.domain.QPost.*;
 import static com.api.TaveShot.domain.post.post.domain.QPost.post;
 import static com.api.TaveShot.global.constant.OauthConstant.MAX_PAGE_NUMBER;
 import static com.api.TaveShot.global.constant.OauthConstant.MAX_PAGE_SIZE;
 
 import com.api.TaveShot.domain.post.post.domain.Post;
 import com.api.TaveShot.domain.post.post.domain.PostTier;
+import com.api.TaveShot.domain.post.post.domain.QPost;
 import com.api.TaveShot.domain.post.post.dto.request.PostSearchCondition;
 import com.api.TaveShot.domain.post.post.dto.response.PostResponse;
 import com.api.TaveShot.global.exception.ApiException;
@@ -17,6 +20,7 @@ import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,11 +41,29 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         return PageableExecutionUtils.getPage(postResponses, pageable, searchPageCount::fetchOne);
     }
 
+    @Override
+    public Post findPostFetchJoin(Long id) {
+        Post findPost = jpaQueryFactory
+                .select(post)
+                .distinct()
+                .from(post)
+                .leftJoin(post.images, image)
+                .leftJoin(post.comments, comment)
+                .where(post.id.eq(id))
+                .fetchJoin()
+                .orderBy(post.id.desc())
+                .fetchOne();
+
+        return Optional.ofNullable(findPost)
+                .orElseThrow(() -> new ApiException(ErrorType._POST_NOT_FOUND));
+    }
+
     private List<PostResponse> getSearchPageContent(final PostSearchCondition condition, final Pageable pageable) {
         validatePaging(condition, pageable);
 
         List<Post> posts = jpaQueryFactory
                 .select(post)
+                .distinct()
                 .from(post)
                 .where(
                         judgeTier(condition.getPostTierEnum()),
@@ -50,6 +72,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                         containWriter(condition.getWriter())
                 )
                 .leftJoin(post.images, image)
+                .leftJoin(post.comments, comment)
                 .fetchJoin()
                 .limit(pageable.getPageSize())
                 .offset(pageable.getOffset())
@@ -114,8 +137,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
 
     private List<PostResponse> toPostResponses(List<Post> posts) {
         return posts.stream()
-                .map(p -> new PostResponse(p.getId(), p.getTitle(), p.getContent(), p.getWriter(),
-                        p.getViewCount(), p.getMemberId(), p.getCreatedDate(), p.getImages()))
+                .map(p -> new PostResponse(p.getId(), p.getTitle(), p.getContent(), p.getWriter(), p.getViewCount(),
+                        p.getComments().size(), p.getMemberId(), p.getCreatedDate(), p.getImages()))
                 .toList();
     }
 

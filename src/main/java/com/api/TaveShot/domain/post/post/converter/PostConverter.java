@@ -1,6 +1,7 @@
 package com.api.TaveShot.domain.post.post.converter;
 
 import com.api.TaveShot.domain.Member.domain.Member;
+import com.api.TaveShot.domain.post.comment.dto.response.CommentListResponse;
 import com.api.TaveShot.domain.post.image.converter.ImageConverter;
 import com.api.TaveShot.domain.post.post.domain.Post;
 import com.api.TaveShot.domain.post.post.dto.request.PostCreateRequest;
@@ -19,7 +20,7 @@ public class PostConverter {
                 .build();
     }
 
-    public static PostResponse entityToResponse(final Post post) {
+    public static PostResponse entityToResponse(final Post post, final CommentListResponse commentListResponse) {
         return PostResponse.builder()
                 .postId(post.getId())
                 .title(post.getTitle())
@@ -27,10 +28,10 @@ public class PostConverter {
                 .writer(post.getWriter())
                 .view(post.getViewCount())
                 .writerId(post.getMemberId())
-                // ToDo 수정 시간으로 넣을지, 생성 시간을 넣을지 프론트와 협의
+                .commentCount(post.getComments().size())
                 .writtenTime(post.getCreatedTime())
                 .imageUrls(ImageConverter.imageToImageResponse(post.getImages()))
-//                .comments() Comment 수정 후 처리
+                .commentListResponse(commentListResponse)
                 .build();
     }
 

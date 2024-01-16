@@ -37,4 +37,8 @@ public enum PostTier {
     public boolean containsTier(Tier tier) {
         return associatedTiers.contains(tier);
     }
+
+    public String getTier() {
+        return tier;
+    }
 }

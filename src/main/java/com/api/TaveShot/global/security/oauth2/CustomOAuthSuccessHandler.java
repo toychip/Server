@@ -44,12 +44,14 @@ public class CustomOAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         log.info("------------------ 소셜 로그인 성공: " + loginId);
 
         Integer id = githubUserInfo.getId();
+        log.info("------------------ id = " + id);
+
         String mail = githubUserInfo.getMail();
         String profileImageUrl = githubUserInfo.getProfileImageUrl();
 
         Member loginMember = memberRepository.findByGitId(Long.valueOf(id)).orElseThrow(
                 () -> new ApiException(_SERVER_USER_NOT_FOUND));
-        String loginMemberId = String.valueOf(loginMember.getId());
+        String loginMemberId = String.valueOf(loginMember.getGitId());
 
         String token = generateToken(loginMemberId);
 

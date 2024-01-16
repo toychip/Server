@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,9 +40,9 @@ public class PostApiController {
                             schema = @Schema(implementation = PostResponse.class)))
     })
     @PostMapping("/post")
-    public SuccessResponse<PostResponse> register(final @Validated @ModelAttribute PostCreateRequest request) {
-        PostResponse postResponse = postService.register(request);
-        return new SuccessResponse<>(postResponse);
+    public SuccessResponse<Long> register(final @Validated @ModelAttribute PostCreateRequest request) {
+        Long postId = postService.register(request);
+        return new SuccessResponse<>(postId);
     }
 
     /* READ */

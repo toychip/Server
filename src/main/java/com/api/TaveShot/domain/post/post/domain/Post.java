@@ -1,6 +1,7 @@
 package com.api.TaveShot.domain.post.post.domain;
 
 import com.api.TaveShot.domain.Member.domain.Member;
+import com.api.TaveShot.domain.post.comment.domain.Comment;
 import com.api.TaveShot.domain.post.image.domain.Image;
 import com.api.TaveShot.domain.post.post.editor.PostEditor;
 import com.api.TaveShot.domain.base.BaseEntity;
@@ -60,8 +61,9 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-//    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
-//    private List<Comment> comments;
+    @Builder.Default
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 
     public PostEditorBuilder toEditor() {
         return PostEditor.builder()
@@ -81,6 +83,10 @@ public class Post extends BaseEntity {
     public String getCreatedTime() {
         LocalDateTime createdDate = getCreatedDate();
         return TimeUtil.formatCreatedDate(createdDate);
+    }
+
+    public void addCount() {
+        viewCount++;
     }
 
 }
