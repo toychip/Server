@@ -66,6 +66,9 @@ dependencies {
 	// redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	implementation 'io.lettuce:lettuce-core'
+	
+	// jsoup
+	implementation 'org.jsoup:jsoup:1.15.4'
 }
 
 tasks.named('bootBuildImage') {
