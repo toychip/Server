@@ -1,43 +1,39 @@
 package com.api.TaveShot.domain.compiler.service;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
-
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
 public class CompilerService {
 
-    private final String pythonServerUrl = "http://localhost:5000"; // 파이썬 서버 주소
-
     public String submitCode(String problemId, String language, String sourceCode) {
         RestTemplate restTemplate = new RestTemplate();
+        String submitUrl = "http://localhost:5000/submitCode";
+        String resultUrl = "http://localhost:5000/result/";
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+        // 요청 보내고 submission_id 받기
+        Map<String, String> requestMap = new HashMap<>();
+        requestMap.put("problemId", problemId);
+        requestMap.put("language", language);
+        requestMap.put("sourceCode", sourceCode);
 
-        // 사용자 입력 데이터를 JSON 형식으로 패키징
-        Map<String, String> requestData = new HashMap<>();
-        requestData.put("problemId", problemId);
-        requestData.put("language", language);
-        requestData.put("sourceCode", sourceCode);
+        ResponseEntity<Map> submitResponse = restTemplate.postForEntity(submitUrl, requestMap, Map.class);
+        String submissionId = (String) submitResponse.getBody().get("submission_id");
 
-        HttpEntity<Map<String, String>> requestEntity = new HttpEntity<>(requestData, headers);
-
-        // 파이썬 서버에 POST 요청 보내기
-        ResponseEntity<String> responseEntity = restTemplate.exchange(
-                pythonServerUrl + "/submit-code",
-                HttpMethod.POST,
-                requestEntity,
-                String.class);
-
-        if (responseEntity.getStatusCode() == HttpStatus.OK) {
-            return responseEntity.getBody();
-        } else {
-            return "Error occurred while submitting code.";
+        String result = "결과 처리 중";
+        while (result.equals("결과 처리 중")) {
+            ResponseEntity<Map> resultResponse = restTemplate.getForEntity(resultUrl + submissionId, Map.class);
+            result = (String) resultResponse.getBody().get("result");
+            try {
+                Thread.sleep(2000);  // 2초 간격으로 확인
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
+        return result;
     }
 
 }

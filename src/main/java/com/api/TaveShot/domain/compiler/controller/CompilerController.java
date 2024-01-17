@@ -8,6 +8,8 @@ import com.api.TaveShot.global.success.SuccessResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/compile")
@@ -22,12 +24,12 @@ public class CompilerController {
         return new SuccessResponse<>(problem);
     }
 
-    @PostMapping("/submit-code")
-    public String submitCode(@RequestBody SubmissionRequestDto submissionRequestDto) {
-        String problemId = submissionRequestDto.getProblemId();
-        String language = submissionRequestDto.getLanguage();
-        String sourceCode = submissionRequestDto.getSourceCode();
-
-        return compilerService.submitCode(problemId, language, sourceCode);
+    @PostMapping("/submit")
+    public String submitCode(@RequestBody Map<String, String> request) {
+        return compilerService.submitCode(
+                request.get("problemId"),
+                request.get("language"),
+                request.get("sourceCode")
+        );
     }
 }
