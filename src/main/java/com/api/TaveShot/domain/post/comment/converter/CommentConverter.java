@@ -51,6 +51,7 @@ public class CommentConverter {
                 .parentId(
                         Optional.ofNullable(comment.getParent())
                                 .map(Comment::getId).orElse(null))
+                .writerProfileImgUrl(comment.getMember().getProfileImageUrl())
                 .build();
     }
 }
