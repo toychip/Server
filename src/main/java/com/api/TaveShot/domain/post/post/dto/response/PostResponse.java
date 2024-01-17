@@ -21,14 +21,16 @@ public class PostResponse {
     private String content;
     private String writer;
     private int view;
+    private int commentCount;
     private Long writerId;
+    private String writerProfileImgUrl;
     private String writtenTime;
     private List<ImageResponse> imageUrls;
-    private int commentCount;
     private CommentListResponse commentListResponse;
 
     @Builder
-    public PostResponse(Long postId, String title, String content, String writer, Integer view, Integer commentCount, Long writerId, LocalDateTime createdDate, List<Image> images) {
+    public PostResponse(Long postId, String title, String content, String writer, Integer view,
+                        Integer commentCount, Long writerId, String writerProfileImgUrl, LocalDateTime createdDate, List<Image> images) {
         this.postId = postId;
         this.title = title;
         this.content = content;
@@ -36,6 +38,7 @@ public class PostResponse {
         this.view = view;
         this.commentCount = commentCount;
         this.writerId = writerId;
+        this.writerProfileImgUrl = writerProfileImgUrl;
         writtenTime = TimeUtil.formatCreatedDate(createdDate);
         this.imageUrls = ImageConverter.imageToImageResponse(images);
     }
