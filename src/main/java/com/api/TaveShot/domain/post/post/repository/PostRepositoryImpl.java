@@ -88,16 +88,24 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
             throw new ApiException(ErrorType._PAGING_INVALID_PAGE_SIZE);
         }
 
-        if (pageable.getPageSize() > MAX_PAGE_NUMBER) {
+        if (pageable.getPageNumber() > MAX_PAGE_NUMBER) {
             throw new ApiException(ErrorType._PAGING_INVALID_PAGE_NUMBER);
         }
 
         long totalPosts = safeFetchCount(getSearchPageCount(condition));
         long expectedStartIndex = pageable.getOffset();
-        long expectedEndIndex = expectedStartIndex + pageable.getPageSize();
+        long expectedEndIndex = expectedStartIndex + pageable.getPageSize() - 1;
+
+        long lastPageIndex = (totalPosts - 1) / pageable.getPageSize(); // 마지막 페이지 인덱스 계산
+
+        // 마지막 페이지인 경우, expectedEndIndex는 totalPosts - 1 이하이어야 함
+        if (pageable.getPageNumber() >= lastPageIndex) {
+            expectedEndIndex = Math.min(expectedEndIndex, totalPosts - 1);
+        }
 
         // 데이터 범위 초과 여부 확인
-        if (expectedStartIndex >= totalPosts || expectedEndIndex > totalPosts) {
+        if (expectedEndIndex > totalPosts) {
+            System.out.println("PostRepositoryImpl.validatePaging.error");
             throw new ApiException(ErrorType._PAGING_INVALID_DATA_SIZE);
         }
     }
