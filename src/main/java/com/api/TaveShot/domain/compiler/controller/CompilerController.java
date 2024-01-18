@@ -25,11 +25,7 @@ public class CompilerController {
     }
 
     @PostMapping("/submit")
-    public String submitCode(@RequestBody Map<String, String> request) {
-        return compilerService.submitCode(
-                request.get("problemId"),
-                request.get("language"),
-                request.get("sourceCode")
-        );
+    public String submitCode(@RequestBody SubmissionRequestDto submissionRequestDto) {
+        return compilerService.submitCode(submissionRequestDto);
     }
 }
