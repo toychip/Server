@@ -76,6 +76,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .fetchJoin()
                 .limit(pageable.getPageSize())
                 .offset(pageable.getOffset())
+                .orderBy(post.id.desc())
                 .fetch();
 
         List<PostResponse> postResponseList = toPostResponses(posts);
