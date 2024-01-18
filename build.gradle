@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.api'
-version = '1.1.0-distinct'
+version = '1.4.0-jwt'
 
 java {
 	sourceCompatibility = '17'
