@@ -66,9 +66,4 @@ public class ProblemDto {
         return sampleOutput;
     }
 
-    public String getProblemUrl(){
-        return "https://www.acmicpc.net/problem/" + this.ID;
-    }
-
-
 }
