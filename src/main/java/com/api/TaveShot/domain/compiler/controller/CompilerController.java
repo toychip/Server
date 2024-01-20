@@ -5,7 +5,13 @@ import com.api.TaveShot.domain.compiler.dto.SubmissionRequestDto;
 import com.api.TaveShot.domain.compiler.service.CompilerService;
 import com.api.TaveShot.domain.compiler.service.ProblemService;
 import com.api.TaveShot.global.success.SuccessResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -25,7 +31,8 @@ public class CompilerController {
     }
 
     @PostMapping("/submit")
-    public String submitCode(@RequestBody SubmissionRequestDto submissionRequestDto) {
-        return compilerService.submitCode(submissionRequestDto);
+    public SuccessResponse<String> submitCode(@RequestBody SubmissionRequestDto submissionRequestDto) {
+        String result = compilerService.submitCode(submissionRequestDto);
+        return new SuccessResponse<>(result);
     }
 }
