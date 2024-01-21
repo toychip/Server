@@ -1,8 +1,9 @@
 {
+  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:962588844400:task-definition/100shot-task-definition:13",
   "containerDefinitions": [
     {
       "name": "100shot-backend",
-      "image": "962588844400.dkr.ecr.ap-northeast-2.amazonaws.com/100shot-ecr:4d3b2f6cbf6112c25766b69b51f02612fd01cfc6",
+      "image": "962588844400.dkr.ecr.ap-northeast-2.amazonaws.com/100shot-ecr:e52999a93876f4d95b8db696b055acd23603734c",
       "cpu": 0,
       "portMappings": [
         {
@@ -31,10 +32,40 @@
   "family": "100shot-task-definition",
   "executionRoleArn": "arn:aws:iam::962588844400:role/ecsTaskExecutionRole",
   "networkMode": "awsvpc",
-  "revision": 14,
+  "revision": 13,
   "volumes": [],
   "status": "ACTIVE",
+  "requiresAttributes": [
+    {
+      "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+    },
+    {
+      "name": "ecs.capability.execution-role-awslogs"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.ecr-auth"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+    },
+    {
+      "name": "ecs.capability.execution-role-ecr-pull"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+    },
+    {
+      "name": "ecs.capability.task-eni"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.29"
+    }
+  ],
   "placementConstraints": [],
+  "compatibilities": [
+    "EC2",
+    "FARGATE"
+  ],
   "requiresCompatibilities": [
     "FARGATE"
   ],
@@ -44,5 +75,7 @@
     "cpuArchitecture": "X86_64",
     "operatingSystemFamily": "LINUX"
   },
+  "registeredAt": "2024-01-21T06:25:44.915Z",
+  "registeredBy": "arn:aws:iam::962588844400:user/github-action-ecs",
   "tags": []
 }
