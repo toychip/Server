@@ -81,7 +81,7 @@ public enum ErrorType {
 
     // ------------------------------------------ Compile ------------------------------------------
     _PROBLEM_NOT_FOUND(NOT_FOUND, "PROBLEM_4040", "요청한 문제 번호를 찾을 수 없습니다."),
-    _SUBMIT_PAGE_NOT_FOUND(NOT_FOUND, "COMPILE_4040", "채점이 준비 되지 않아 코드를 제출할 수 없습니다.")
+    _SUBMIT_PAGE_NOT_FOUND(NOT_FOUND, "COMPILE_4040", "아직 정답이 준비 되지 않아 코드를 제출할 수 없습니다.")
 
     ;
 
