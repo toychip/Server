@@ -37,6 +37,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Print Environment Variables
+        run: |
+          echo "SPRING_DATASOURCE_USERNAME: ${{ env.SPRING_DATASOURCE_USERNAME }}"
+
       - name: Set environment variables
         run: |
           echo "GH_REDIRECT_URI=${{ secrets.GH_REDIRECT_URI }}" >> $GITHUB_ENV
