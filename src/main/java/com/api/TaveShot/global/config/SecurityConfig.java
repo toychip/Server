@@ -37,15 +37,13 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize ->
                         authorize
                                 .requestMatchers(
-                                        "/actuator/**"
-                                        , "/swagger-ui/**"
-                                        , "/api-docs/swagger-config"
+                                         "/swagger-ui/**"
                                         ,"/oauth/**"
                                         ,"/favicon.ico"
                                         ,"/login/**"
-                                        , "/**"
+                                        , "/api/health"
                                 ).permitAll()
-                                .anyRequest().permitAll());
+                                .anyRequest().authenticated());
         http
                 .oauth2Login()
                 .authorizationEndpoint()

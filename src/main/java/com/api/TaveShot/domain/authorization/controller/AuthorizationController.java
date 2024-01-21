@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/authorization")
+@RequestMapping("/api/authorization")
 public class AuthorizationController {
 
     private final AuthorizationService authorizationService;
