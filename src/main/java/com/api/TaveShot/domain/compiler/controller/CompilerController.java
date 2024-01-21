@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -44,7 +45,7 @@ public class CompilerController {
     })
 
     @PostMapping("/submit")
-    public SuccessResponse<String> submitCode(@RequestBody SubmissionRequestDto submissionRequestDto) {
+    public SuccessResponse<String> submitCode(@RequestBody @Validated SubmissionRequestDto submissionRequestDto) {
         String result = compilerService.submitCode(submissionRequestDto);
         return new SuccessResponse<>(result);
     }
