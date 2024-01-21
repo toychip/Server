@@ -10,7 +10,7 @@ env:
   # 1.AWS ECR 이름
   ECR_REPOSITORY: 100shot-ecr
   # 5.AWS의 ECS 클러스터의 SERVICE 이름
-  ECS_SERVICE: 100shot-backend-service
+  ECS_SERVICE: 100shot-back-service
   # 4.AWS ECS 클러스터 이름
   ECS_CLUSTER: taveshot-cluster
   # 3.정의한 ECS TASK 이름
