@@ -37,26 +37,16 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Print Environment Variables
+      - name: Decode And Make application.yml
         run: |
-          echo "SPRING_DATASOURCE_USERNAME: ${{ env.SPRING_DATASOURCE_USERNAME }}"
-
-      - name: Set environment variables
-        run: |
-          echo "GH_REDIRECT_URI=${{ secrets.GH_REDIRECT_URI }}" >> $GITHUB_ENV
-          echo "GH_CLIENT_ID=${{ secrets.GH_CLIENT_ID }}" >> $GITHUB_ENV
-          echo "GH_CLIENT_SECRET=${{ secrets.GH_CLIENT_SECRET }}" >> $GITHUB_ENV
-          echo "SPRING_DATASOURCE_USERNAME=${{ secrets.SPRING_DATASOURCE_USERNAME }}" >> $GITHUB_ENV
-          echo "SPRING_DATASOURCE_PASSWORD=${{ secrets.SPRING_DATASOURCE_PASSWORD }}" >> $GITHUB_ENV
-          echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> $GITHUB_ENV
-          echo "GOOGLE_SECRET_KEY=${{ secrets.GOOGLE_SECRET_KEY }}" >> $GITHUB_ENV
-          echo "GOOGLE_CX=${{ secrets.GOOGLE_CX }}" >> $GITHUB_ENV
-          echo "LAMBDA_SECRET_URL1=${{ secrets.LAMBDA_SECRET_URL1 }}" >> $GITHUB_ENV
-          echo "LAMBDA_SECRET_URL2=${{ secrets.LAMBDA_SECRET_URL2 }}" >> $GITHUB_ENV
-          echo "S3_ACCESS_KEY=${{ secrets.S3_ACCESS_KEY }}" >> $GITHUB_ENV
-          echo "S3_SECRET_KEY=${{ secrets.S3_SECRET_KEY }}" >> $GITHUB_ENV
-          echo "S3_BUCKET=${{ secrets.S3_BUCKET }}" >> $GITHUB_ENV
-          echo "S3_DIR_NAME=${{ secrets.S3_DIR_NAME }}" >> $GITHUB_ENV
+          mkdir -p ./src/main/resources
+          APPLICATION_YML_PATH=./src/main/resources/application.yml
+          if [ -f "$APPLICATION_YML_PATH" ]; then
+            echo "Removing existing application.yml"
+            rm "$APPLICATION_YML_PATH"
+          fi
+          echo "Creating new application.yml with decoded content"
+          echo "${{ secrets.APPLICATION_YML_DECODE }}" | base64 --decode > "$APPLICATION_YML_PATH"
 
       - name: Build with Gradle
         run: ./gradlew bootJar
