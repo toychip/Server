@@ -59,7 +59,7 @@ public class ProblemService {
         ProblemDto problem = problemMap.get(id);
 
         if (problem == null) {
-            throw new ApiException(ErrorType._SOLVED_INVALID_REQUEST); //에러 타입 수정 필요
+            throw new ApiException(ErrorType._PROBLEM_NOT_FOUND);
         }
         return problemMap.get(id);
     }
