@@ -1,5 +1,4 @@
 {
-  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:962588844400:task-definition/100shot-task-definition:14",
   "containerDefinitions": [
     {
       "name": "100shot-backend",
@@ -35,37 +34,7 @@
   "revision": 14,
   "volumes": [],
   "status": "ACTIVE",
-  "requiresAttributes": [
-    {
-      "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
-    },
-    {
-      "name": "ecs.capability.execution-role-awslogs"
-    },
-    {
-      "name": "com.amazonaws.ecs.capability.ecr-auth"
-    },
-    {
-      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
-    },
-    {
-      "name": "ecs.capability.execution-role-ecr-pull"
-    },
-    {
-      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
-    },
-    {
-      "name": "ecs.capability.task-eni"
-    },
-    {
-      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.29"
-    }
-  ],
   "placementConstraints": [],
-  "compatibilities": [
-    "EC2",
-    "FARGATE"
-  ],
   "requiresCompatibilities": [
     "FARGATE"
   ],
@@ -75,7 +44,5 @@
     "cpuArchitecture": "X86_64",
     "operatingSystemFamily": "LINUX"
   },
-  "registeredAt": "2024-01-21T15:18:32.025Z",
-  "registeredBy": "arn:aws:iam::962588844400:user/github-action-ecs",
   "tags": []
 }
