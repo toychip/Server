@@ -46,9 +46,6 @@ public class SecurityConfig {
                                 ).permitAll()
                                 .anyRequest().authenticated());
 
-        http.requiresChannel()
-                .requestMatchers("/favicon.ico").requiresSecure();
-
         http
                 .oauth2Login()
                 .authorizationEndpoint()
