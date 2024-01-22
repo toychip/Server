@@ -28,6 +28,7 @@ public class PostConverter {
                 .writer(post.getWriter())
                 .view(post.getViewCount())
                 .writerId(post.getMemberId())
+                .writerProfileImgUrl(post.getMember().getProfileImageUrl())
                 .commentCount(post.getComments().size())
                 .writtenTime(post.getCreatedTime())
                 .imageUrls(ImageConverter.imageToImageResponse(post.getImages()))
