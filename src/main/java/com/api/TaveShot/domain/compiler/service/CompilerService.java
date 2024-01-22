@@ -27,7 +27,7 @@ public class CompilerService {
         while (result.equals("결과 처리 중") && attempts < MAX_ATTEMPTS) {
             ResponseEntity<Map> resultResponse = restTemplate.getForEntity(RESULT_URL + submissionId, Map.class);
             result = (String) resultResponse.getBody().get("result");
-            if (result.contains("채점이 준비되지 않아, 코드를 제출할 수 없습니다.")) {
+            if (result.contains("정답이 준비되지 않아, 코드를 제출할 수 없습니다.")) {
                 throw new ApiException(ErrorType._SUBMIT_PAGE_NOT_FOUND);
             }
             try {
