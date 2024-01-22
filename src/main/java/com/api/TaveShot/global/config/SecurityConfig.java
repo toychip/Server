@@ -44,9 +44,7 @@ public class SecurityConfig {
                                         , "/api/health"
                                         , "/api/v1/search"
                                 ).permitAll()
-                                .anyRequest().authenticated())
-                .requiresChannel().requestMatchers("/login/**", "/oauth/**")
-                        .requiresSecure();
+                                .anyRequest().authenticated());
 
         http
                 .oauth2Login()
