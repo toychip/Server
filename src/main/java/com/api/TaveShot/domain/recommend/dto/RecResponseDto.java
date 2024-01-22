@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 public class RecResponseDto {
 
-    private List<String> result;
+    private List<RecProDetailResponseDto> result;
 
     private String rightCnt;
     private String wrongCnt;
