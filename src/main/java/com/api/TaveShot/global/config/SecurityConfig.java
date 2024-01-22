@@ -48,8 +48,8 @@ public class SecurityConfig {
 
         http
                 .requiresChannel(channel -> channel
-                                .requestMatchers("/login/github")
-                                .requiresSecure());
+                        .requestMatchers("/login/github", "/login/oauth/authorize/github")
+                        .requiresSecure());
 
         http
                 .oauth2Login()
