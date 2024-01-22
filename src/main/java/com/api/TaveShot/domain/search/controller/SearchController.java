@@ -32,9 +32,7 @@ public class SearchController {
     @Operation(summary = "해답 블로그 반환", description = "원하는 문제와 언어를 검색하여 " +
             "백준 해답 블로그 리스트를 제공합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "해답 제시 성공",
-                    content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
-                            schema = @Schema(implementation = PostResponse.class)))
+            @ApiResponse(responseCode = "200", description = "해답 제시 성공")
     })
     @GetMapping
     public SuccessResponse<GoogleListResponseDto> getList(@RequestParam String query){
@@ -45,9 +43,7 @@ public class SearchController {
     @Operation(summary = "해답 블로그 새로고침 수행", description = "처음 반환한 해답 블로그 리스트 외에 더 보고 싶은 블로그가 있다면" +
             " 새로고침을 통해 다른 리스트 제공")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "새로고침 성공",
-                    content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
-                            schema = @Schema(implementation = PostResponse.class)))
+            @ApiResponse(responseCode = "200", description = "새로고침 성공")
     })
     @GetMapping("/refresh")
     public SuccessResponse<GoogleListResponseDto> getRefresh(@RequestParam String query, @RequestParam(value = "start") int index){
