@@ -1,0 +1,46 @@
+{
+  "containerDefinitions": [
+    {
+      "name": "100shot-backend",
+      "image": "962588844400.dkr.ecr.ap-northeast-2.amazonaws.com/100shot-ecr:e52999a93876f4d95b8db696b055acd23603734c",
+      "cpu": 0,
+      "portMappings": [
+        {
+          "name": "100shot-backend-8080-tcp",
+          "containerPort": 8080,
+          "hostPort": 8080,
+          "protocol": "tcp",
+          "appProtocol": "http"
+        }
+      ],
+      "essential": true,
+      "environment": [],
+      "mountPoints": [],
+      "volumesFrom": [],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-create-group": "true",
+          "awslogs-group": "/ecs/100shot-task-definition",
+          "awslogs-region": "ap-northeast-2",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ],
+  "family": "100shot-task-definition",
+  "executionRoleArn": "arn:aws:iam::962588844400:role/ecsTaskExecutionRole",
+  "networkMode": "awsvpc",
+  "volumes": [],
+  "placementConstraints": [],
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "1024",
+  "memory": "3072",
+  "runtimePlatform": {
+    "cpuArchitecture": "X86_64",
+    "operatingSystemFamily": "LINUX"
+  },
+  "tags": []
+}
