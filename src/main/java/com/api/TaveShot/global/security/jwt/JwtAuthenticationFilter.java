@@ -25,6 +25,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response,
                                     final FilterChain filterChain) throws ServletException, IOException {
 
+        log.info("-----------------------JWT filter do FilterInternal !!!!");
         String requestURI = request.getRequestURI();
         if (isPublicUri(requestURI)) {
             // Public uri 일 경우 검증 안함
