@@ -91,7 +91,7 @@ public class CustomOAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHan
                 "%s/?token=%s&memberId=%s&gitLoginId=%s&profileImgUrl=%s",
                 REDIRECT_URL, token, encodedMemberId, encodedLoginId, encodedGitProfileImageUrl
         );
-        log.info("redirect url: " + REDIRECT_URL);
+        log.info("Front! redirect url: " + REDIRECT_URL);
         response.sendRedirect(frontendRedirectUrl);
     }
 
