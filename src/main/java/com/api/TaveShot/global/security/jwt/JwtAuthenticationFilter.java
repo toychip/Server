@@ -25,7 +25,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response,
                                     final FilterChain filterChain) throws ServletException, IOException {
 
-        log.info("-----------------------JWT filter do FilterInternal !!!!");
         String requestURI = request.getRequestURI();
         if (isPublicUri(requestURI)) {
             // Public uri 일 경우 검증 안함
@@ -33,10 +32,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
+        log.info("-----   JWT filter do FilterInternal !!!!");
         String authorizationHeader = request.getHeader("Authorization");
-
-        log.info("JwtAuthenticationFilter.doFilterInternal");
-        log.info("--------------------   authorizationHeader = " + authorizationHeader);
+        log.info("------- authorizationHeader = " + authorizationHeader);
 
         if (authorizationHeader != null && isBearer(authorizationHeader)) {
             try {
