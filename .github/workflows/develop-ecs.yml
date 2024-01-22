@@ -37,16 +37,13 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Decode And Make application.yml
+      - name: Create application.yml
         run: |
           mkdir -p ./src/main/resources
           APPLICATION_YML_PATH=./src/main/resources/application.yml
-          if [ -f "$APPLICATION_YML_PATH" ]; then
-            echo "Removing existing application.yml"
-            rm "$APPLICATION_YML_PATH"
-          fi
-          echo "Creating new application.yml with decoded content"
-          echo "${{ secrets.APPLICATION_YML_DECODE }}" | base64 --decode > "$APPLICATION_YML_PATH"
+          echo "Writing application.yml"
+          echo "${{ secrets.APPLICATION_YML }}" > "$APPLICATION_YML_PATH"
+
 
       - name: Build with Gradle
         run: ./gradlew bootJar

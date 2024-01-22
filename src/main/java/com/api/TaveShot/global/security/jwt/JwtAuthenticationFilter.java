@@ -32,10 +32,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
+        log.info("-----   JWT filter do FilterInternal !!!!");
         String authorizationHeader = request.getHeader("Authorization");
-
-        log.info("JwtAuthenticationFilter.doFilterInternal");
-        log.info("--------------------   authorizationHeader = " + authorizationHeader);
+        log.info("------- authorizationHeader = " + authorizationHeader);
 
         if (authorizationHeader != null && isBearer(authorizationHeader)) {
             try {
