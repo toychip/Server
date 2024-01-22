@@ -39,13 +39,15 @@ public class SecurityConfig {
                                 .requestMatchers(
                                          "/swagger-ui/**"
                                         ,"/oauth/**"
-                                        ,"/favicon.ico"
+                                        ,"**/favicon.ico"
                                         ,"/login/**"
                                         , "/api/health"
                                         , "/api/v1/search"
                                 ).permitAll()
                                 .anyRequest().authenticated());
 
+        http.requiresChannel()
+                .requestMatchers("**/favicon.ico").requiresSecure();
         http
                 .oauth2Login()
                 .authorizationEndpoint()
