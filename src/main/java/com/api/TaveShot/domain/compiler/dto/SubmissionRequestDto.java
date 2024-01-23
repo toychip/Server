@@ -1,4 +1,4 @@
-package com.api.TaveShot.domain.compiler.dto;
+/*package com.api.TaveShot.domain.compiler.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -21,4 +21,4 @@ public class SubmissionRequestDto {
     @NotEmpty
     private String sourceCode;
 
-}
+}*/

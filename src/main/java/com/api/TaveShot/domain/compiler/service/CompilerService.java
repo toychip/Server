@@ -1,4 +1,4 @@
-package com.api.TaveShot.domain.compiler.service;
+/*package com.api.TaveShot.domain.compiler.service;
 
 import com.api.TaveShot.domain.compiler.dto.SubmissionRequestDto;
 import com.api.TaveShot.global.exception.ApiException;
@@ -11,8 +11,8 @@ import java.util.Map;
 @Service
 public class CompilerService {
 
-    private static final String SUBMIT_CODE_URL = "http://localhost:5000/submitCode";
-    private static final String RESULT_URL = "http://localhost:5000/result/";
+    private static final String SUBMIT_CODE_URL = "http://43.202.52.177/submitCode";
+    private static final String RESULT_URL = "http://43.202.52.177/result/";
     private static final int MAX_ATTEMPTS = 10;
     private static final long SLEEP_TIME_MILLIS = 5000;
 
@@ -40,4 +40,4 @@ public class CompilerService {
 
         return result;
     }
-}
+}*/

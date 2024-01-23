@@ -32,4 +32,8 @@ public class ProblemDto {
     @JsonProperty("Sample Output")
     private String sampleOutput;
 
+    public String getProblemUrl(){
+        return "https://www.acmicpc.net/problem/" + this.id;
+    }
+
 }
