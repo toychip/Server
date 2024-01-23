@@ -1,9 +1,6 @@
 package com.api.TaveShot.domain.compiler.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -13,29 +10,33 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class BojProblem {
+
     @Id
-    @Column(name = "ID")
+    @Column(name = "ID", columnDefinition = "TEXT")
     private String id;
 
-    @Column(name = "Title")
+    @Column(name = "Title", columnDefinition = "TEXT")
     private String title;
 
+    @Lob
     @Column(name = "Description")
     private String description;
 
-    @Column(name = "InputDescription")
+    @Lob
+    @Column(name = "Images with Descriptions")
+    private String imagesWithDescriptions;
+
+    @Lob
+    @Column(name = "Input Description")
     private String inputDescription;
 
-    @Column(name = "OutputDescription")
+    @Column(name = "Output Description", columnDefinition = "TEXT")
     private String outputDescription;
 
-    @Column(name = "SampleInput")
+    @Column(name = "Sample Input", columnDefinition = "TEXT")
     private String sampleInput;
 
-    @Column(name = "SampleOutput")
+    @Column(name = "Sample Output", columnDefinition = "TEXT")
     private String sampleOutput;
 
-    @Column(name = "ImagesWithDescriptions")
-    private String imagesWithDescriptions;
 }
-

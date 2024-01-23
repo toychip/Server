@@ -32,7 +32,6 @@ public class ProblemDto {
     @JsonProperty("Sample Output")
     private String sampleOutput;
 
-    // JSON에 있는 "Images with Descriptions" 필드를 처리하기 위해 필드 추가
     @JsonProperty("Images with Descriptions")
     private String imagesWithDescriptions;
 }
