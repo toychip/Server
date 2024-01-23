@@ -20,7 +20,6 @@ public class ProblemConverter {
                 .outputDescription(bojProblem.getOutputDescription())
                 .sampleInput(bojProblem.getSampleInput())
                 .sampleOutput(bojProblem.getSampleOutput())
-                .imagesWithDescriptions(bojProblem.getImagesWithDescriptions())
                 .build();
     }
 

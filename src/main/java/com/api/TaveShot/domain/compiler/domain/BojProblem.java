@@ -23,10 +23,6 @@ public class BojProblem {
     private String description;
 
     @Lob
-    @Column(name = "Images with Descriptions")
-    private String imagesWithDescriptions;
-
-    @Lob
     @Column(name = "Input Description")
     private String inputDescription;
 

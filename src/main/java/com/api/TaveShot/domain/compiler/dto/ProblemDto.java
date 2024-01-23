@@ -32,6 +32,4 @@ public class ProblemDto {
     @JsonProperty("Sample Output")
     private String sampleOutput;
 
-    @JsonProperty("Images with Descriptions")
-    private String imagesWithDescriptions;
 }
