@@ -21,7 +21,7 @@ public class ProblemService {
 
     public ProblemDto getProblemById(String id) {
         BojProblem bojProblem = problemRepository.findById(id)
-                .orElseThrow(() -> new ApiException(ErrorType._PROBLEM_NOT_FOUND));
+                .orElseThrow(() -> new ApiException(ErrorType._COMPILE_PROBLEM_NOT_FOUND));
 
         return ProblemConverter.convertToDto(bojProblem).orElseThrow(() -> new ApiException(ErrorType._PROBLEM_CONVERSION_ERROR));
     }

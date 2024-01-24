@@ -82,8 +82,9 @@ public enum ErrorType {
     // ---------------------------------------- problem ---------------------------------------------------
 
     _PROBLEM_NOT_FOUND(BAD_REQUEST, "PROBLEM_4001", "존재하지 않는 문제입니다."),
+
     // ------------------------------------------ Compile ------------------------------------------
-    _PROBLEM_NOT_FOUND(NOT_FOUND, "PROBLEM_4040", "요청한 문제 번호를 찾을 수 없습니다."),
+    _COMPILE_PROBLEM_NOT_FOUND(NOT_FOUND, "PROBLEM_4040", "요청한 문제 번호를 찾을 수 없습니다."),
     _SUBMIT_PAGE_NOT_FOUND(NOT_FOUND, "COMPILE_4040", "아직 정답이 준비 되지 않아 코드를 제출할 수 없습니다."),
     _PROBLEM_CONVERSION_ERROR(INTERNAL_SERVER_ERROR, "PROBLEM_5002", "문제 정보 변환 중 오류가 발생했습니다.")
 
