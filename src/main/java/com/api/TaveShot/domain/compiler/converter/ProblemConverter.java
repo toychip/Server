@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProblemConverter {
 
-    public ProblemDto convertToDto(BojProblem bojProblem) {
+    public static ProblemDto convertToDto(BojProblem bojProblem) {
         if (bojProblem == null) {
             return null;
         }
@@ -23,7 +23,7 @@ public class ProblemConverter {
                 .build();
     }
 
-    public BojProblem convertToEntity(ProblemDto problemDto) {
+    public static BojProblem convertToEntity(ProblemDto problemDto) {
         if (problemDto == null) {
             return null;
         }
