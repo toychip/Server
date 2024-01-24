@@ -20,8 +20,8 @@ public class CrawlingService {
 
     // 첫번째 크롤링, 사용자의 순위, 랭크, 맞춘 문제 수, 틀린 문제 수, 맞춘 문제 리스트
     public UserCrawlingDto getUserInfo(String userName) throws IOException {
-        String rank = null;
-        String tier = null;
+        String rank = "0";
+        String tier = "0";
         String rightCnt = "0";
         String wrongCnt = "0";
         List<String> list = new ArrayList<>();
