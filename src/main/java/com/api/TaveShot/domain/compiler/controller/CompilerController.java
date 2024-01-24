@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,9 +28,10 @@ public class CompilerController {
                             schema = @Schema(implementation = ProblemDto.class)))
     })
     @GetMapping("/problems/{id}")
-    public SuccessResponse<ProblemDto> getProblem(@PathVariable String id) {
-        ProblemDto problem = problemService.getProblemById(id);
-        return new SuccessResponse<>(problem);
+    public ResponseEntity<SuccessResponse<ProblemDto>> getProblem(@PathVariable String id) {
+        return problemService.getProblemById(id)
+                .map(problemDto -> ResponseEntity.ok(new SuccessResponse<>(problemDto)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     /*@Operation(summary = "코드 컴파일링 및 채점", description = "해당 문제 풀이에 대한 채점 결과를 보여줍니다.")
