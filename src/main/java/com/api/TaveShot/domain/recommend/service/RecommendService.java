@@ -76,6 +76,8 @@ public class RecommendService {
                 .baseUrl(lambda2)
                 .build();
 
+        ProblemElement problemElement = problemElementRepository.findByProblemId(solvedRecentId).orElseThrow( () -> new ApiException(ErrorType._PROBLEM_NOT_FOUND));
+
         RecProRequestDto requestDto = RecProRequestDto.builder()
                 .solvedRecentId(solvedRecentId)
                 .build();
@@ -158,7 +160,7 @@ public class RecommendService {
             Integer num = Integer.parseInt(result.get(i));
             log.info("num:{}", num);
             try {
-                ProblemElement problemElement = problemElementRepository.findByProblemId(num);
+                ProblemElement problemElement = problemElementRepository.findByProblemId(Integer.parseInt(String.valueOf(num))).orElseThrow( () -> new ApiException(ErrorType._PROBLEM_NOT_FOUND));
                 log.info("{}, {}, {}", problemElement.getProblemId(), problemElement.getBojLevel(), problemElement.getBojKey());
                 String tierName = getTierName(problemElement.getBojLevel());
                 List<String> tags = extractWords(problemElement.getBojKey());
