@@ -22,8 +22,8 @@ public class CrawlingService {
     public UserCrawlingDto getUserInfo(String userName) throws IOException {
         String rank = null;
         String tier = null;
-        String rightCnt = null;
-        String wrongCnt = null;
+        String rightCnt = "0";
+        String wrongCnt = "0";
         List<String> list = new ArrayList<>();
 
         String url = baekURL + userName;
