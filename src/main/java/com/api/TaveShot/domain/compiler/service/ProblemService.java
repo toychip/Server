@@ -19,9 +19,10 @@ public class ProblemService {
 
     private final ProblemRepository problemRepository;
 
-    public Optional<ProblemDto> getProblemById(String id) {
-        return problemRepository.findById(id)
-                .map(ProblemConverter::convertToDto)
+    public ProblemDto getProblemById(String id) {
+        BojProblem bojProblem = problemRepository.findById(id)
                 .orElseThrow(() -> new ApiException(ErrorType._PROBLEM_NOT_FOUND));
+
+        return ProblemConverter.convertToDto(bojProblem).orElseThrow(() -> new ApiException(ErrorType._PROBLEM_CONVERSION_ERROR));
     }
 }

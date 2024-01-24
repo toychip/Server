@@ -28,10 +28,9 @@ public class CompilerController {
                             schema = @Schema(implementation = ProblemDto.class)))
     })
     @GetMapping("/problems/{id}")
-    public ResponseEntity<SuccessResponse<ProblemDto>> getProblem(@PathVariable String id) {
-        return problemService.getProblemById(id)
-                .map(problemDto -> ResponseEntity.ok(new SuccessResponse<>(problemDto)))
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public SuccessResponse<ProblemDto> getProblem(@PathVariable String id) {
+        ProblemDto problemDto = problemService.getProblemById(id);
+        return new SuccessResponse<>(problemDto);
     }
 
     /*@Operation(summary = "코드 컴파일링 및 채점", description = "해당 문제 풀이에 대한 채점 결과를 보여줍니다.")
