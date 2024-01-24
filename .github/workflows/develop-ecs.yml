@@ -2,7 +2,7 @@ name: Deploy Server
 
 on:
   push:
-    branches: [ "develop" ]
+    branches: [ "main" ]
 
 env:
   # 서울 REGION
