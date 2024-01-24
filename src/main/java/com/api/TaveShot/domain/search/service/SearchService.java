@@ -1,8 +1,12 @@
 package com.api.TaveShot.domain.search.service;
 
+import com.api.TaveShot.domain.recommend.domain.ProblemElement;
+import com.api.TaveShot.domain.recommend.repository.ProblemElementRepository;
 import com.api.TaveShot.domain.search.dto.GoogleItemDto;
 import com.api.TaveShot.domain.search.dto.GoogleListResponseDto;
 import com.api.TaveShot.domain.search.dto.GoogleResponseDto;
+import com.api.TaveShot.global.exception.ApiException;
+import com.api.TaveShot.global.exception.ErrorType;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +19,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -30,8 +35,12 @@ public class SearchService {
     @Value("${google.secret.cx}")
     private String CX;
 
+    private final ProblemElementRepository problemElementRepository;
 
     public GoogleListResponseDto findBlog(String query, int index) {
+
+        ProblemElement problemElement = problemElementRepository.findByProblemId(Integer.parseInt(query)).orElseThrow( () -> new ApiException(ErrorType._PROBLEM_NOT_FOUND));
+
         WebClient webClient = WebClient.builder()
                 .baseUrl("https://www.googleapis.com/customsearch/v1")
                 .build();

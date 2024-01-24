@@ -67,9 +67,13 @@ dependencies {
 	// redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	implementation 'io.lettuce:lettuce-core'
-	
+
 	// jsoup
 	implementation 'org.jsoup:jsoup:1.15.4'
+
+	// csv
+	implementation 'com.opencsv:opencsv:5.5.2'
+	implementation 'commons-io:commons-io:2.11.0'
 }
 
 tasks.named('bootBuildImage') {
@@ -84,4 +88,3 @@ tasks.named('test') {
 clean {
 	delete file('src/main/generated')
 }
-
