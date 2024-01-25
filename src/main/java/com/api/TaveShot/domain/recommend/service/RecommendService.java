@@ -41,7 +41,6 @@ public class RecommendService {
     // 사용자 기반 추천 서비스
     public RecResponseDto getListByUser() throws IOException {
         UserCrawlingDto dto = getUserInfo();
-
         WebClient webClient = WebClient.builder()
                 .baseUrl(lambda1)
                 .build();
@@ -52,7 +51,14 @@ public class RecommendService {
                 .bodyToMono(RecProResponseDto.class)
                 .block();
 
-        Integer tierCount = tierCountRepository.findByTier(Integer.parseInt(dto.getTier()));
+        Integer tierCount;
+        if(dto.getTier().equals("0")){
+            tierCount = 0;
+        }
+        else {
+            tierCount = tierCountRepository.findByTier(Integer.parseInt(dto.getTier()));
+        }
+        log.info("tier:{}", tierCount);
 
         List<RecProDetailResponseDto> proDetailResponseDtos = getProblemDetail(proList);
 
@@ -88,7 +94,14 @@ public class RecommendService {
                 .bodyToMono(RecProResponseDto.class)
                 .block();
 
-        Integer tierCount = tierCountRepository.findByTier(Integer.parseInt(dto.getTier()));
+        Integer tierCount;
+        if(dto.getTier().equals("0")){
+            tierCount = 0;
+        }
+        else {
+            tierCount = tierCountRepository.findByTier(Integer.parseInt(dto.getTier()));
+        }
+        log.info("tier:{}", tierCount);
 
         List<RecProDetailResponseDto> proDetailResponseDtos = getProblemDetail(proList);
 
@@ -106,7 +119,7 @@ public class RecommendService {
     public UserCrawlingDto getUserInfo() throws IOException {
         Member currentMember2 = getCurrentMember();
         String bojName = currentMember2.getBojName();
-//        String bojName = "wjdrhs3473";
+//        String bojName = "cucubab";
 
         UserCrawlingDto dto = crawlingService.getUserInfo(bojName);
 

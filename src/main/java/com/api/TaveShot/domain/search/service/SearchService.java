@@ -59,8 +59,11 @@ public class SearchService {
 
         dto = dto.map(googleResponseDto -> {
             for (GoogleItemDto googleItemDto : googleResponseDto.getItems()){
+                log.info("{}, {}, {}", googleItemDto.getLink(), googleItemDto.getPagemap(), googleItemDto.getCreatedDate());
                 googleItemDto.modifyBlog(googleItemDto.getLink());
-                googleItemDto.modifyCreatedDate();
+                if(googleItemDto.getPagemap() != null) {
+                    googleItemDto.modifyCreatedDate();
+                }
             }
             return googleResponseDto;
         });

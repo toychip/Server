@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,22 +33,26 @@ public class GoogleItemDto {
     @JsonProperty(value = "pagemap")
     private Pagemap pagemap;
 
-    private String blog;
+    @Builder.Default
+    private String blog = "can't sort";
 
-    private String createdDate;
+    @Builder.Default
+    private String createdDate = "";
 
 
     public static class Pagemap {
 
         @JsonProperty(value = "metatags")
-        private List<Metatags> metatags;
+        @Builder.Default
+        private List<Metatags> metatags = new ArrayList<>();
 
     }
 
     public static class Metatags {
 
         @JsonProperty(value = "article:published_time")
-        private String createdTime;
+        @Builder.Default
+        private String createdTime = "";
 
 
     }
@@ -68,10 +73,15 @@ public class GoogleItemDto {
     }
 
     public void modifyCreatedDate(){
-        String created = pagemap.metatags.get(0).createdTime;
-        if(created != null){
-            this.createdDate = created.substring(0, 10);
+        if(pagemap.metatags != null){
+            String created = pagemap.metatags.get(0).createdTime;
+            log.info("{}", created);
+            if(!created.equals("")){
+                this.createdDate = created.substring(0, 10);
+            }
+            else this.createdDate = "";
         }
-        else this.createdDate = created;
+        else
+            this.createdDate = "";
     }
 }
