@@ -43,6 +43,7 @@ public class SecurityConfig {
                                         ,"/login/**"
                                         , "/api/health"
                                         , "/api/v1/search"
+                                        , "/api/compile"
                                 ).permitAll()
                                 .anyRequest().authenticated());
 
