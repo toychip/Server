@@ -38,7 +38,8 @@ public class RecommendController {
             @ApiResponse(responseCode = "200", description = "추천 성공")
     })
     @GetMapping("/problem")
-    public SuccessResponse<RecResponseDto> getSolvedProList(@RequestParam(value = "solvedRecentId") Long solvedNumber)
+
+    public SuccessResponse<RecResponseDto> getSolvedProList(@RequestParam(value = "solvedRecentId") String solvedNumber)
             throws IOException {
         RecResponseDto responseDto = recommendService.getListByProblem(solvedNumber);
         return new SuccessResponse<>(responseDto);

@@ -1,5 +1,7 @@
 package com.api.TaveShot.domain.recommend.service;
 
+import static com.api.TaveShot.global.util.NumberValidator.extractNumberFromRecommendString;
+
 import com.api.TaveShot.domain.Member.domain.Member;
 import com.api.TaveShot.domain.Member.repository.MemberRepository;
 import com.api.TaveShot.domain.recommend.domain.ProblemElement;
@@ -76,7 +78,9 @@ public class RecommendService {
     }
 
     // 문제 기반 추천 서비스
-    public RecResponseDto getListByProblem(Long solvedRecentId) throws IOException {
+    public RecResponseDto getListByProblem(String solvedRecentIdStr) throws IOException {
+
+        Long solvedRecentId = extractNumberFromRecommendString(solvedRecentIdStr);
 
         UserCrawlingDto dto = getUserInfo();
 

@@ -1,5 +1,7 @@
 package com.api.TaveShot.domain.search.service;
 
+import static com.api.TaveShot.global.util.NumberValidator.extractNumberFromBojString;
+
 import com.api.TaveShot.domain.recommend.repository.ProblemElementRepository;
 import com.api.TaveShot.domain.search.dto.GoogleItemDto;
 import com.api.TaveShot.domain.search.dto.GoogleListResponseDto;
@@ -68,12 +70,4 @@ public class SearchService {
 
     }
 
-    public Long extractNumberFromBojString(String input) {
-        Pattern pattern = Pattern.compile("백준 (\\d+)번");
-        Matcher matcher = pattern.matcher(input);
-        if (matcher.find()) {
-            return Long.parseLong(matcher.group(1));
-        }
-        throw new ApiException(ErrorType._PROBLEM_NOT_FOUND);
-    }
 }
