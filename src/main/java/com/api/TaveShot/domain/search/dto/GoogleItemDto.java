@@ -1,17 +1,13 @@
 package com.api.TaveShot.domain.search.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Getter
 @AllArgsConstructor
@@ -29,30 +25,12 @@ public class GoogleItemDto {
     @JsonProperty(value = "snippet")
     private String snippet;
 
-    @JsonProperty(value = "pagemap")
-    private Pagemap pagemap;
-
     private String blog;
 
     private String createdDate;
 
 
-    public static class Pagemap {
-
-        @JsonProperty(value = "metatags")
-        private List<Metatags> metatags;
-
-    }
-
-    public static class Metatags {
-
-        @JsonProperty(value = "article:published_time")
-        private String createdTime;
-
-
-    }
-
-    public void modifyBlog(String link){
+    public void modifyBlog(String link) {
         // 정규 표현식
         String regex = "\\.(.*?)\\.";
 
@@ -67,11 +45,4 @@ public class GoogleItemDto {
         }
     }
 
-    public void modifyCreatedDate(){
-        String created = pagemap.metatags.get(0).createdTime;
-        if(created != null){
-            this.createdDate = created.substring(0, 10);
-        }
-        else this.createdDate = created;
-    }
 }
