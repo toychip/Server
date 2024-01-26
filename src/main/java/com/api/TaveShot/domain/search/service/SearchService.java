@@ -32,7 +32,9 @@ public class SearchService {
 
     public GoogleListResponseDto findBlog(String query, int index) {
 
-        ProblemElement problemElement = problemElementRepository.findByProblemId(Integer.parseInt(query))
+        String questionNumber = query.replaceAll("[^0-9]", "");
+
+        problemElementRepository.findByProblemId(Integer.parseInt(questionNumber))
                 .orElseThrow(() -> new ApiException(ErrorType._PROBLEM_NOT_FOUND));
 
         WebClient webClient = WebClient.builder()
