@@ -11,6 +11,6 @@ import java.util.Optional;
 public interface ProblemElementRepository extends JpaRepository<ProblemElement, Long> {
 
     @Query("select p from ProblemElement as p where p.problemId=:problemId")
-    Optional<ProblemElement> findByProblemId(Integer problemId);
+    Optional<ProblemElement> findByProblemId(Long problemId);
 
 }

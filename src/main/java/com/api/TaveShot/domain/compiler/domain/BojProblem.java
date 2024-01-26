@@ -18,12 +18,10 @@ public class BojProblem {
     @Column(name = "Title", columnDefinition = "TEXT")
     private String title;
 
-    @Lob
-    @Column(name = "Description")
+    @Column(name = "Description", columnDefinition = "TEXT")
     private String description;
 
-    @Lob
-    @Column(name = "Input Description")
+    @Column(name = "Input Description", columnDefinition = "TEXT")
     private String inputDescription;
 
     @Column(name = "Output Description", columnDefinition = "TEXT")

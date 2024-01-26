@@ -1,26 +1,18 @@
 package com.api.TaveShot.domain.recommend.controller;
 
-import com.api.TaveShot.domain.post.post.dto.response.PostResponse;
-import com.api.TaveShot.domain.recommend.dto.RecProRequestDto;
-import com.api.TaveShot.domain.recommend.dto.RecProResponseDto;
 import com.api.TaveShot.domain.recommend.dto.RecResponseDto;
 import com.api.TaveShot.domain.recommend.service.RecommendService;
 import com.api.TaveShot.global.success.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.io.IOException;
 
 @RestController
 @Slf4j
@@ -46,7 +38,8 @@ public class RecommendController {
             @ApiResponse(responseCode = "200", description = "추천 성공")
     })
     @GetMapping("/problem")
-    public SuccessResponse<RecResponseDto> getSolvedProList(@RequestParam(value = "solvedRecentId") int solvedNumber) throws IOException {
+    public SuccessResponse<RecResponseDto> getSolvedProList(@RequestParam(value = "solvedRecentId") Long solvedNumber)
+            throws IOException {
         RecResponseDto responseDto = recommendService.getListByProblem(solvedNumber);
         return new SuccessResponse<>(responseDto);
     }

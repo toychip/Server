@@ -1,6 +1,5 @@
 package com.api.TaveShot.domain.search.service;
 
-import com.api.TaveShot.domain.recommend.domain.ProblemElement;
 import com.api.TaveShot.domain.recommend.repository.ProblemElementRepository;
 import com.api.TaveShot.domain.search.dto.GoogleItemDto;
 import com.api.TaveShot.domain.search.dto.GoogleListResponseDto;
@@ -8,6 +7,8 @@ import com.api.TaveShot.domain.search.dto.GoogleResponseDto;
 import com.api.TaveShot.global.exception.ApiException;
 import com.api.TaveShot.global.exception.ErrorType;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,9 +33,9 @@ public class SearchService {
 
     public GoogleListResponseDto findBlog(String query, int index) {
 
-        String questionNumber = query.replaceAll("[^0-9]", "");
+        Long questionNumber = extractNumberFromBojString(query);
 
-        problemElementRepository.findByProblemId(Integer.parseInt(questionNumber))
+        problemElementRepository.findByProblemId(questionNumber)
                 .orElseThrow(() -> new ApiException(ErrorType._PROBLEM_NOT_FOUND));
 
         WebClient webClient = WebClient.builder()
@@ -65,5 +66,14 @@ public class SearchService {
                 .dtos(googleResponseDtos)
                 .build();
 
+    }
+
+    public Long extractNumberFromBojString(String input) {
+        Pattern pattern = Pattern.compile("백준 (\\d+)번");
+        Matcher matcher = pattern.matcher(input);
+        if (matcher.find()) {
+            return Long.parseLong(matcher.group(1));
+        }
+        throw new ApiException(ErrorType._PROBLEM_NOT_FOUND);
     }
 }

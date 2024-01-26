@@ -3,24 +3,27 @@ package com.api.TaveShot.domain.recommend.service;
 import com.api.TaveShot.domain.Member.domain.Member;
 import com.api.TaveShot.domain.Member.repository.MemberRepository;
 import com.api.TaveShot.domain.recommend.domain.ProblemElement;
-import com.api.TaveShot.domain.recommend.dto.*;
+import com.api.TaveShot.domain.recommend.dto.RecProDetailResponseDto;
+import com.api.TaveShot.domain.recommend.dto.RecProRequestDto;
+import com.api.TaveShot.domain.recommend.dto.RecProResponseDto;
+import com.api.TaveShot.domain.recommend.dto.RecResponseDto;
+import com.api.TaveShot.domain.recommend.dto.UserCrawlingDto;
 import com.api.TaveShot.domain.recommend.repository.ProblemElementRepository;
 import com.api.TaveShot.domain.recommend.repository.TierCountRepository;
 import com.api.TaveShot.global.exception.ApiException;
 import com.api.TaveShot.global.exception.ErrorType;
 import com.api.TaveShot.global.util.SecurityUtil;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 @Slf4j
@@ -52,10 +55,9 @@ public class RecommendService {
                 .block();
 
         Integer tierCount;
-        if(dto.getTier().equals("0")){
+        if (dto.getTier().equals("0")) {
             tierCount = 0;
-        }
-        else {
+        } else {
             tierCount = tierCountRepository.findByTier(Integer.parseInt(dto.getTier()));
         }
         log.info("tier:{}", tierCount);
@@ -74,7 +76,7 @@ public class RecommendService {
     }
 
     // 문제 기반 추천 서비스
-    public RecResponseDto getListByProblem(int solvedRecentId) throws IOException {
+    public RecResponseDto getListByProblem(Long solvedRecentId) throws IOException {
 
         UserCrawlingDto dto = getUserInfo();
 
@@ -82,7 +84,8 @@ public class RecommendService {
                 .baseUrl(lambda2)
                 .build();
 
-        ProblemElement problemElement = problemElementRepository.findByProblemId(solvedRecentId).orElseThrow( () -> new ApiException(ErrorType._PROBLEM_NOT_FOUND));
+        problemElementRepository.findByProblemId(solvedRecentId)
+                .orElseThrow(() -> new ApiException(ErrorType._PROBLEM_NOT_FOUND));
 
         RecProRequestDto requestDto = RecProRequestDto.builder()
                 .solvedRecentId(solvedRecentId)
@@ -95,10 +98,9 @@ public class RecommendService {
                 .block();
 
         Integer tierCount;
-        if(dto.getTier().equals("0")){
+        if (dto.getTier().equals("0")) {
             tierCount = 0;
-        }
-        else {
+        } else {
             tierCount = tierCountRepository.findByTier(Integer.parseInt(dto.getTier()));
         }
         log.info("tier:{}", tierCount);
@@ -126,55 +128,59 @@ public class RecommendService {
         return dto;
     }
 
-    private Member getCurrentMember(){
+    private Member getCurrentMember() {
         Member currentMember = SecurityUtil.getCurrentMember();
         Long currentMemberId = currentMember.getId();
         return memberRepository.findById(currentMemberId)
                 .orElseThrow(() -> new ApiException(ErrorType._USER_NOT_FOUND_DB));
     }
 
-    private String getTierName(Integer bojLevel){
+    private String getTierName(Integer bojLevel) {
         String[] tiers = {"BRONZE", "SILVER", "GOLD", "PLATINUM", "DIAMOND", "RUBY", "MASTER"};
-        if(bojLevel <= 5)
+        if (bojLevel <= 5) {
             return tiers[0];
-        else if(bojLevel <= 10)
+        } else if (bojLevel <= 10) {
             return tiers[1];
-        else if(bojLevel <= 15)
+        } else if (bojLevel <= 15) {
             return tiers[2];
-        else if(bojLevel <= 20)
+        } else if (bojLevel <= 20) {
             return tiers[3];
-        else if(bojLevel <= 25)
+        } else if (bojLevel <= 25) {
             return tiers[4];
-        else if(bojLevel <= 30)
+        } else if (bojLevel <= 30) {
             return tiers[5];
+        }
 
         return tiers[6];
     }
 
-    private List<String> extractWords(String bojTags){
+    private List<String> extractWords(String bojTags) {
         List<String> tags = new ArrayList<>();
 
         Pattern pattern = Pattern.compile("\\b\\w+\\b");
         Matcher matcher = pattern.matcher(bojTags);
 
-        while(matcher.find()){
+        while (matcher.find()) {
             tags.add(matcher.group());
         }
 
         return tags;
     }
 
-    private List<RecProDetailResponseDto> getProblemDetail(RecProResponseDto proList){
+    private List<RecProDetailResponseDto> getProblemDetail(RecProResponseDto proList) {
         List<String> result = proList.getResult();
         List<RecProDetailResponseDto> proDetailResponseDto = new ArrayList<>();
 
         // 문제 세부 정보 찾기
-        for(int i=0;i<15;i++){
+        for (int i = 0; i < 15; i++) {
             Integer num = Integer.parseInt(result.get(i));
             log.info("num:{}", num);
             try {
-                ProblemElement problemElement = problemElementRepository.findByProblemId(Integer.parseInt(String.valueOf(num))).orElseThrow( () -> new ApiException(ErrorType._PROBLEM_NOT_FOUND));
-                log.info("{}, {}, {}", problemElement.getProblemId(), problemElement.getBojLevel(), problemElement.getBojKey());
+                ProblemElement problemElement = problemElementRepository.findByProblemId(
+                                Long.parseLong(String.valueOf(num)))
+                        .orElseThrow(() -> new ApiException(ErrorType._PROBLEM_NOT_FOUND));
+                log.info("{}, {}, {}", problemElement.getProblemId(), problemElement.getBojLevel(),
+                        problemElement.getBojKey());
                 String tierName = getTierName(problemElement.getBojLevel());
                 List<String> tags = extractWords(problemElement.getBojKey());
                 RecProDetailResponseDto detailResponseDto = RecProDetailResponseDto.builder()
@@ -184,7 +190,7 @@ public class RecommendService {
                         .bojTag(tags)
                         .build();
                 proDetailResponseDto.add(detailResponseDto);
-            } catch(Exception e){
+            } catch (Exception e) {
                 continue;
             }
 
