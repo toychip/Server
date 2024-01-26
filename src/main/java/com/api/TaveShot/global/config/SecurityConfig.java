@@ -42,8 +42,8 @@ public class SecurityConfig {
                                         ,"/favicon.ico"
                                         ,"/login/**"
                                         , "/api/health"
-                                        , "/api/v1/search"
-                                        , "/api/compile"
+                                        , "/api/v1/search/**"
+                                        , "/api/compile/**"
                                 ).permitAll()
                                 .anyRequest().authenticated());
 
