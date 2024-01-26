@@ -64,7 +64,7 @@ public class CrawlingService {
                 wrongCnt = row_data3;
             }
         }
-        log.info("{}, {}, {}", rank, rightCnt, wrongCnt);
+        log.info("{}, {}, {}, {}", rank, rightCnt, wrongCnt, tier);
 
         // 맞은 문제 리스트
         Elements table2 = document.select(".panel.panel-default");
@@ -74,7 +74,6 @@ public class CrawlingService {
             String data2 = a.text();
             list.add(data2);
         }
-
 
         return UserCrawlingDto.builder()
                         .rank(rank)
