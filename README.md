@@ -1,1 +1,1 @@
-![BackendArchitecture](https://ddoklipbk.s3.ap-northeast-2.amazonaws.com/photo/BAAR.png)
+![BackendArchitecture-2024-09-14만료](https://ifh.cc/g/ccR5Xs.jpg)
